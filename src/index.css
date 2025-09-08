@@ -1,0 +1,62 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    color-scheme: dark;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* scan bar (retângulo sólido deslizando) */
+@keyframes scan {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(200%);
+    }
+}
+
+.animate-scan {
+    animation: scan 6s linear infinite;
+}
+
+/* ticker de dados */
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.data-ticker {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.data-ticker-inner {
+    display: inline-block;
+    padding-right: 2rem;
+    animation: ticker 22s linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(180%);
+    }
+}
+
+.scanline {
+    animation: scanline 3.6s linear infinite;
+}
