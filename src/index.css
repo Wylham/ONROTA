@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    @apply font-sans antialiased;
+}
+
 :root {
     color-scheme: dark;
 }
@@ -59,4 +69,13 @@ html {
 
 .scanline {
     animation: scanline 3.6s linear infinite;
+}
+
+.bg-hero {
+    background-image: url("/technology-background-design-elements-blue-neon-l-2025-01-09-18-37-43-utc.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-attachment: fixed;
+    /* dá efeito de profundidade */
 }

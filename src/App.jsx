@@ -1,4 +1,5 @@
-﻿import React from "react";
+﻿// App.jsx
+import React from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./sections/Hero";
@@ -12,8 +13,21 @@ import { IconWhatsapp } from "./components/Icons";
 export default function App() {
   return (
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
-      <Navbar />
-      <Hero />
+      {/* BG só no topo (Navbar + Hero) */}
+      <div
+        className="
+          relative
+          bg-[url('/hero-bg.jpg')] bg-no-repeat bg-cover
+          bg-[position:85%_0] md:bg-[position:100%_0]
+          md:bg-fixed
+        "
+      >
+        {/* Overlay pra legibilidade */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-transparent" />
+        <Navbar />
+        <Hero />
+      </div>
+
       <About />
       <Services />
       <Clients />
