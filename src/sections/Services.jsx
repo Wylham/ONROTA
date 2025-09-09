@@ -1,102 +1,137 @@
-﻿import React from "react";
-import { PRODUCT_NAME } from "../constants";
-import {
-  IconScan,
-  IconShield,
-  IconLink,
-  IconTruck,
-  IconArrowRight,
-  IconCheck,
-} from "../components/Icons.jsx";
+﻿// src/sections/Services.jsx
+import React from "react";
+import oncadLogo from "../assets/oncad-logo.png";
+import { IconScan, IconTruck, IconLink, IconShield, IconArrowRight } from "../components/Icons";
 
 export default function Services() {
   return (
     <section id="servicos" className="bg-black text-white">
-      <div className="mx-auto max-w-7xl px-4 py-20">
-        <h2 className="text-4xl font-bold mb-3">{PRODUCT_NAME}</h2>
-        <p className="text-white/80 text-lg md:text-xl max-w-3xl">
-          Cadastro de motoristas e caminhões com OCR de CNH/CRLV, validações
-          automáticas e integração ERP via API — rápido, padronizado e sem erro
-          humano.
-        </p>
+      <div className="mx-auto max-w-7xl px-4 py-16">
+        {/* Cabeçalho enxuto */}
+        <header className="mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Conheça o <span className="text-indigo-400">OnCad</span>
+          </h2>
+          <p className="mt-2 text-white/70 max-w-2xl">
+            Automatize cadastros com OCR (CNH/CRLV), integre ao seu ERP via API e elimine erros
+            humanos com validações e rastreabilidade ponta a ponta.
+          </p>
+        </header>
 
-        {/* Card branco legível */}
-        <div className="mt-8 rounded-3xl bg-white text-black border border-slate-200 shadow-xl p-6 md:p-8">
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-7">
-              <h3 className="text-2xl md:text-3xl font-semibold">
-                O que é o {PRODUCT_NAME}?
-              </h3>
-              <p className="mt-3 text-slate-700">
-                Lê CNH e CRLV com OCR, preenche o cadastro automaticamente e
-                envia ao ERP via API.
-              </p>
+        {/* Grid principal: sem espaços sobrando e preenchendo a altura visual */}
+        <div className="grid md:grid-cols-12 gap-8 items-stretch">
+          {/* Lado do conteúdo (informações do app) */}
+          <div className="md:col-span-6 flex">
+            <div className="my-auto w-full">
+              {/* Bullets com ícones (compactos) */}
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <li className="flex items-start gap-3">
+                  <div className="shrink-0 p-2 rounded-xl bg-indigo-500/15">
+                    <IconScan className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <div className="leading-snug">
+                    <p className="font-semibold">OCR de CNH e CRLV</p>
+                    <p className="text-sm text-white/70">
+                      Leitura automática e precisa em segundos.
+                    </p>
+                  </div>
+                </li>
 
-              <h4 className="mt-6 font-semibold text-slate-900">
-                Como funciona
-              </h4>
-              <ol className="mt-3 grid sm:grid-cols-3 gap-4">
-                <li className="rounded-xl p-4 bg-slate-50 border border-slate-200">
-                  <p className="font-medium flex items-center gap-2">
-                    <IconScan className="w-4 h-4" /> Captura (OCR)
-                  </p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Foto/PDF da CNH/CRLV com normalização.
-                  </p>
+                <li className="flex items-start gap-3">
+                  <div className="shrink-0 p-2 rounded-xl bg-indigo-500/15">
+                    <IconTruck className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <div className="leading-snug">
+                    <p className="font-semibold">Cadastro completo</p>
+                    <p className="text-sm text-white/70">
+                      Campos preenchidos sem digitação manual.
+                    </p>
+                  </div>
                 </li>
-                <li className="rounded-xl p-4 bg-slate-50 border border-slate-200">
-                  <p className="font-medium flex items-center gap-2">
-                    <IconTruck className="w-4 h-4" /> Fluxo guiado
-                  </p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Preenchimento automático e regras por perfil.
-                  </p>
-                </li>
-                <li className="rounded-xl p-4 bg-slate-50 border border-slate-200">
-                  <p className="font-medium flex items-center gap-2">
-                    <IconLink className="w-4 h-4" /> Integração ERP
-                  </p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Envio via API, webhooks e logs por registro.
-                  </p>
-                </li>
-              </ol>
 
-              <div className="mt-6">
+                <li className="flex items-start gap-3">
+                  <div className="shrink-0 p-2 rounded-xl bg-indigo-500/15">
+                    <IconLink className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <div className="leading-snug">
+                    <p className="font-semibold">Integração com ERP</p>
+                    <p className="text-sm text-white/70">Envio via API com rastreabilidade.</p>
+                  </div>
+                </li>
+
+                <li className="flex items-start gap-3">
+                  <div className="shrink-0 p-2 rounded-xl bg-indigo-500/15">
+                    <IconShield className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <div className="leading-snug">
+                    <p className="font-semibold">Zero erro humano</p>
+                    <p className="text-sm text-white/70">Validações e padronização automáticas.</p>
+                  </div>
+                </li>
+              </ul>
+
+              {/* CTA compacta */}
+              <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href="#contato"
-                  className="inline-flex items-center gap-2 rounded-2xl px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700"
+                  className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 transition-colors"
                 >
-                  Solicitar demonstração <IconArrowRight className="w-4 h-4" />
+                  Solicitar demonstração <IconArrowRight className="w-5 h-5" />
                 </a>
-              </div>
-            </div>
-
-            {/* Coluna direita: espaço reservado (sem dependências) */}
-            <div className="lg:col-span-5">
-              <div className="h-[360px] rounded-2xl ring-1 ring-slate-200 grid place-items-center bg-black text-white/60">
-                Tela do app (adicione imagens depois)
+                <a
+                  href="#clientes"
+                  className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 border border-white/15 hover:border-white/30 transition-colors"
+                >
+                  Ver clientes
+                </a>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 border-t border-slate-200 pt-6">
-            <h4 className="font-semibold text-slate-900">
-              Integrações & segurança
-            </h4>
-            <ul className="mt-3 grid sm:grid-cols-3 gap-4 text-sm">
-              <li className="rounded-xl p-4 bg-slate-50 border border-slate-200">
-                <IconLink className="w-4 h-4 inline mr-2" /> ERPs (API REST)
-              </li>
-              <li className="rounded-xl p-4 bg-slate-50 border border-slate-200">
-                <IconShield className="w-4 h-4 inline mr-2" /> Criptografia em
-                trânsito/repouso
-              </li>
-              <li className="rounded-xl p-4 bg-slate-50 border border-slate-200">
-                <IconShield className="w-4 h-4 inline mr-2" /> Consentimento &
-                retenção (LGPD)
-              </li>
-            </ul>
+          {/* Lado da logo — novo “painel inovador” sem textos abaixo e sem sobras */}
+          <div className="md:col-span-6 flex">
+            <div className="relative w-full my-auto">
+              {/* aura externa (profundidade) */}
+              <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.25),transparent_60%)] blur-2xl" />
+
+              {/* painel principal com shape inovador */}
+              <div
+                className="
+                  relative overflow-hidden isolate
+                  rounded-[2rem]
+                  border border-white/10
+                  bg-gradient-to-br from-white/10 to-white/[0.04]
+                  backdrop-blur-xl shadow-2xl
+                  min-h-[22rem]
+                  flex items-center justify-center
+                "
+              >
+                {/* faixa diagonal translúcida - “transbordando” */}
+                <div
+                  className="
+                    absolute -left-24 md:-left-20 -top-16
+                    h-64 w-[130%] rotate-[-8deg]
+                    bg-gradient-to-r from-indigo-500/30 via-transparent to-transparent
+                    blur-xl
+                  "
+                />
+
+                {/* layers de brilho */}
+                <div className="absolute -inset-24 -z-10 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(255,255,255,0.08),transparent_35%)]" />
+                <div className="absolute -inset-28 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.25),transparent_60%)]" />
+
+                {/* Logo com leve flutuação */}
+                <img
+                  src={oncadLogo}
+                  alt="OnCad"
+                  className="relative w-64 md:w-72 h-auto drop-shadow-[0_10px_30px_rgba(99,102,241,0.35)] transition-transform duration-500 ease-out will-change-transform
+                            group-hover:translate-y-[-2px]"
+                />
+
+                {/* sombra de projeção */}
+                <div className="absolute -bottom-6 left-10 right-10 h-12 rounded-full blur-2xl bg-black/60" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
