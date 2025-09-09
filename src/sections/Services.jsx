@@ -1,6 +1,6 @@
 ﻿// src/sections/Services.jsx
 import React from "react";
-import oncadLogo from "../assets/oncad-logo.png"; // se não existir, cai no placeholder
+import oncadLogo from "../assets/oncad-logo.png";
 import { IconScan, IconTruck, IconLink, IconShield, IconArrowRight } from "../components/Icons";
 
 // Placeholder (portrait) para prints de smartphone
@@ -27,23 +27,6 @@ const SCREEN_PLACEHOLDER =
   </svg>
 `);
 
-// Placeholder do ícone (logo) caso não exista arquivo
-const LOGO_ICON_PLACEHOLDER =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(`
-  <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#151515"/>
-        <stop offset="100%" stop-color="#1f1f1f"/>
-      </linearGradient>
-    </defs>
-    <rect width="100%" height="100%" rx="160" ry="160" fill="url(#bg)"/>
-    <circle cx="512" cy="512" r="300" fill="none" stroke="#7aa2ff" stroke-width="24" opacity="0.45"/>
-    <text x="50%" y="54%" text-anchor="middle" fill="#89b4ff" font-size="200" font-family="Inter, Arial, sans-serif" font-weight="800">O</text>
-  </svg>
-`);
-
 export default function Services() {
   return (
     <section id="servicos" className="bg-black text-white">
@@ -59,7 +42,7 @@ export default function Services() {
           </p>
         </header>
 
-        {/* Linha 1 — Info do app + LOGO em retângulo cinza (maior e visível) */}
+        {/* Linha 1 — Info do app + LOGO em retângulo cinza */}
         <div className="grid md:grid-cols-12 gap-8 items-center">
           {/* Coluna: informações do app */}
           <div className="md:col-span-7">
@@ -115,7 +98,7 @@ export default function Services() {
             </div>
           </div>
 
-          {/* Coluna: LOGO em retângulo cinza (sem espaços mortos) */}
+          {/* Coluna: LOGO em retângulo cinza */}
           <div className="md:col-span-5">
             <div
               className="
@@ -137,7 +120,7 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Linha 2 — Prints do app (smartphone) com moldura bonita */}
+        {/* Linha 2 — Prints do app (smartphone) com moldura */}
         <div className="mt-14">
           <h3 className="text-xl font-semibold mb-5">Mais sobre o OnCad</h3>
 
@@ -158,7 +141,7 @@ export default function Services() {
               >
                 {/* “Moldura” do smartphone (borda interna) */}
                 <div className="rounded-[1.3rem] bg-black overflow-hidden ring-1 ring-white/5">
-                  {/* notch opcional (bem sutil) */}
+                  {/* notch (bem sutil) */}
                   <div className="mx-auto mt-2 mb-1 h-1.5 w-24 rounded-full bg-white/10" />
                   {/* Tela (imagem) — 9:16 */}
                   <div className="px-2 pb-2">
