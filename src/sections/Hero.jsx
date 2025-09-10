@@ -1,124 +1,95 @@
-﻿import React from "react";
+﻿// src/sections/Hero.jsx
+import React from "react";
+import robotImg from "../assets/robot.png";
 import { IconArrowRight, IconCheck } from "../components/Icons";
-import robotSrc from "../assets/robot.png"; // ajuste o caminho se necessário
 
 export default function Hero() {
   return (
-    <section
-      id="home"
-      className="relative pt-20 md:pt-24 pb-24 md:pb-36 scroll-mt-24 md:scroll-mt-28"
-    >
-      {/* Overlay para legibilidade sobre o background global */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.30)_0%,rgba(0,0,0,0.40)_35%,rgba(0,0,0,0.55)_100%)]" />
+    <section id="home" className="relative pt-20 md:pt-24 overflow-hidden">
+      {/* BACKGROUND vindo do public/ */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          backgroundImage: "url('/hero-bg.jpg')", // 👈 usa direto do public/
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center right",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 -z-10"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(80% 60% at 20% 30%, rgba(0,0,0,.60) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 70%)," +
+            "linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.25) 40%, rgba(0,0,0,.55))",
+        }}
+      />
 
-      <div className="relative mx-auto max-w-7xl px-4">
-        {/* MOBILE (até md) */}
-        <div className="md:hidden">
-          <h1 className="text-[34px] leading-[1.1] font-extrabold text-white">
-            Transforme sua operação logística com a OnRota
+      <div className="mx-auto max-w-7xl px-4 py-10 grid lg:grid-cols-2 gap-8 items-center">
+        {/* Texto à esquerda */}
+        <div>
+          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
+            Mais segurança, menos riscos: o futuro do transporte é{" "}
+            <span className="text-blue-400">ONROTA</span>.
           </h1>
-          <p className="mt-3 text-white/85">
-            Cadastro com OCR, integração via API e validações automáticas — menos erros, mais
-            velocidade.
+
+          <p className="mt-4 text-white/80 text-base md:text-lg max-w-xl">
+            Nós combinamos <strong>tecnologia antifraude</strong> e <strong>automação</strong> para
+            eliminar erros manuais e aumentar a confiabilidade das suas rotas. Reduza custos e opere
+            com mais segurança no transporte rodoviário.
           </p>
 
-          <div className="mt-5 grid gap-3">
+          <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="#servicos"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 bg-blue-600 hover:bg-blue-500 transition"
+              className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-sm md:text-base"
             >
-              Conhecer o OnCad <IconArrowRight className="w-5 h-5" />
+              Conhecer o OnCad <IconArrowRight />
             </a>
             <a
               href="#contato"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 bg-white text-black hover:bg-white/90 transition"
+              className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-white text-black hover:bg-white/90 text-sm md:text-base"
             >
-              Entre em contato
+              Fale com a OnRota
             </a>
           </div>
 
           <div className="mt-6 grid gap-3 text-white/90 text-sm">
             <div className="flex items-start gap-2">
-              <IconCheck className="mt-0.5 w-4 h-4 text-blue-400" />
-              <span>Profissionais e serviços especializados</span>
+              <IconCheck className="mt-0.5" />
+              <span>
+                <strong>Foco exclusivo</strong> no transporte rodoviário
+              </span>
             </div>
             <div className="flex items-start gap-2">
-              <IconCheck className="mt-0.5 w-4 h-4 text-blue-400" />
-              <span>Qualidade e segurança de dados</span>
+              <IconCheck className="mt-0.5" />
+              <span>
+                <strong>Sistema antifraude</strong> para validação de dados
+              </span>
             </div>
             <div className="flex items-start gap-2">
-              <IconCheck className="mt-0.5 w-4 h-4 text-blue-400" />
-              <span>Resultados rápidos e mensuráveis</span>
+              <IconCheck className="mt-0.5" />
+              <span>
+                <strong>Automação logística</strong> que elimina erros manuais
+              </span>
             </div>
-          </div>
-
-          {/* Robô MOBILE — centralizado HORIZONTALMENTE e flutuando */}
-          <div className="relative mt-8 mx-auto w-[240px] sm:w-[280px]">
-            {/* AURA (brilho abaixo) */}
-            <div className="pointer-events-none absolute -bottom-4 left-1/2 -translate-x-1/2 w-[90%] h-8 rounded-full bg-blue-500/30 blur-2xl opacity-70" />
-            <img
-              src={robotSrc}
-              alt=""
-              className="w-full h-auto animate-float drop-shadow-[0_25px_55px_rgba(59,130,246,0.35)]"
-              onError={(e) => (e.currentTarget.style.display = "none")}
-            />
           </div>
         </div>
 
-        {/* ===== DESKTOP / TABLET (md+) ===== */}
-        <div className="hidden md:grid lg:grid-cols-2 gap-10 items-center">
-          {/* Coluna ESQUERDA: texto/CTAs */}
-          <div className="max-w-2xl">
-            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight text-white">
-              Transforme sua operação logística com a OnRota
-            </h1>
-            <p className="mt-5 text-white/85 text-lg">
-              Nosso produto OnCad automatiza o cadastro de motoristas e caminhões com OCR, integra
-              ao seu ERP via API e elimina erros humanos.
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-3">
-              <a
-                href="#servicos"
-                className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-blue-600 hover:bg-blue-500 transition"
-              >
-                Conhecer o OnCad <IconArrowRight className="w-5 h-5" />
-              </a>
-              <a
-                href="#contato"
-                className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-white text-black hover:bg-white/90 transition"
-              >
-                Entre em contato
-              </a>
-            </div>
-
-            <div className="mt-8 grid sm:grid-cols-3 gap-6 text-white/90 text-sm">
-              <div className="flex items-start gap-2">
-                <IconCheck className="mt-0.5 w-4 h-4 text-blue-400" />
-                <span>Profissionais e serviços especializados</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <IconCheck className="mt-0.5 w-4 h-4 text-blue-400" />
-                <span>Qualidade e segurança de dados</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <IconCheck className="mt-0.5 w-4 h-4 text-blue-400" />
-                <span>Resultados rápidos e mensuráveis</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Coluna DIREITA: Robô flutuante centralizado HORIZONTALMENTE */}
-          <div className="relative flex items-end justify-center">
-            {/* Aura/Glow abaixo do robô */}
-            <div className="pointer-events-none absolute -bottom-2 w-3/4 h-10 rounded-full bg-blue-500/30 blur-3xl opacity-70" />
-            <img
-              src={robotSrc}
-              alt=""
-              className="w-[340px] lg:w-[420px] h-auto animate-float drop-shadow-[0_30px_65px_rgba(59,130,246,0.35)]"
-              onError={(e) => (e.currentTarget.style.display = "none")}
-            />
-          </div>
+        {/* Robô à direita */}
+        <div className="relative flex justify-center lg:justify-end items-end">
+          <img
+            src={robotImg}
+            alt="Robô futurista representando a tecnologia ONROTA"
+            className="
+              w-40 sm:w-52 md:w-60
+              lg:w-[18rem] xl:w-[20rem] 2xl:w-[22rem]
+              animate-float
+            "
+          />
+          <div className="absolute bottom-0 right-10 left-10 h-40 blur-3xl bg-blue-500/25 rounded-full -z-10" />
         </div>
       </div>
     </section>

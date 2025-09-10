@@ -11,12 +11,13 @@ const NAV = [
   { id: "contato", label: "Contato" },
 ];
 
+// Menu renderizado via Portal no <body> (nada passa por cima)
 function MobileMenuPortal({ open, onClose, onGo }) {
   if (typeof document === "undefined") return null;
 
   return ReactDOM.createPortal(
     <>
-      {/* Overlay sólido que cobre TUDO */}
+      {/* Overlay sólido cobrindo tudo */}
       <div
         onClick={onClose}
         style={{ zIndex: 9998 }}
@@ -25,7 +26,7 @@ function MobileMenuPortal({ open, onClose, onGo }) {
         }`}
       />
 
-      {/* Painel lateral acima do overlay */}
+      {/* Painel lateral por cima do overlay */}
       <aside
         style={{ zIndex: 9999 }}
         className={`fixed top-0 right-0 h-full w-[86%] max-w-[360px] bg-black border-l border-white/10 pt-16 px-4 transform transition-transform duration-300 ${
@@ -35,7 +36,6 @@ function MobileMenuPortal({ open, onClose, onGo }) {
         aria-modal="true"
         aria-label="Menu de navegação"
       >
-        {/* Header do painel */}
         <div className="flex items-center justify-between pb-4">
           <img src={logo} alt="OnRota" className="h-7 w-auto" />
           <button
@@ -48,7 +48,6 @@ function MobileMenuPortal({ open, onClose, onGo }) {
           </button>
         </div>
 
-        {/* Itens */}
         <ul className="space-y-2">
           {NAV.map((n) => (
             <li key={n.id}>
@@ -63,7 +62,6 @@ function MobileMenuPortal({ open, onClose, onGo }) {
           ))}
         </ul>
 
-        {/* CTA opcional */}
         <div className="mt-6 border-t border-white/10 pt-4">
           <a
             href="#contato"
@@ -85,24 +83,15 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Transparente no topo; escurece ao rolar
+  // Escurece o navbar assim que o usuário rola (>= 1px)
   useEffect(() => {
-    const hero = document.getElementById("home");
-    if (!hero) {
-      const onScroll = () => setScrolled(window.scrollY > 8);
-      onScroll();
-      window.addEventListener("scroll", onScroll);
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-    const io = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting), {
-      rootMargin: "-80px 0px 0px 0px",
-      threshold: 0,
-    });
-    io.observe(hero);
-    return () => io.disconnect();
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    onScroll(); // estado correto ao carregar
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Bloqueia scroll do body quando o menu abre
+  // Bloqueia o scroll do body com menu aberto
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -129,7 +118,6 @@ export default function Navbar() {
         ].join(" ")}
       >
         <nav className="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between text-white">
-          {/* Logo sem texto ao lado */}
           <a href="#home" className="flex items-center min-w-0" aria-label="Ir para início">
             <img src={logo} alt="OnRota" className="h-7 w-auto" />
           </a>
@@ -145,7 +133,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Botão mobile: hamburger -> X (animado) */}
+          {/* Botão mobile hamburger -> X (animado) */}
           <button
             onClick={() => setOpen((v) => !v)}
             className="md:hidden relative h-10 w-10 grid place-items-center rounded-lg border border-white/15 bg-white/5"
@@ -175,7 +163,7 @@ export default function Navbar() {
         </nav>
       </header>
 
-      {/* Menu (Portal no <body>) */}
+      {/* Menu mobile via Portal */}
       <MobileMenuPortal open={open} onClose={() => setOpen(false)} onGo={handleGo} />
     </>
   );

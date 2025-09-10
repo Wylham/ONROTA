@@ -94,7 +94,7 @@ html {
 }
 
 .animate-float {
-    animation: float 4s ease-in-out infinite;
+    animation: float 5s ease-in-out infinite;
 }
 
 /* Respeita usuários que preferem menos movimento */
