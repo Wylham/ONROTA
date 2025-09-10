@@ -28,7 +28,7 @@ export default function Hero() {
                 href="#sobre"
                 className="inline-flex items-center gap-2 rounded-xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700 transition-colors"
               >
-                Conheça mais sobre nós <IconArrowRight className="w-5 h-5" />
+                Conhecer mais sobre
               </a>
               <a
                 href="#contato"
@@ -54,12 +54,33 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Robô ajustado: mais centralizado e menor */}
-          <div className="flex items-center justify-center">
+          {/* Robô com aura, sombra, levitação e hover com scale+rotate */}
+          <div className="relative flex items-center justify-center">
+            {/* Aura futurista atrás */}
+            <div className="absolute w-[120%] h-[120%] rounded-full bg-indigo-500/20 blur-3xl"></div>
+
+            {/* Robô */}
             <img
               src={robot}
               alt="Robô futurista"
-              className="w-[280px] md:w-[380px] lg:w-[440px] h-auto drop-shadow-[0_15px_35px_rgba(99,102,241,0.4)]"
+              className="
+                relative z-[1]
+                w-[270px] md:w-[370px] lg:w-[430px] h-auto
+                drop-shadow-[0_15px_35px_rgba(99,102,241,0.4)]
+                animate-float
+                transition-transform duration-500 ease-in-out
+                hover:scale-105 hover:rotate-2
+              "
+              draggable="false"
+            />
+
+            {/* Sombra de apoio (chão) */}
+            <div
+              className="
+                absolute -bottom-2 left-1/2 -translate-x-1/2
+                w-56 md:w-64 lg:w-72 h-8
+                rounded-full bg-black/55 blur-2xl
+              "
             />
           </div>
         </div>
