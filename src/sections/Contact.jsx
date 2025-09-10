@@ -1,47 +1,29 @@
 // src/sections/Contact.jsx
-import React, { useRef, useState } from "react";
+import React from "react";
 import { PRODUCT_NAME, WHATSAPP_NUMBER, CONTACT_EMAIL, WHATSAPP_LINK } from "../constants";
-import { IconWhatsapp, IconMail, IconUser, IconPhone, IconMessage } from "../components/Icons";
+import { IconWhatsapp, IconMail, IconPhone } from "../components/Icons";
 
 export default function Contact() {
-  const formRef = useRef(null);
-  const [isSending, setIsSending] = useState(false);
-  const [sent, setSent] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSending(true);
-    try {
-      await new Promise((r) => setTimeout(r, 800));
-      setSent(true);
-      formRef.current?.reset();
-    } catch (err) {
-      console.error(err);
-      alert("Não foi possível enviar agora. Tente novamente.");
-    } finally {
-      setIsSending(false);
-    }
-  };
-
   return (
-    <section id="contato" className="bg-black scroll-mt-24 md:scroll-mt-28">
+    <section id="contato" className="bg-black text-white scroll-mt-24 md:scroll-mt-28">
       <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid md:grid-cols-2 gap-10">
-          {/* Coluna esquerda */}
-          <div className="text-white">
-            <h2 className="text-3xl font-bold">Entre em contato</h2>
-            <p className="mt-2 text-white/70">
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          {/* Coluna esquerda: título + descrição + CTAs */}
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold">Entre em contato</h2>
+            <p className="mt-3 text-white/70 max-w-2xl">
               Fale com nosso time para demonstração do{" "}
-              <strong className="text-white">{PRODUCT_NAME}</strong>, proposta ou dúvidas técnicas.
-              Respondemos rápido.
+              <span className="text-white font-semibold">{PRODUCT_NAME}</span>, proposta comercial
+              ou dúvidas técnicas. Respondemos rápido. 🚀
             </p>
 
-            <div className="mt-6 flex flex-col gap-3">
+            <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
               <a
                 href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-full px-4 py-3 bg-green-500 text-white w-fit shadow-sm"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl px-5 py-3 bg-green-500 text-white shadow-sm hover:scale-[1.02] transition"
+                aria-label="Falar pelo WhatsApp"
               >
                 <IconWhatsapp className="w-5 h-5" />
                 WhatsApp
@@ -49,90 +31,96 @@ export default function Contact() {
 
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="inline-flex items-center gap-2 rounded-full px-4 py-3 bg-white text-black w-fit shadow-sm"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl px-5 py-3 bg-white text-black shadow-sm hover:scale-[1.02] transition"
+                aria-label="Enviar e-mail"
               >
                 <IconMail className="w-5 h-5" />
                 {CONTACT_EMAIL}
               </a>
             </div>
 
-            {sent && (
-              <div className="mt-6 rounded-xl border border-green-500/30 bg-green-500/10 text-green-200 px-4 py-3 text-sm">
-                <p className="font-medium">Mensagem enviada! 🎉</p>
-                <p className="mt-1">Recebemos seu contato e vamos responder em breve.</p>
-              </div>
-            )}
+            {/* Info rápida no mobile */}
+            <p className="mt-4 text-sm text-white/60">
+              Preferir ligar? <span className="text-white/80">{WHATSAPP_NUMBER}</span>
+            </p>
           </div>
 
-          {/* Coluna direita (formulário dark) */}
-          <div className="rounded-3xl border border-slate-800 bg-neutral-900 p-6 shadow-xl">
-            <form ref={formRef} onSubmit={handleSubmit} className="grid gap-4 text-white">
-              <label className="grid gap-2">
-                <span className="text-sm font-medium">Nome</span>
-                <div className="flex items-center gap-2 rounded-xl bg-neutral-800 px-3 py-2">
-                  <IconUser className="w-4 h-4 text-slate-400" />
-                  <input
-                    name="name"
-                    type="text"
-                    placeholder="Seu nome"
-                    required
-                    className="w-full bg-transparent outline-none text-white placeholder-slate-400"
-                  />
+          {/* Coluna direita: cartões de contato (sem formulário) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* WhatsApp */}
+            <a
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="group rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-green-500/15 ring-1 ring-green-500/25">
+                  <IconWhatsapp className="w-5 h-5 text-green-400" />
                 </div>
-              </label>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <label className="grid gap-2">
-                  <span className="text-sm font-medium">E-mail</span>
-                  <div className="flex items-center gap-2 rounded-xl bg-neutral-800 px-3 py-2">
-                    <IconMail className="w-4 h-4 text-slate-400" />
-                    <input
-                      name="email"
-                      type="email"
-                      placeholder="voce@empresa.com"
-                      className="w-full bg-transparent outline-none text-white placeholder-slate-400"
-                    />
-                  </div>
-                </label>
-
-                <label className="grid gap-2">
-                  <span className="text-sm font-medium">Telefone/WhatsApp</span>
-                  <div className="flex items-center gap-2 rounded-xl bg-neutral-800 px-3 py-2">
-                    <IconPhone className="w-4 h-4 text-slate-400" />
-                    <input
-                      name="phone"
-                      type="tel"
-                      placeholder="(xx) xxxxx-xxxx"
-                      className="w-full bg-transparent outline-none text-white placeholder-slate-400"
-                    />
-                  </div>
-                </label>
+                <div>
+                  <p className="text-sm text-white/60">WhatsApp</p>
+                  <p className="font-medium">{WHATSAPP_NUMBER}</p>
+                </div>
               </div>
+              <p className="mt-3 text-sm text-white/60">Atendimento rápido e direto ao ponto.</p>
+            </a>
 
-              <label className="grid gap-2">
-                <span className="text-sm font-medium">Mensagem</span>
-                <div className="flex items-start gap-2 rounded-xl bg-neutral-800 px-3 py-2">
-                  <IconMessage className="w-4 h-4 text-slate-400 mt-1" />
-                  <textarea
-                    name="message"
-                    rows="5"
-                    placeholder="Quero saber mais sobre o OnCad..."
-                    required
-                    className="w-full bg-transparent outline-none resize-y text-white placeholder-slate-400"
-                  />
+            {/* E-mail */}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="group rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 ring-1 ring-white/20">
+                  <IconMail className="w-5 h-5 text-white" />
                 </div>
-              </label>
+                <div>
+                  <p className="text-sm text-white/60">E-mail</p>
+                  <p className="font-medium break-all">{CONTACT_EMAIL}</p>
+                </div>
+              </div>
+              <p className="mt-3 text-sm text-white/60">
+                Envie detalhes da sua operação/logística.
+              </p>
+            </a>
 
-              <button
-                type="submit"
-                disabled={isSending}
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 bg-indigo-600 text-white hover:bg-indigo-500 transition disabled:opacity-60"
-              >
-                {isSending ? "Enviando" : sent ? "Enviar outra mensagem" : "Enviar"}
-              </button>
-            </form>
+            {/* Telefone (link tel) */}
+            <a
+              href={`tel:${WHATSAPP_NUMBER.replace(/\D/g, "")}`}
+              className="group rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 ring-1 ring-white/20">
+                  <IconPhone className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm text-white/60">Telefone</p>
+                  <p className="font-medium">{WHATSAPP_NUMBER}</p>
+                </div>
+              </div>
+              <p className="mt-3 text-sm text-white/60">Horário comercial (seg–sex).</p>
+            </a>
+
+            {/* Endereço/Local (opcional) — pode remover se não quiser */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <p className="text-sm text-white/60">Localização</p>
+              <p className="font-medium">Atendemos 100% remoto</p>
+              <p className="mt-2 text-sm text-white/60">
+                Implantação simples e suporte próximo em todo o Brasil.
+              </p>
+            </div>
           </div>
         </div>
+
+        {/* Rodapé da seção (nota pequena) */}
+        <p className="mt-10 text-xs text-white/50">
+          Ao entrar em contato, você concorda com nossa{" "}
+          <a href="#" className="underline hover:text-white/70">
+            Política de Privacidade
+          </a>
+          .
+        </p>
       </div>
     </section>
   );

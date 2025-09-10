@@ -103,3 +103,35 @@ html {
         animation: none !important;
     }
 }
+
+/* Imagens nunca esticam errado */
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Evita quebra de palavras em telas estreitas */
+p,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: anywhere;
+}
+
+/* Suaviza rolagem para âncoras do navbar */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Evita bounce de elementos com translate no mobile */
+* {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+}

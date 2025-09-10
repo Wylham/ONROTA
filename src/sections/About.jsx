@@ -4,7 +4,7 @@ import aboutPhoto from "../assets/about-photo.png";
 
 export default function About() {
   return (
-    <section id="sobre" className="bg-white text-black">
+    <section id="sobre" className="bg-white text-black scroll-mt-24 md:scroll-mt-28">
       {/* BANNER: foto grande + texto direto na imagem */}
       <div className="relative mx-auto max-w-7xl px-4 pt-10">
         <div className="relative overflow-hidden rounded-3xl">

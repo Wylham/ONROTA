@@ -38,7 +38,7 @@ export default function App() {
         href={WHATSAPP_LINK}
         target="_blank"
         rel="noreferrer noopener"
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-30" // <-- z-30, abaixo do menu
       >
         <div className="rounded-full p-4 shadow-xl bg-green-500 hover:scale-105 transition-transform">
           <IconWhatsapp className="w-6 h-6 text-white" />
