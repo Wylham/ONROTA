@@ -1,6 +1,5 @@
-﻿// src/components/Navbar.jsx
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+﻿import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import logo from "../assets/logo-light.png";
 
 const NAV = [
@@ -11,50 +10,103 @@ const NAV = [
   { id: "contato", label: "Contato" },
 ];
 
-// Menu renderizado via Portal no <body> (nada passa por cima)
-function MobileMenuPortal({ open, onClose, onGo }) {
-  if (typeof document === "undefined") return null;
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
 
-  return ReactDOM.createPortal(
-    <>
-      {/* Overlay sólido cobrindo tudo */}
-      <div
-        onClick={onClose}
-        style={{ zIndex: 9998 }}
-        className={`fixed inset-0 bg-black transition-opacity ${
-          open ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      />
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = open ? "hidden" : prev || "";
+    return () => {
+      document.body.style.overflow = prev || "";
+    };
+  }, [open]);
 
-      {/* Painel lateral por cima do overlay */}
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    const onHash = () => setOpen(false);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  return (
+    <header className="fixed inset-x-0 top-0 z-50 h-16 bg-black/85 backdrop-blur border-b border-white/10">
+      <nav className="mx-auto max-w-7xl w-full h-full px-4 flex items-center justify-between text-white">
+        <a href="#home" className="flex items-center gap-2">
+          <img src={logo} alt="OnRota" className="h-7 w-auto" />
+        </a>
+
+        {/* desktop */}
+        <ul className="hidden md:flex items-center gap-6 text-sm">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={`#${n.id}`} className="text-white/80 hover:text-indigo-400">
+                {n.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* botão mobile – some quando o drawer abre */}
+        <button
+          className={`md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-white/15 transition ${open ? "invisible" : "visible"}`}
+          onClick={() => setOpen(true)}
+          aria-label="Abrir menu"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#fff" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
+          </svg>
+        </button>
+      </nav>
+
+      {/* Drawer mobile via PORTAL (fora do header, sobre o body) */}
+      <MobileDrawer open={open} onClose={() => setOpen(false)} nav={NAV} />
+    </header>
+  );
+}
+
+function MobileDrawer({ open, onClose, nav }) {
+  const panelRef = useRef(null);
+  if (!open) return null;
+
+  const drawer = (
+    <div className="fixed inset-0 z-[1000]">
+      {/* Backdrop sólido cobrindo tudo */}
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
+      {/* Painel */}
       <aside
-        style={{ zIndex: 9999 }}
-        className={`fixed top-0 right-0 h-full w-[86%] max-w-[360px] bg-black border-l border-white/10 pt-16 px-4 transform transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
+        ref={panelRef}
+        className="absolute left-0 top-0 h-full w-[88%] max-w-sm bg-black text-white shadow-2xl flex flex-col"
         role="dialog"
         aria-modal="true"
-        aria-label="Menu de navegação"
       >
-        <div className="flex items-center justify-between pb-4">
-          <img src={logo} alt="OnRota" className="h-7 w-auto" />
+        <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
+          <img src={logo} alt="OnRota" className="h-7" />
           <button
+            className="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-white/10 hover:bg-white/15"
             onClick={onClose}
-            className="h-10 w-10 grid place-items-center rounded-lg border border-white/15 bg-white/5"
             aria-label="Fechar menu"
           >
-            <span className="block h-0.5 w-5 bg-white rotate-45 translate-y-0"></span>
-            <span className="block h-0.5 w-5 bg-white -rotate-45 -mt-0.5"></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="#fff"
+                d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4l-6.3 6.3-1.4-1.4L9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z"
+              />
+            </svg>
           </button>
         </div>
 
-        <ul className="space-y-2">
-          {NAV.map((n) => (
+        <ul className="flex-1 overflow-y-auto px-4 py-4 space-y-1 text-base">
+          {nav.map((n) => (
             <li key={n.id}>
               <a
                 href={`#${n.id}`}
-                onClick={(e) => onGo(e, n.id)}
-                className="block rounded-lg px-3 py-3 text-white/95 hover:bg-white/10"
+                className="block py-3 px-2 rounded-lg hover:bg-white/05"
+                onClick={onClose}
               >
                 {n.label}
               </a>
@@ -62,109 +114,19 @@ function MobileMenuPortal({ open, onClose, onGo }) {
           ))}
         </ul>
 
-        <div className="mt-6 border-t border-white/10 pt-4">
+        <div className="p-4 border-t border-white/10">
           <a
             href="#contato"
-            onClick={(e) => onGo(e, "contato")}
-            className="block text-center rounded-xl px-4 py-3 bg-blue-600 hover:bg-blue-500"
+            className="block w-full text-center rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700"
+            onClick={onClose}
           >
             Fale com a OnRota
           </a>
+          <p className="mt-3 text-xs text-white/40">© 2025 OnRota</p>
         </div>
-
-        <p className="mt-6 text-[11px] text-white/40">© {new Date().getFullYear()} OnRota</p>
       </aside>
-    </>,
-    document.body
+    </div>
   );
-}
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  // Escurece o navbar assim que o usuário rola (>= 1px)
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0);
-    onScroll(); // estado correto ao carregar
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Bloqueia o scroll do body com menu aberto
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  const handleGo = (e, id) => {
-    e.preventDefault();
-    setOpen(false);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    history.replaceState(null, "", `#${id}`);
-  };
-
-  return (
-    <>
-      <header
-        className={[
-          "fixed inset-x-0 top-0 z-50 border-b transition-colors",
-          scrolled
-            ? "bg-black/80 backdrop-blur border-white/10"
-            : "bg-transparent border-transparent",
-        ].join(" ")}
-      >
-        <nav className="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between text-white">
-          <a href="#home" className="flex items-center min-w-0" aria-label="Ir para início">
-            <img src={logo} alt="OnRota" className="h-7 w-auto" />
-          </a>
-
-          {/* Desktop */}
-          <ul className="hidden md:flex items-center gap-6 text-sm">
-            {NAV.map((n) => (
-              <li key={n.id}>
-                <a href={`#${n.id}`} className="text-white/85 hover:text-blue-400">
-                  {n.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          {/* Botão mobile hamburger -> X (animado) */}
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="md:hidden relative h-10 w-10 grid place-items-center rounded-lg border border-white/15 bg-white/5"
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? "Fechar menu" : "Abrir menu"}
-          >
-            <span
-              className={[
-                "absolute block h-0.5 w-5 bg-white transition-transform duration-300",
-                open ? "rotate-45 translate-y-0" : "-translate-y-2",
-              ].join(" ")}
-            />
-            <span
-              className={[
-                "absolute block h-0.5 w-5 bg-white transition-opacity duration-300",
-                open ? "opacity-0" : "opacity-100",
-              ].join(" ")}
-            />
-            <span
-              className={[
-                "absolute block h-0.5 w-5 bg-white transition-transform duration-300",
-                open ? "-rotate-45 translate-y-0" : "translate-y-2",
-              ].join(" ")}
-            />
-          </button>
-        </nav>
-      </header>
-
-      {/* Menu mobile via Portal */}
-      <MobileMenuPortal open={open} onClose={() => setOpen(false)} onGo={handleGo} />
-    </>
-  );
+  return createPortal(drawer, document.body);
 }

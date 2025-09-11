@@ -5,91 +5,159 @@ import { IconArrowRight, IconCheck } from "../components/Icons";
 
 export default function Hero() {
   return (
-    <section id="home" className="relative pt-20 md:pt-24 overflow-hidden">
-      {/* BACKGROUND vindo do public/ */}
+    <section
+      id="home"
+      className="
+        relative overflow-hidden
+        pt-14 md:pt-20
+        bg-black md:bg-transparent
+      "
+    >
+      {/* DESKTOP/TABLET: imagem de fundo */}
       <div
-        className="absolute inset-0 -z-10"
-        style={{
-          backgroundImage: "url('/hero-bg.jpg')", // 👈 usa direto do public/
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center right",
-        }}
+        className="hidden md:block absolute inset-0 -z-30 bg-cover bg-center"
+        style={{ backgroundImage: "url('/hero-bg.jpg')" }}
         aria-hidden="true"
-      />
-      <div
-        className="absolute inset-0 -z-10"
-        aria-hidden="true"
-        style={{
-          background:
-            "radial-gradient(80% 60% at 20% 30%, rgba(0,0,0,.60) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 70%)," +
-            "linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.25) 40%, rgba(0,0,0,.55))",
-        }}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-10 grid lg:grid-cols-2 gap-8 items-center">
-        {/* Texto à esquerda */}
-        <div>
-          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
+      {/* MOBILE: base preta */}
+      <div className="absolute inset-0 -z-30 block md:hidden bg-black" aria-hidden="true" />
+
+      {/* MOBILE: acentos azuis (radiais) nas laterais para não ficar chapado */}
+      <div
+        className="absolute -z-20 md:hidden pointer-events-none right-[-20%] top-[-10%] w-[140%] h-[140%] opacity-80"
+        style={{
+          backgroundImage:
+            "radial-gradient(60% 55% at 85% 35%, rgba(37,99,235,0.22) 0%, rgba(37,99,235,0.15) 35%, rgba(0,0,0,0) 70%)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -z-20 md:hidden pointer-events-none left-[-35%] bottom-[-15%] w-[150%] h-[150%] opacity-70"
+        style={{
+          backgroundImage:
+            "radial-gradient(55% 50% at 10% 85%, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.10) 35%, rgba(0,0,0,0) 68%)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* DESKTOP: overlay suave atrás do texto */}
+      <div
+        className="
+          pointer-events-none
+          absolute left-0 top-0 bottom-0 w-[68%] max-w-[780px]
+          -z-10 hidden md:block
+          bg-gradient-to-r from-black/70 via-black/45 to-transparent
+        "
+        aria-hidden="true"
+      />
+
+      <div className="mx-auto max-w-7xl px-4 py-8 md:py-14 grid lg:grid-cols-2 gap-6 md:gap-10 items-center">
+        {/* COLUNA DE TEXTO */}
+        <div className="relative">
+          {/* Mobile: NÃO uso overlay sólido para não matar a aura do robô.
+              Se quiser reforçar, descomente o bloco abaixo e ajuste opacidade. */}
+          {/*
+          <div
+            className="absolute inset-0 -z-10 rounded-2xl md:hidden bg-gradient-to-r from-black/85 via-black/60 to-transparent"
+            aria-hidden="true"
+          />
+          */}
+          <h1 className="text-[28px] leading-[1.15] md:text-5xl md:leading-tight font-extrabold">
             Mais segurança, menos riscos: o futuro do transporte é{" "}
-            <span className="text-blue-400">ONROTA</span>.
+            <span className="text-blue-400">ONROTA.</span>
           </h1>
 
-          <p className="mt-4 text-white/80 text-base md:text-lg max-w-xl">
+          <p className="mt-3 md:mt-5 text-white/80 text-[15px] md:text-lg max-w-xl">
             Nós combinamos <strong>tecnologia antifraude</strong> e <strong>automação</strong> para
             eliminar erros manuais e aumentar a confiabilidade das suas rotas. Reduza custos e opere
-            com mais segurança no transporte rodoviário.
+            com mais segurança.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-5 md:mt-7 flex flex-wrap gap-3">
             <a
               href="#servicos"
-              className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-sm md:text-base"
+              className="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 md:px-5 md:py-3 bg-indigo-600 hover:bg-indigo-700 text-sm md:text-base"
             >
               Conhecer o OnCad <IconArrowRight />
             </a>
             <a
               href="#contato"
-              className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-white text-black hover:bg-white/90 text-sm md:text-base"
+              className="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 md:px-5 md:py-3 bg-white text-black hover:bg-white/90 text-sm md:text-base"
             >
               Fale com a OnRota
             </a>
           </div>
 
-          <div className="mt-6 grid gap-3 text-white/90 text-sm">
+          <div className="mt-6 md:mt-8 grid gap-3 text-white/90 text-sm">
             <div className="flex items-start gap-2">
               <IconCheck className="mt-0.5" />
-              <span>
-                <strong>Foco exclusivo</strong> no transporte rodoviário
-              </span>
+              <span>Foco exclusivo no transporte rodoviário</span>
             </div>
             <div className="flex items-start gap-2">
               <IconCheck className="mt-0.5" />
-              <span>
-                <strong>Sistema antifraude</strong> para validação de dados
-              </span>
+              <span>Sistema antifraude para validação</span>
             </div>
             <div className="flex items-start gap-2">
               <IconCheck className="mt-0.5" />
-              <span>
-                <strong>Automação logística</strong> que elimina erros manuais
-              </span>
+              <span>Automação logística que elimina erros</span>
             </div>
           </div>
         </div>
 
-        {/* Robô à direita */}
+        {/* COLUNA DO ROBÔ — maior + aura + sombra de chão */}
         <div className="relative flex justify-center lg:justify-end items-end">
+          {/* Aura azul ampla atrás do robô */}
+          <div
+            className="
+              absolute -z-10
+              top-2 md:top-4
+              left-1/2 -translate-x-1/2
+              w-[16rem] h-[16rem] sm:w-[18rem] sm:h-[18rem] md:w-[24rem] md:h-[24rem]
+              rounded-full bg-blue-500/25 blur-3xl
+            "
+            aria-hidden="true"
+          />
+          {/* Glow secundário mais suave para preencher (opcional) */}
+          <div
+            className="
+              absolute -z-10
+              top-10 md:top-12
+              left-1/2 -translate-x-1/2
+              w-[22rem] h-[22rem] md:w-[30rem] md:h-[30rem]
+              rounded-full bg-indigo-500/15 blur-[100px]
+            "
+            aria-hidden="true"
+          />
+
+          {/* Robô com leve drop-shadow */}
           <img
             src={robotImg}
-            alt="Robô futurista representando a tecnologia ONROTA"
+            alt="Robô OnRota"
             className="
-              w-40 sm:w-52 md:w-60
-              lg:w-[18rem] xl:w-[20rem] 2xl:w-[22rem]
+              relative z-10
+              w-36 sm:w-44 md:w-72
+              lg:w-[22rem] xl:w-[24rem]
+              drop-shadow-2xl
               animate-float
             "
           />
-          <div className="absolute bottom-0 right-10 left-10 h-40 blur-3xl bg-blue-500/25 rounded-full -z-10" />
+
+          {/* Sombra de chão (elipse) */}
+          <div
+            className="
+              absolute -z-10
+              bottom-1 md:bottom-2
+              left-1/2 -translate-x-1/2
+              w-[62%] md:w-[65%]
+              h-[10px] md:h-[14px]
+              rounded-full
+              bg-black/50
+              blur-[6px] md:blur-[10px]
+              opacity-85
+            "
+            aria-hidden="true"
+          />
         </div>
       </div>
     </section>

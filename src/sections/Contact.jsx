@@ -1,4 +1,3 @@
-// src/sections/Contact.jsx
 import React from "react";
 import { PRODUCT_NAME, WHATSAPP_NUMBER, CONTACT_EMAIL, WHATSAPP_LINK } from "../constants";
 import { IconWhatsapp, IconMail, IconPhone } from "../components/Icons";

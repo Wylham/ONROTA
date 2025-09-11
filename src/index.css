@@ -20,7 +20,6 @@ html {
     scroll-behavior: smooth;
 }
 
-/* scan bar (retângulo sólido deslizando) */
 @keyframes scan {
     0% {
         transform: translateY(-100%);
@@ -35,7 +34,6 @@ html {
     animation: scan 6s linear infinite;
 }
 
-/* ticker de dados */
 @keyframes ticker {
     0% {
         transform: translateX(0);
@@ -71,16 +69,25 @@ html {
     animation: scanline 3.6s linear infinite;
 }
 
-.bg-hero {
-    background-image: url("/technology-background-design-elements-blue-neon-l-2025-01-09-18-37-43-utc.jpg");
-    background-size: cover;
+.hero-bg {
+    background-image: url('/hero-bg.jpg');
     background-repeat: no-repeat;
-    background-position: center top;
-    background-attachment: fixed;
-    /* dá efeito de profundidade */
+    background-size: cover;
+    background-position: 10% 10%;
 }
 
-/* Levitação sutil do robô */
+@media (min-width: 768px) {
+    .hero-bg {
+        background-position: 50% 50%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-bg {
+        background-attachment: fixed;
+    }
+}
+
 @keyframes float {
 
     0%,
@@ -97,14 +104,12 @@ html {
     animation: float 5s ease-in-out infinite;
 }
 
-/* Respeita usuários que preferem menos movimento */
 @media (prefers-reduced-motion: reduce) {
     .animate-float {
         animation: none !important;
     }
 }
 
-/* Imagens nunca esticam errado */
 img,
 video,
 canvas,
@@ -113,7 +118,6 @@ svg {
     height: auto;
 }
 
-/* Evita quebra de palavras em telas estreitas */
 p,
 li,
 h1,
@@ -125,13 +129,20 @@ h6 {
     overflow-wrap: anywhere;
 }
 
-/* Suaviza rolagem para âncoras do navbar */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Evita bounce de elementos com translate no mobile */
 * {
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
+}
+
+.lock-scroll,
+.lock-scroll body {
+    overflow: hidden;
+}
+
+#home,
+#sobre,
+#servicos,
+#clientes,
+#contato {
+    scroll-margin-top: 4.5rem;
 }

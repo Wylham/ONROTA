@@ -1,8 +1,6 @@
 ﻿import React from "react";
 
 export default function Clients() {
-  // Se você colocar logos reais em /public/logos, liste os nomes aqui:
-  // ex.: ["acme.png", "pianetto.png"] — se não existir, cai no fallback visual.
   const logos = []; // deixe vazio por enquanto
 
   return (
@@ -25,7 +23,6 @@ export default function Clients() {
                 alt={name.replace(/\.[a-z]+$/i, "")}
                 className="max-h-full max-w-full object-contain"
                 onError={(e) => {
-                  // Se a imagem não existir, vira cartão fallback
                   e.currentTarget.outerHTML = `<div class="w-full h-full grid place-items-center rounded-xl bg-slate-50 text-slate-400 text-xs">Sua logo aqui</div>`;
                 }}
               />

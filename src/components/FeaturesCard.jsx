@@ -1,4 +1,3 @@
-// src/components/FeaturesCard.jsx
 import React from "react";
 import { IconScan, IconLink, IconShield, IconMessage } from "./Icons";
 

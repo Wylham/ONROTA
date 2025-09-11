@@ -1,5 +1,4 @@
 ﻿import React from "react";
-// se você usa logos do OnCad / prints, mantenha seus imports
 
 export default function Services() {
   return (
