@@ -69,11 +69,35 @@ html {
     animation: scanline 3.6s linear infinite;
 }
 
+/* Hero com múltiplos backgrounds (gradiente + imagem) */
+
+/* MOBILE (default): gradiente preto→azul por cima da imagem
+   - Gradiente = camada 1 (no topo)
+   - Imagem    = camada 2 (por baixo) */
 .hero-bg {
-    background-image: url('/hero-bg.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 10% 10%;
+    background-image:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 35%, rgba(0, 0, 0, 0.45) 70%, rgba(0, 0, 0, 0) 100%),
+        url('/hero-bg.jpg');
+    background-size: 100% 100%, cover;
+    background-position: 0 0, 7% 42%;
+
+}
+
+/* TABLET+ (≥768px): remove o gradiente e usa só a imagem como antes */
+@media (min-width: 768px) {
+    .hero-bg {
+        background-image: url('/hero-bg.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 50% 50%;
+    }
+}
+
+/* DESKTOP+ (≥1024px): mantém o parallax leve se quiser */
+@media (min-width: 1024px) {
+    .hero-bg {
+        background-attachment: fixed;
+    }
 }
 
 @media (min-width: 768px) {
@@ -145,4 +169,18 @@ h6 {
 #clientes,
 #contato {
     scroll-margin-top: 4.5rem;
+}
+
+/* Mobile: #home com IMAGEM + GRADIENTE (translúcido) */
+@media (max-width: 767px) {
+    #home {
+        background-image:
+            linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.82) 40%, rgba(2, 6, 23, 0.88) 100%),
+            url('/hero-bg.jpg');
+        background-repeat: no-repeat, no-repeat;
+        background-size: 100% 100%, cover;
+        /* gradiente cobre tudo; imagem cover */
+        background-position: 0% 0%, 50% 40%;
+        /* ajuste fino do enquadramento da imagem */
+    }
 }
