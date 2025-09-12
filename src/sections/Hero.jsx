@@ -98,10 +98,10 @@ export default function Hero() {
             <div className="absolute inset-0 -z-10 grid place-items-center" aria-hidden="true">
               <div
                 className="
-                  w-[100%] h-[100%] rounded-full blur-2xl
-                  bg-blue-500/15
-                  md:w-[135%] md:h-[135%] md:bg-blue-500/25
-                  lg:w-[150%] lg:h-[150%] lg:bg-blue-500/30
+                  w-[80%] h-[80%] rounded-full blur-2xl
+                  bg-blue-500/10
+                  md:w-[135%] md:h-[135%] md:bg-blue-500/15
+                  lg:w-[150%] lg:h-[150%] lg:bg-blue-500/10
                 "
               />
               <div

@@ -1,51 +1,70 @@
-﻿import React from "react";
-import logoLight from "../assets/logo-light.png";
+﻿// src/sections/Footer.jsx
+import React from "react";
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
-    <footer className="bg-black text-white w-full">
-      <div className="mx-auto max-w-7xl px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-2">
-          <div className="flex items-center gap-4">
-            <img
-              src={logoLight}
-              alt="ONROTA"
-              className="h-8 w-auto"
-              loading="eager"
-            />
-            <div>
-              <p className="font-semibold">OnRota Tecnologia</p>
-              <p className="text-sm text-white/60">
-                Soluções para logística e cadastro inteligente
-              </p>
-            </div>
+    <footer className="bg-black border-t border-white/10">
+      <div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
+        <div
+          className="
+            flex flex-col items-center text-center gap-4
+            md:grid md:grid-cols-3 md:items-center md:text-left md:gap-6
+          "
+        >
+          {/* ESQUERDA — copyright */}
+          <div className="text-white/70 text-sm">
+            © {new Date().getFullYear()} OnRota. Todos os direitos reservados.
           </div>
 
-          <nav className="flex flex-wrap items-center md:justify-end gap-x-8 gap-y-3 text-sm">
-            <a href="#sobre" className="text-white/80 hover:text-white">
-              Sobre
+          {/* CENTRO — Política e Termos */}
+          <div className="flex flex-wrap justify-center items-center gap-4 text-sm">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="text-white/80 hover:text-white"
+            >
+              Política de Privacidade
             </a>
-            <a href="#servicos" className="text-white/80 hover:text-white">
-              Serviços
+            <span className="hidden md:inline text-white/30">•</span>
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="text-white/80 hover:text-white"
+            >
+              Termos de Uso
             </a>
-            <a href="#clientes" className="text-white/80 hover:text-white">
-              Clientes
-            </a>
-            <a href="#contato" className="text-white/80 hover:text-white">
-              Contato
-            </a>
+          </div>
+
+          {/* DIREITA — Navegação */}
+          <nav className="flex justify-center md:justify-end">
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-white/85 text-sm">
+              <li>
+                <a href="#home" className="hover:text-white">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="#sobre" className="hover:text-white">
+                  Sobre
+                </a>
+              </li>
+              <li>
+                <a href="#servicos" className="hover:text-white">
+                  Serviços
+                </a>
+              </li>
+              <li>
+                <a href="#clientes" className="hover:text-white">
+                  Clientes
+                </a>
+              </li>
+              <li>
+                <a href="#contato" className="hover:text-white">
+                  Contato
+                </a>
+              </li>
+            </ul>
           </nav>
-        </div>
-
-        <div className="mt-12 border-t border-white/10 pt-6 text-xs text-white/60 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p>© {year} OnRota. Todos os direitos reservados.</p>
-          <div className="flex items-center gap-4">
-            <a className="hover:text-white">Política de Privacidade</a>
-            <span className="opacity-40">•</span>
-            <a className="hover:text-white">Termos de Uso</a>
-          </div>
         </div>
       </div>
     </footer>
