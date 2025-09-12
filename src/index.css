@@ -184,3 +184,15 @@ h6 {
         /* ajuste fino do enquadramento da imagem */
     }
 }
+
+/* Remove scrollbar em navegadores modernos */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE e Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
