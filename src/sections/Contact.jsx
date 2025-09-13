@@ -3,6 +3,10 @@ import React from "react";
 import logo from "../assets/logo-light.png";
 import { LOCALIZACAO_LINK, WHATSAPP_LINK } from "@/constants";
 
+// badges oficiais (adicione estes arquivos na pasta assets)
+import appStoreBadge from "../assets/appstore-badge.svg";
+import googlePlayBadge from "../assets/googleplay-badge.png";
+
 const Icon = {
   WhatsApp: (props) => (
     <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" {...props}>
@@ -29,12 +33,45 @@ export default function Contato() {
       <div className="mx-auto max-w-7xl px-4">
         {/* 3 colunas */}
         <div className="grid md:grid-cols-3 gap-10 md:gap-16 items-start">
-          {/* COLUNA 1 — Logo + descrição */}
+          {/* COLUNA 1 — Logo + descrição + badges */}
           <aside className="space-y-4 md:mt-6">
             <img src={logo} alt="OnRota" className="h-12 md:h-16 w-auto opacity-95" />
             <p className="text-white/70 text-sm max-w-md">
               Soluções antifraude e automação para transporte rodoviário.
             </p>
+
+            {/* Frase pequena + badges das lojas */}
+            <div className="pt-2">
+              <p className="text-white/80 text-xs md:text-sm mb-2">
+                Baixe nosso app em sua loja de aplicativos:
+              </p>
+              <div className="flex gap-3 flex-wrap">
+                <a
+                  href="https://apps.apple.com/br/app/seuapp"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Baixar na App Store"
+                >
+                  <img
+                    src={appStoreBadge}
+                    alt="Baixar na App Store"
+                    className="h-9 w-auto object-contain"
+                  />
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=seuapp"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Baixar no Google Play"
+                >
+                  <img
+                    src={googlePlayBadge}
+                    alt="Baixar no Google Play"
+                    className="h-9 w-auto object-contain"
+                  />
+                </a>
+              </div>
+            </div>
           </aside>
 
           {/* COLUNA 2 — Telefone/E-mail + WhatsApp */}
@@ -72,7 +109,7 @@ export default function Contato() {
             </div>
           </div>
 
-          {/* COLUNA 3 — Localização + redes sociais abaixo */}
+          {/* COLUNA 3 — Localização + redes sociais */}
           <div className="text-white/90 text-sm md:text-base md:mt-6">
             <div>
               <span className="text-white font-semibold">Localização:</span>{" "}
@@ -87,7 +124,7 @@ export default function Contato() {
               </a>
             </div>
 
-            {/* Redes sociais */}
+            {/* Redes sociais (sem badges aqui) */}
             <div className="mt-5 flex items-center gap-3 flex-wrap">
               <Icon.SocialBtn label="LinkedIn" href="https://www.linkedin.com/">
                 <svg
