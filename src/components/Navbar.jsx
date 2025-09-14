@@ -5,7 +5,7 @@ import logo from "../assets/logo-light.png";
 const NAV = [
   { id: "home", label: "Home" },
   { id: "sobre", label: "Sobre nós" },
-  { id: "servicos", label: "Serviços" },
+  { id: "servicos", label: "Produtos" },
   { id: "clientes", label: "Nossos clientes" },
   { id: "contato", label: "Contato" },
 ];

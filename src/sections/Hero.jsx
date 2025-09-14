@@ -75,7 +75,7 @@ export default function Hero() {
               {/* CTAs */}
               <div className="flex flex-row gap-3">
                 <a
-                  href="#servicos"
+                  href="#sobre"
                   className="inline-flex items-center justify-center rounded-lg px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-[13px] font-medium"
                 >
                   Conhecer mais

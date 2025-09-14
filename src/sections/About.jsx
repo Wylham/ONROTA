@@ -45,13 +45,13 @@ export default function About() {
                 href="#contato"
                 className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
               >
-                Falar com a ONROTA
+                Falar com a OnRota
               </a>
               <a
                 href="#clientes"
                 className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-4 py-2 text-white text-sm font-medium hover:bg-white/15 transition-colors"
               >
-                Ver casos e clientes
+                Nossos clientes
               </a>
             </div>
           </div>
@@ -215,8 +215,8 @@ export default function About() {
               Na <strong>ONROTA</strong>, entendemos que o{" "}
               <strong>transporte rodoviário de cargas</strong> é um dos pilares da economia
               brasileira e que sua complexidade exige soluções que unam <strong>tecnologia</strong>,{" "}
-              <strong>segurança</strong>e <strong>inteligência</strong>. Nascemos com o propósito de
-              combater fraudes que impactam diretamente a eficiência e a confiabilidade do setor,
+              <strong>segurança</strong> e <strong>inteligência</strong>. Nascemos com o propósito
+              de combater fraudes que impactam diretamente a eficiência e a confiabilidade do setor,
               oferecendo ferramentas que vão além da simples validação de dados: entregamos
               <strong> proteção antifraude</strong>, <strong>automação logística</strong> e{" "}
               <strong>clareza operacional</strong> em cada processo.
