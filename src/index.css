@@ -196,3 +196,13 @@ h6 {
     scrollbar-width: none;
     /* Firefox */
 }
+
+/* esconde scrollbar do carrossel horizontal no mobile */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
