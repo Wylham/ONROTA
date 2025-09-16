@@ -1,0 +1,17 @@
+# Ativar reescrita
+RewriteEngine On
+RewriteBase /
+
+# Forçar HTTPS (se preferir fazer pelo arquivo; no hPanel você também pode ativar Force HTTPS)
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Canonical: WWW -> sem WWW (opcional; use se quiser sem www)
+RewriteCond %{HTTP_HOST} ^www\.onrota\.tech$ [NC]
+RewriteRule ^(.*)$ https://onrota.tech/$1 [L,R=301]
+
+# SPA fallback: entrega arquivos reais; demais rotas caem no index.html
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]

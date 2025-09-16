@@ -4,7 +4,7 @@ import { IconOCR, IconCadastro, IconAPI, IconValidacao } from "@/components/icon
 
 export default function Services() {
   const ASSETS = {
-    mockup: "/mockups/phone-oncad2.png",
+    mockup: "/mockups/phone-oncad2.webp",
   };
 
   const features = [
@@ -78,7 +78,7 @@ export default function Services() {
               />
             ) : (
               <div className="w-full aspect-[16/9] flex items-center justify-center text-xs text-white/60 border border-dashed border-white/20 rounded-xl">
-                Adicione /mockups/phone-oncad2.png
+                Adicione /mockups/phone-oncad2.webp
               </div>
             )}
           </div>
