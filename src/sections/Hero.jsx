@@ -1,6 +1,5 @@
 ﻿// src/sections/Hero.jsx
 import React from "react";
-import robotImg from "../assets/robot.png";
 import { IconCheck } from "../components/Icons";
 
 export default function Hero() {
@@ -9,7 +8,7 @@ export default function Hero() {
       {/* DESKTOP: imagem de fundo */}
       <div
         className="hidden md:block absolute inset-0 -z-30 bg-cover bg-center"
-        style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+        style={{ backgroundImage: "url('/hero-bg.webp')" }}
         aria-hidden="true"
       />
 
@@ -115,7 +114,7 @@ export default function Hero() {
             </div>
 
             <img
-              src={robotImg}
+              src="/assets/robot.webp"
               alt="Robô OnRota"
               className="relative z-10 w-36 sm:w-44 md:w-72 lg:w-[22rem] xl:w-[24rem] drop-shadow-2xl animate-float"
             />

@@ -21,7 +21,7 @@ export default function App() {
       <div
         className="
           relative
-          bg-[url('/hero-bg.jpg')] bg-no-repeat bg-cover
+          bg-[url('/hero-bg.webp')] bg-no-repeat bg-cover
           bg-[position:85%_0] md:bg-[position:100%_0]
           md:bg-fixed
         "
