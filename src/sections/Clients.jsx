@@ -1,15 +1,13 @@
 ﻿// src/sections/Clients.jsx
 import React, { useEffect, useRef, useState } from "react";
 
-// Tamanhos por logo (px) — Boa Viagem maior
 const CLIENTS = [
   { key: "pianetto", alt: "Cliente Pianetto", w: 220, h: 110, wMobile: 220, hMobile: 110 },
-  { key: "boa-viagem", alt: "Cliente Boa Viagem", w: 400, h: 200, wMobile: 400, hMobile: 200 }, // ↑ maior
+  { key: "boa-viagem", alt: "Cliente Boa Viagem", w: 400, h: 200, wMobile: 400, hMobile: 200 },
   { key: "anderle", alt: "Cliente Anderle", w: 220, h: 110, wMobile: 220, hMobile: 110 },
   { key: "shrlog", alt: "Cliente SHR LOG", w: 220, h: 110, wMobile: 220, hMobile: 110 },
 ];
 
-// Logo: WebP (1x/2x) + fallback PNG. Força width/height e remove max-width.
 function Logo({ name, alt, w, h, eager = false }) {
   const src1xWebp = `/logos/@1x/${name}@1x.webp`;
   const src2xWebp = `/logos/@2x/${name}@2x.webp`;
@@ -77,8 +75,12 @@ export default function Clients() {
   }, [index]);
 
   return (
-    <section id="clientes" className="bg-white text-black scroll-mt-24 md:scroll-mt-28">
-      <div className="mx-auto max-w-7xl px-4 py-16">
+    <section
+      id="clientes"
+      className="relative bg-gray-100 text-black scroll-mt-24 md:scroll-mt-28 overflow-hidden"
+    >
+      <div className="mx-auto max-w-7xl px-4 py-16 flex flex-col items-center">
+        {/* Cabeçalho centralizado */}
         <div className="text-center">
           <h2 className="text-2xl font-bold">Nossos clientes</h2>
           <p className="mt-2 max-w-2xl mx-auto text-slate-600">
@@ -86,8 +88,8 @@ export default function Clients() {
           </p>
         </div>
 
-        {/* MOBILE: carrossel SEM card */}
-        <div className="mt-10 md:hidden relative">
+        {/* MOBILE: carrossel sem card */}
+        <div className="mt-10 md:hidden relative w-full max-w-md mx-auto">
           <div
             ref={scrollRef}
             onScroll={handleScroll}
@@ -118,7 +120,7 @@ export default function Clients() {
             type="button"
             onClick={goPrev}
             aria-label="Anterior"
-            className="absolute left-2 top-[calc(50%+0px)] -translate-y-1/2 rounded-full border border-slate-300 bg-white/95 shadow-sm hover:bg-slate-50 w-10 h-10 grid place-items-center"
+            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-slate-300 bg-white/95 shadow-sm hover:bg-slate-50 w-10 h-10 grid place-items-center"
           >
             <svg
               viewBox="0 0 24 24"
@@ -134,7 +136,7 @@ export default function Clients() {
             type="button"
             onClick={goNext}
             aria-label="Próximo"
-            className="absolute right-2 top-[calc(50%+0px)] -translate-y-1/2 rounded-full border border-slate-300 bg-white/95 shadow-sm hover:bg-slate-50 w-10 h-10 grid place-items-center"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-slate-300 bg-white/95 shadow-sm hover:bg-slate-50 w-10 h-10 grid place-items-center"
           >
             <svg
               viewBox="0 0 24 24"
@@ -157,29 +159,24 @@ export default function Clients() {
                   setIndex(i);
                   scrollToIndex(i);
                 }}
-                className={`h-2.5 rounded-full transition-all ${index === i ? "w-6 bg-slate-800" : "w-2.5 bg-slate-300"}`}
+                className={`h-2.5 rounded-full transition-all ${
+                  index === i ? "w-6 bg-slate-800" : "w-2.5 bg-slate-300"
+                }`}
               />
             ))}
           </div>
         </div>
 
-        {/* DESKTOP/TABLET: grid COM card (apenas BV com card maior) */}
-        <div className="mt-12 hidden md:grid grid-cols-2 lg:grid-cols-4 gap-10 place-items-center">
-          {CLIENTS.map((c) => {
-            const isBV = c.key === "boa-viagem";
-            // Card da BV com largura real suficiente para 400px + padding
-            const cardClasses = isBV
-              ? "max-w-[520px] h-60 p-4" // 520 - 32 = 488px internos > 400px
-              : "max-w-[360px] h-40 lg:h-52 p-6";
-            return (
-              <div
-                key={c.key}
-                className={`w-full flex items-center justify-center rounded-2xl bg-white shadow-sm border border-slate-200 ${cardClasses}`}
-              >
-                <Logo name={c.key} alt={c.alt} w={c.w} h={c.h} />
-              </div>
-            );
-          })}
+        {/* DESKTOP/TABLET: grid centralizado */}
+        <div className="mt-12 hidden md:grid grid-cols-2 lg:grid-cols-4 gap-10 place-items-center justify-center">
+          {CLIENTS.map((c) => (
+            <div
+              key={c.key}
+              className="w-full flex items-center justify-center rounded-2xl bg-white shadow-sm md:border md:border-slate-200 max-w-[360px] h-40 lg:h-52 p-6"
+            >
+              <Logo name={c.key} alt={c.alt} w={c.w} h={c.h} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-﻿// App.jsx
+﻿// src/App.jsx
 import React from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -6,10 +6,14 @@ import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Services from "./sections/Services";
 import Clients from "./sections/Clients";
-import Proof from "./sections/Proof";
+import Numbers from "./sections/Numbers";
+import ProductDemo from "./sections/ProductDemo";
+import Impact from "./sections/Impact";
 import Contact from "./sections/Contact";
 import { WHATSAPP_LINK } from "./constants";
 import { IconWhatsapp } from "./components/Icons";
+import { DEMO_VIDEO } from "./constants/metrics";
+import Testimonials from "./sections/Testimonials";
 
 export default function App() {
   const whatsMsg =
@@ -17,24 +21,21 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
-      {/* BG só no topo (Navbar + Hero) */}
-      <div
-        className="
-          relative
-          bg-[url('/hero-bg.webp')] bg-no-repeat bg-cover
-          bg-[position:85%_0] md:bg-[position:100%_0]
-          md:bg-fixed
-        "
-      >
-        {/* Overlay pra legibilidade */}
+      {/* Topo (Navbar + Hero) com background */}
+      <div className="relative bg-[url('/hero-bg.jpg')] bg-no-repeat bg-cover bg-[position:85%_0] md:bg-[position:100%_0] md:bg-fixed">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-transparent" />
         <Navbar />
         <Hero />
       </div>
+
+      {/* Conteúdo principal do site */}
       <About />
       <Services />
       <Clients />
-      <Proof />
+      <Numbers />
+      <ProductDemo {...DEMO_VIDEO} />
+      <Impact />
+      <Testimonials />
       <Contact />
       <Footer />
 

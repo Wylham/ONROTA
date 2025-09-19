@@ -13,16 +13,18 @@
   Eye,
   Gem,
   Cpu,
-  FileText, // para OCR/PDF
-  UserCheck, // para Cadastro
-  Plug, // para Integração/API
-  Shield, // para Validações/Segurança
+  FileText,
+  UserCheck,
+  Plug,
+  Shield,
+  Rocket, // 🚀 simplificação
+  BrainCircuit, // 🧠 IA
+  MessagesSquare, // 💬 comunicação
 } from "lucide-react";
 
 export const IconMail = (props) => <Mail {...props} />;
 export const IconPhone = (props) => <Phone {...props} />;
 export const IconUser = (props) => <User {...props} />;
-export const IconMessage = (props) => <MessageSquare {...props} />;
 
 export const IconShield = (props) => <ShieldCheck {...props} />; // segurança geral
 export const IconLink = (props) => <Cpu {...props} />; // inovação/tecnologia
@@ -43,3 +45,8 @@ export const IconOCR = (props) => <FileText {...props} />; // OCR em PDFs
 export const IconCadastro = (props) => <UserCheck {...props} />; // Cadastro automático
 export const IconAPI = (props) => <Plug {...props} />; // Integração API
 export const IconValidacao = (props) => <Shield {...props} />; // Validações e regras
+
+// novos para Impact.jsx
+export const IconRocket = (props) => <Rocket {...props} />; // simplifique o dia a dia
+export const IconAI = (props) => <BrainCircuit {...props} />; // melhorias na análise/IA
+export const IconMessage = (props) => <MessagesSquare {...props} />; // esteja onde seu cliente está
