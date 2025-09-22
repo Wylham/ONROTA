@@ -2,6 +2,18 @@
 import React from "react";
 
 export default function Footer() {
+  const scrollToId = (id) => {
+    const HEADER_OFFSET = 64; // altura do navbar fixo
+    const el = document.getElementById(id);
+    if (!el) {
+      window.location.hash = id;
+      return;
+    }
+    const y = el.getBoundingClientRect().top + window.pageYOffset - HEADER_OFFSET - 8;
+    window.history.pushState(null, "", `#${id}`);
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
   return (
     <footer className="bg-black border-t border-white/10">
       <div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
@@ -39,28 +51,63 @@ export default function Footer() {
           <nav className="flex justify-center md:justify-end">
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-white/85 text-sm">
               <li>
-                <a href="#home" className="hover:text-white">
+                <a
+                  href="#home"
+                  className="hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToId("home");
+                  }}
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#sobre" className="hover:text-white">
+                <a
+                  href="#sobre"
+                  className="hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToId("sobre");
+                  }}
+                >
                   Sobre
                 </a>
               </li>
               <li>
-                <a href="#servicos" className="hover:text-white">
+                <a
+                  href="#servicos"
+                  className="hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToId("servicos");
+                  }}
+                >
                   Serviços
                 </a>
               </li>
               <li>
-                <a href="#clientes" className="hover:text-white">
+                <a
+                  href="#clientes"
+                  className="hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToId("clientes");
+                  }}
+                >
                   Clientes
                 </a>
               </li>
               <li>
-                <a href="#contato" className="hover:text-white">
-                  Contato
+                <a
+                  href="#planos"
+                  className="hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToId("planos");
+                  }}
+                >
+                  Planos
                 </a>
               </li>
             </ul>

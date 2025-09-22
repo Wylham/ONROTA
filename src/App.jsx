@@ -9,6 +9,7 @@ import Clients from "./sections/Clients";
 import Numbers from "./sections/Numbers";
 import ProductDemo from "./sections/ProductDemo";
 import Impact from "./sections/Impact";
+import Plans from "./sections/Plans"; // << importar
 import Contact from "./sections/Contact";
 import { WHATSAPP_LINK } from "./constants";
 import { IconWhatsapp } from "./components/Icons";
@@ -21,22 +22,57 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
-      {/* Topo (Navbar + Hero) com background */}
-      <div className="relative bg-[url('/hero-bg.jpg')] bg-no-repeat bg-cover bg-[position:85%_0] md:bg-[position:100%_0] md:bg-fixed">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-transparent" />
-        <Navbar />
+      {/* Navbar fixo */}
+      <Navbar />
+
+      {/* Topo (Hero) com gradiente */}
+      <div
+        id="home"
+        className="relative isolate"
+        style={{
+          backgroundImage: "linear-gradient(135deg, #0A1530 0%, #050A16 55%, #000000 100%)",
+          backgroundColor: "#0A1530",
+        }}
+      >
         <Hero />
       </div>
 
-      {/* Conteúdo principal do site */}
-      <About />
-      <Services />
-      <Clients />
-      <Numbers />
-      <ProductDemo {...DEMO_VIDEO} />
-      <Impact />
-      <Testimonials />
-      <Contact />
+      {/* Conteúdo principal */}
+      <div id="sobre" className="scroll-mt-24">
+        <About />
+      </div>
+
+      <div id="servicos" className="scroll-mt-24">
+        <Services />
+      </div>
+
+      <div id="clientes" className="scroll-mt-24">
+        <Clients />
+      </div>
+
+      <div id="numbers" className="scroll-mt-24">
+        <Numbers />
+      </div>
+
+      <div id="productdemo" className="scroll-mt-24">
+        <ProductDemo {...DEMO_VIDEO} />
+      </div>
+
+      <div id="impact" className="scroll-mt-24">
+        <Impact />
+      </div>
+
+      {/* NOVO: Planos */}
+      <Plans />
+
+      <div id="testimonials" className="scroll-mt-24">
+        <Testimonials />
+      </div>
+
+      <div id="contato" className="scroll-mt-24">
+        <Contact />
+      </div>
+
       <Footer />
 
       {/* Botão flutuante do WhatsApp */}
@@ -45,7 +81,7 @@ export default function App() {
         target="_blank"
         rel="noreferrer noopener"
         aria-label="Falar com um especialista no WhatsApp"
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[9998]"
       >
         <div className="rounded-full p-4 shadow-xl bg-green-500 hover:scale-105 transition-transform">
           <IconWhatsapp className="w-6 h-6 text-white" />

@@ -56,8 +56,8 @@ export default function Impact({
         </div>
 
         {/* Logos de integrações */}
-        <div className="mt-12 md:mt-14">
-          <p className="text-center text-slate-500">
+        <div className="mt-10 md:mt-12">
+          <p className="text-center text-sm md:text-base text-slate-500">
             Realizamos integrações com os principais sistemas do mercado.
           </p>
           <ul className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-x-14 gap-y-10 opacity-90">

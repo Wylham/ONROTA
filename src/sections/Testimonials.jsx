@@ -41,6 +41,11 @@ const TESTIMONIALS = [
   },
 ];
 
+// Correção de escala para arquivos com muito "respiro" interno (somente BV)
+const LOGO_SCALE_BY_NAME = {
+  "Boa Viagem": "scale-[2.20] md:scale-[1.85]", // ajuste refinado
+};
+
 export default function Testimonials({
   heading = "Quem experimentou, se encantou!",
   items = TESTIMONIALS,
@@ -138,48 +143,54 @@ export default function Testimonials({
                 gap-4 lg:gap-6
               "
             >
-              {items.map((t, i) => (
-                <article
-                  key={i}
-                  data-slide-index={i}
-                  ref={(el) => (slidesRef.current[i] = el)}
-                  className="
-                    snap-center snap-always
-                    rounded-3xl border border-slate-200 bg-white
-                    p-6 md:p-8 shadow-sm flex flex-col h-full
-                  "
-                >
-                  <Quote className="w-10 h-10 text-indigo-400" />
-                  <p className="mt-5 text-slate-700 leading-relaxed">“{t.quote}”</p>
+              {items.map((t, i) => {
+                const scaleClass = LOGO_SCALE_BY_NAME[t.name] ?? "";
+                return (
+                  <article
+                    key={i}
+                    data-slide-index={i}
+                    ref={(el) => (slidesRef.current[i] = el)}
+                    className="
+                      snap-center snap-always
+                      rounded-3xl border border-slate-200 bg-white
+                      p-6 md:p-8 shadow-sm flex flex-col h-full
+                    "
+                  >
+                    <Quote className="w-10 h-10 text-indigo-400" />
+                    <p className="mt-5 text-slate-700 leading-relaxed">“{t.quote}”</p>
 
-                  <div className="mt-6 md:mt-8">
-                    <div className="font-semibold text-slate-900">{t.company}</div>
-                    <div className="text-slate-500 text-sm">{t.role}</div>
+                    <div className="mt-6 md:mt-8">
+                      <div className="font-semibold text-slate-900">{t.company}</div>
+                      <div className="text-slate-500 text-sm">{t.role}</div>
 
-                    <div className="mt-5 flex items-center justify-between">
-                      <img
-                        src={t.logo}
-                        alt={t.name}
-                        className={`object-contain ${
-                          t.name === "Boa Viagem" ? "h-18 md:h-20" : "h-10 md:h-12"
-                        }`}
-                      />
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, s) => (
-                          <Star
-                            key={s}
-                            className={`w-4 h-4 ${
-                              s < (t.rating || 5)
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-slate-300"
-                            }`}
+                      {/* Logo + estrelas – caixa fixa igual para todos */}
+                      <div className="mt-5 flex items-center justify-between gap-3">
+                        {/* Caixa de logo com altura padrão */}
+                        <div className="h-10 md:h-12 max-w-[46%] flex items-center">
+                          <img
+                            src={t.logo}
+                            alt={t.name}
+                            className={`h-full w-auto object-contain shrink-0 origin-left ${scaleClass}`}
                           />
-                        ))}
+                        </div>
+
+                        <div className="flex items-center gap-1 shrink-0">
+                          {Array.from({ length: 5 }).map((_, s) => (
+                            <Star
+                              key={s}
+                              className={`w-4 h-4 ${
+                                s < (t.rating || 5)
+                                  ? "fill-yellow-400 text-yellow-400"
+                                  : "text-slate-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
 
