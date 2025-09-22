@@ -1,8 +1,8 @@
 // src/sections/Plans.jsx
 import React, { useEffect, useRef } from "react";
+import { CalendarCheck2, Wrench } from "lucide-react";
 
 const PLANS = [
-  // Starter vem primeiro (mais barato)
   {
     id: "starter",
     title: "Starter",
@@ -65,7 +65,6 @@ const PLANS = [
       "SLA dedicado (12h)",
     ],
   },
-  // Enterprise — tudo “Sob consulta”
   {
     id: "enterprise",
     title: "Enterprise",
@@ -101,11 +100,11 @@ function PlanCard({
         relative h-full w-full max-w-[420px]
         rounded-2xl border border-white/10 bg-white/5
         shadow-lg overflow-hidden transition
-        hover:ring-1 hover:ring-indigo-500/35
+        hover:ring-1 hover:ring-[#1da7e5]/50
       "
     >
       {popular && (
-        <div className="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] md:text-xs font-medium bg-indigo-600 text-white">
+        <div className="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] md:text-xs font-medium bg-[#1da7e5] text-white">
           {badge || "Popular"}
         </div>
       )}
@@ -151,7 +150,7 @@ function PlanCard({
           <ul className="mt-3 space-y-2 text-[13px] md:text-sm text-white/90">
             {features.map((f, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-400" />
+                <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
                 <span>{f}</span>
               </li>
             ))}
@@ -165,7 +164,6 @@ function PlanCard({
 export default function Plans() {
   const trackRef = useRef(null);
 
-  // garante que o carrossel começa no primeiro card (Starter visível)
   useEffect(() => {
     const el = trackRef.current;
     if (el) el.scrollLeft = 0;
@@ -186,22 +184,22 @@ export default function Plans() {
         <header className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-extrabold">Planos OnCad</h2>
           <p className="mt-3 text-white/80 text-sm md:text-base">
-            Acelere seus cadastros com antifraude, automação e integrações — menos retrabalho, mais
-            confiança.
+            Escolha o plano ideal para impulsionar seus cadastros e reduzir fraudes dos seus
+            clientes!
           </p>
 
           {/* Selos */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#60a5fa" d="M12 2l7 4v6c0 5-7 10-7 10S5 17 5 12V6l7-4z" />
+                <path fill="#1da7e5" d="M12 2l7 4v6c0 5-7 10-7 10S5 17 5 12V6l7-4z" />
               </svg>
               Garantia de Satisfação de 30 dias
             </span>
           </div>
         </header>
 
-        {/* Carrossel com fades (Starter aparece primeiro) */}
+        {/* Carrossel com fades */}
         <div className="relative mt-8 px-3 sm:px-6">
           {/* FADE ESQUERDA */}
           <div
@@ -214,12 +212,12 @@ export default function Plans() {
             className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-[#0b0e19] to-transparent z-[5]"
           />
 
-          {/* SETAS (mantidas) */}
+          {/* SETAS (agora #1da7e5) */}
           <button
             type="button"
             aria-label="Anterior"
             onClick={() => scrollByCards("prev")}
-            className="grid place-items-center absolute left-0 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-indigo-600 hover:bg-indigo-700 shadow-lg z-10"
+            className="grid place-items-center absolute left-0 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#1da7e5] hover:bg-[#1593c8] shadow-lg z-10"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#fff" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
@@ -230,14 +228,14 @@ export default function Plans() {
             type="button"
             aria-label="Próximo"
             onClick={() => scrollByCards("next")}
-            className="grid place-items-center absolute right-0 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-indigo-600 hover:bg-indigo-700 shadow-lg z-10"
+            className="grid place-items-center absolute right-0 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#1da7e5] hover:bg-[#1593c8] shadow-lg z-10"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#fff" d="M8.59 7.41 10 6l6 6-6 6-1.41-1.41L13.17 12z" />
             </svg>
           </button>
 
-          {/* TRILHO — alinhar ao início para o primeiro card ficar visível */}
+          {/* TRILHO */}
           <div
             ref={trackRef}
             className="
@@ -265,11 +263,9 @@ export default function Plans() {
         {/* Chamadas estratégicas (sem o card de desconto) */}
         <div className="mt-10">
           <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Teste gratuito */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 md:px-5 md:py-5 flex items-start gap-3 hover:ring-1 hover:ring-indigo-500/35 transition">
-              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#8ab4ff" d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
-              </svg>
+            {/* Teste gratuito (ícone atualizado) */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 md:px-5 md:py-5 flex items-start gap-3 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
+              <CalendarCheck2 size={20} strokeWidth={2} color="#1da7e5" />
               <div className="text-sm md:text-base">
                 <strong className="font-semibold">Teste gratuito por 30 dias</strong>
                 <div className="text-white/80 text-xs md:text-sm">
@@ -278,14 +274,9 @@ export default function Plans() {
               </div>
             </div>
 
-            {/* Consultoria gratuita */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 md:px-5 md:py-5 flex items-start gap-3 hover:ring-1 hover:ring-indigo-500/35 transition">
-              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  fill="#34d399"
-                  d="M12 2a7 7 0 0 0-7 7v6a3 3 0 0 0 3 3h2v-6H7V9a5 5 0 0 1 10 0v3h-3v6h2a3 3 0 0 0 3-3V9a7 7 0 0 0-7-7z"
-                />
-              </svg>
+            {/* Consultoria gratuita de implementação (ícone atualizado) */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 md:px-5 md:py-5 flex items-start gap-3 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
+              <Wrench size={20} strokeWidth={2} color="#1da7e5" />
               <div className="text-sm md:text-base">
                 <strong className="font-semibold">Consultoria gratuita de implementação</strong>
                 <div className="text-white/80 text-xs md:text-sm">
