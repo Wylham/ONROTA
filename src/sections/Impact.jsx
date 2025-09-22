@@ -1,6 +1,6 @@
 // src/sections/Impact.jsx
 import React from "react";
-import { IconValidacao, IconOCR, IconAPI } from "@/components/Icons";
+import { IconValidacao, IconOCR, IconAPI } from "@/components/icons.jsx";
 
 const CARDS = [
   {
