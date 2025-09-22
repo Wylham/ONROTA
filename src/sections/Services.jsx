@@ -1,6 +1,6 @@
 ﻿// src/sections/Services.jsx
 import React from "react";
-import { IconOCR, IconCadastro, IconAPI, IconValidacao } from "@/components/icons";
+import { IconOCR, IconCadastro, IconAPI, IconValidacao } from "@/components/icons.jsx";
 
 export default function Services() {
   const ASSETS = {
