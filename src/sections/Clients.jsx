@@ -38,7 +38,7 @@ export default function Clients() {
   const [index, setIndex] = useState(0);
   const scrollRef = useRef(null);
   const scrollDebounce = useRef(null);
-  const max = CLIENTS.length;
+  const max = CLIENTS.length + 1; // inclui o slide do "+38" no mobile
 
   const scrollToIndex = (i) => {
     const el = scrollRef.current;
@@ -79,16 +79,16 @@ export default function Clients() {
       id="clientes"
       className="relative bg-gray-100 text-black scroll-mt-24 md:scroll-mt-28 overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl px-4 py-16 flex flex-col items-center">
+      <div className="mx-auto max-w-7xl px-4 py-16 flex flex-col items-center text-center">
         {/* Cabeçalho centralizado */}
-        <div className="text-center">
+        <div>
           <h2 className="text-2xl font-bold">Nossos clientes</h2>
           <p className="mt-2 max-w-2xl mx-auto text-slate-600">
             Algumas marcas que confiam em nossa equipe e tecnologia.
           </p>
         </div>
 
-        {/* MOBILE: carrossel sem card */}
+        {/* MOBILE: carrossel */}
         <div className="mt-10 md:hidden relative w-full max-w-md mx-auto">
           <div
             ref={scrollRef}
@@ -112,6 +112,14 @@ export default function Clients() {
                   />
                 </div>
               ))}
+
+              {/* Adendo +38 no mobile */}
+              <div
+                className="min-w-full snap-center flex items-center justify-center"
+                style={{ height: 260 }}
+              >
+                <span className="text-3xl font-semibold text-slate-600 select-none">+38</span>
+              </div>
             </div>
           </div>
 
@@ -151,7 +159,7 @@ export default function Clients() {
 
           {/* indicadores */}
           <div className="mt-4 flex justify-center gap-2">
-            {CLIENTS.map((_, i) => (
+            {[...CLIENTS, { key: "+38" }].map((_, i) => (
               <button
                 key={i}
                 aria-label={`Ir para slide ${i + 1}`}
@@ -167,16 +175,22 @@ export default function Clients() {
           </div>
         </div>
 
-        {/* DESKTOP/TABLET: grid centralizado */}
-        <div className="mt-12 hidden md:grid grid-cols-2 lg:grid-cols-4 gap-10 place-items-center justify-center">
+        {/* DESKTOP/TABLET */}
+        <div className="mt-12 hidden md:flex items-center justify-center gap-10 flex-nowrap">
           {CLIENTS.map((c) => (
             <div
               key={c.key}
-              className="w-full flex items-center justify-center rounded-2xl bg-white shadow-sm md:border md:border-slate-200 max-w-[360px] h-40 lg:h-52 p-6"
+              className={`flex items-center justify-center rounded-2xl bg-white shadow-sm md:border md:border-slate-200 h-40 lg:h-52 p-6 
+                ${c.key === "boa-viagem" ? "max-w-[260px]" : "max-w-[360px]"} w-full`}
             >
               <Logo name={c.key} alt={c.alt} w={c.w} h={c.h} />
             </div>
           ))}
+
+          {/* Adendo +38 (flutuante, sem card) */}
+          <span className="ml-4 text-2xl lg:text-3xl font-semibold text-slate-600 select-none whitespace-nowrap align-middle">
+            +38
+          </span>
         </div>
       </div>
     </section>

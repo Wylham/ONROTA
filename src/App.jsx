@@ -9,7 +9,7 @@ import Clients from "./sections/Clients";
 import Numbers from "./sections/Numbers";
 import ProductDemo from "./sections/ProductDemo";
 import Impact from "./sections/Impact";
-import Plans from "./sections/Plans"; // << importar
+import Plans from "./sections/Plans";
 import Contact from "./sections/Contact";
 import { WHATSAPP_LINK } from "./constants";
 import { IconWhatsapp } from "./components/Icons";
@@ -18,7 +18,7 @@ import Testimonials from "./sections/Testimonials";
 
 export default function App() {
   const whatsMsg =
-    "Acabei de ver o site da OnRota e quero saber mais sobre o ONCAD — como vocês mantêm minha operação mais segura, eficiente e livre de fraude. Podemos falar?";
+    "Acabei de visitar o site da ONROTA e quero saber mais sobre o produto ONCAD, e como ele pode manter minha operação mais segura, eficiente e livre de fraudes.";
 
   return (
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
@@ -77,7 +77,7 @@ export default function App() {
 
       {/* Botão flutuante do WhatsApp */}
       <a
-        href={`${WHATSAPP_LINK}?text=${encodeURIComponent(whatsMsg)}`}
+        href={WHATSAPP_LINK}
         target="_blank"
         rel="noreferrer noopener"
         aria-label="Falar com um especialista no WhatsApp"

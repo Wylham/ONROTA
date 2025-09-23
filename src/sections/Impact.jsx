@@ -62,13 +62,29 @@ export default function Impact({
           </p>
           <ul className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-x-14 gap-y-10 opacity-90">
             <li className="flex items-center justify-center h-28 md:h-32">
-              <img src="/integrations/atua.webp" alt="Atua" className="max-h-full object-contain" />
+              <img
+                src="/integrations/atua.webp"
+                alt="Atua"
+                className="max-h-full object-contain"
+                loading="lazy"
+              />
             </li>
             <li className="flex items-center justify-center h-28 md:h-32">
               <img
                 src="/integrations/sankhya.webp"
                 alt="Sankhya"
                 className="max-h-full object-contain"
+                loading="lazy"
+              />
+            </li>
+
+            {/* NOVA LOGO (mesmo tamanho) — troque o src e o alt */}
+            <li className="flex items-center justify-center h-28 md:h-32">
+              <img
+                src="/integrations/sat.webp"
+                alt="Sat"
+                className="max-h-full object-contain"
+                loading="lazy"
               />
             </li>
           </ul>

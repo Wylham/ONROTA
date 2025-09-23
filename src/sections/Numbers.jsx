@@ -2,11 +2,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const STATS = [
-  { type: "mil", value: 50, label: "cadastros realizados" },
+  { type: "mil", value: 149, label: "cadastros realizados" },
   { type: "mil", value: 1, label: "usuários ativos" },
-  { type: "%", value: 85, label: "redução de fraudes" },
-  { type: "%", value: 80, label: "tempo de cadastro reduzido" },
-  { type: "rm", value: 15, label: "em cargas protegidas contra fraudes" },
+  { type: "%", value: 96, label: "redução de fraudes" },
+  { type: "%", value: 87, label: "tempo de cadastro reduzido" },
+  { type: "bi", value: 1, label: "em cargas protegidas contra fraudes" },
 ];
 
 function useInView(ref, threshold = 0.55) {
@@ -49,7 +49,7 @@ function Counter({ type, target }) {
   let out = "";
   if (type === "mil") out = `+${n}mil`;
   else if (type === "%") out = `${n}%`;
-  else if (type === "rm") out = `+R$${n}M`;
+  else if (type === "bi") out = `+R$${n}B`;
 
   return (
     <span ref={ref} className="tabular-nums">

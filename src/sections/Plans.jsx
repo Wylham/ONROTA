@@ -178,7 +178,7 @@ export default function Plans() {
   };
 
   return (
-    <section id="planos" className="relative py-16 md:py-20 bg-[#0b0e19]">
+    <section id="planos" className="relative py-16 md:py-20 bg-[#121212]">
       <div className="mx-auto max-w-7xl px-4">
         {/* Header */}
         <header className="text-center max-w-3xl mx-auto">
@@ -190,11 +190,23 @@ export default function Plans() {
 
           {/* Selos */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            {/* Garantia */}
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#1da7e5" d="M12 2l7 4v6c0 5-7 10-7 10S5 17 5 12V6l7-4z" />
               </svg>
               Garantia de Satisfação de 30 dias
+            </span>
+
+            {/* Sem fidelidade (novo, igual ao anexo) */}
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="#1da7e5"
+                  d="M12 1a5 5 0 0 0-5 5v2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm0 2a3 3 0 0 1 3 3v2H9V6a3 3 0 0 1 3-3Z"
+                />
+              </svg>
+              Sem fidelidade em todos os planos
             </span>
           </div>
         </header>
@@ -204,12 +216,12 @@ export default function Plans() {
           {/* FADE ESQUERDA */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-16 bg-gradient-to-r from-[#0b0e19] to-transparent z-[5]"
+            className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-16 bg-gradient-to-r from-[#121212] to-transparent z-[5]"
           />
           {/* FADE DIREITA */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-[#0b0e19] to-transparent z-[5]"
+            className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-[#121212] to-transparent z-[5]"
           />
 
           {/* SETAS (agora #1da7e5) */}
@@ -269,7 +281,7 @@ export default function Plans() {
               <div className="text-sm md:text-base">
                 <strong className="font-semibold">Teste gratuito por 30 dias</strong>
                 <div className="text-white/80 text-xs md:text-sm">
-                  Experimente o OnCad completo sem custo.
+                  Experimente o OnCad completo <br /> (limitado à 50 cadastros).
                 </div>
               </div>
             </div>
@@ -288,8 +300,7 @@ export default function Plans() {
         </div>
 
         <p className="mt-8 text-center text-sm text-white/60">
-          Valores fictícios para demonstração. Solicite proposta conforme volume de cadastros,
-          usuários, integrações e SLA.
+          Valores fictícios para demonstração. assim que validado, irei ajustar os valores reais.
         </p>
       </div>
     </section>

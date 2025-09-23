@@ -55,10 +55,10 @@ export default function Services() {
                 className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold
                            bg-blue-600 hover:bg-blue-500 text-white transition"
               >
-                Fale Conosco
+                Agendar Demo Gratuita
               </a>
               <a
-                href="#contato"
+                href="#planos"
                 className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold
                            border border-white/30 hover:border-white/60 bg-transparent text-white transition"
               >

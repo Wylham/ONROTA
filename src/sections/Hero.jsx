@@ -65,10 +65,10 @@ export default function Hero() {
                   Conhecer mais
                 </a>
                 <a
-                  href="#contato"
+                  href="#servicos"
                   className="inline-flex items-center justify-center rounded-lg px-3 py-2 border border-white text-white font-bold text-[13px] hover:bg-white/10"
                 >
-                  Agendar Demo Gratuita
+                  Nossos Produtos
                 </a>
               </div>
             </div>
