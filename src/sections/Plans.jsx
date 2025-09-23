@@ -198,7 +198,7 @@ export default function Plans() {
               Garantia de Satisfação de 30 dias
             </span>
 
-            {/* Sem fidelidade (novo, igual ao anexo) */}
+            {/* Sem fidelidade */}
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -224,7 +224,7 @@ export default function Plans() {
             className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-[#121212] to-transparent z-[5]"
           />
 
-          {/* SETAS (agora #1da7e5) */}
+          {/* SETAS */}
           <button
             type="button"
             aria-label="Anterior"
@@ -272,27 +272,47 @@ export default function Plans() {
           </div>
         </div>
 
-        {/* Chamadas estratégicas (sem o card de desconto) */}
+        {/* Chamadas estratégicas */}
         <div className="mt-10">
           <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Teste gratuito (ícone atualizado) */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 md:px-5 md:py-5 flex items-start gap-3 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
-              <CalendarCheck2 size={20} strokeWidth={2} color="#1da7e5" />
-              <div className="text-sm md:text-base">
-                <strong className="font-semibold">Teste gratuito por 30 dias</strong>
-                <div className="text-white/80 text-xs md:text-sm">
-                  Experimente o OnCad completo <br /> (limitado à 50 cadastros).
+            {/* Teste gratuito — respiro garantido à direita */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
+              {/* Wrapper interno com PL/PR separados e PR forçado via inline style */}
+              <div
+                className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
+                style={{ paddingRight: "3.25rem" }}
+              >
+                <CalendarCheck2
+                  size={20}
+                  strokeWidth={2}
+                  color="#1da7e5"
+                  className="shrink-0 mt-0.5"
+                />
+                <div className="flex-1 min-w-0 leading-relaxed">
+                  <strong className="block font-semibold whitespace-nowrap">
+                    Teste gratuito por 30 dias
+                  </strong>
+                  <p className="text-white/80 text-xs md:text-sm">
+                    Experimente o OnCad completo (limitado a 50 cadastros).
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Consultoria gratuita de implementação (ícone atualizado) */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 md:px-5 md:py-5 flex items-start gap-3 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
-              <Wrench size={20} strokeWidth={2} color="#1da7e5" />
-              <div className="text-sm md:text-base">
-                <strong className="font-semibold">Consultoria gratuita de implementação</strong>
-                <div className="text-white/80 text-xs md:text-sm">
-                  Implantação guiada para acelerar resultados.
+            {/* Consultoria gratuita de implementação (equilíbrio visual) */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
+              <div
+                className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
+                style={{ paddingRight: "2.5rem" }}
+              >
+                <Wrench size={20} strokeWidth={2} color="#1da7e5" className="shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0 leading-relaxed">
+                  <strong className="block font-semibold">
+                    Consultoria gratuita de implementação
+                  </strong>
+                  <p className="text-white/80 text-xs md:text-sm">
+                    Implantação guiada para acelerar resultados.
+                  </p>
                 </div>
               </div>
             </div>
