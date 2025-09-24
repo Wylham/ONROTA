@@ -6,49 +6,48 @@ const PLANS = [
   {
     id: "starter",
     title: "Starter",
-    price: "R$ 390",
+    price: "R$ 850",
     priceSuffix: "/mês",
     highlight: "Essencial para começar com segurança",
-    description: "Validações confiáveis e 1 conector para sair do Excel com rapidez.",
+    description: "Validações confiáveis integrado para sair do processo manual com rapidez",
     features: [
-      "3.000 cadastros/mês",
+      "100 cadastros/mês",
       "2 usuários",
-      "1 integração (Sankhya ou Atua)",
+      "1 integração com Atua ou SAT",
       "Antifraude essencial + automação básica",
-      "Suporte por e-mail (SLA 48h)",
+      "Suporte (SLA em tempo real)",
     ],
   },
   {
     id: "basic",
-    title: "Basic",
-    price: "R$ 715",
-    priceSuffix: "/mês",
+    title: "Essencial",
+    price: "R$ 8,97",
+    priceSuffix: "/por cadastro",
     highlight: "Mais controle para seu time",
-    description: "Automação simples e alertas para reduzir erros manuais.",
+    description: "Automação simples + antifraude e alertas para reduzir erros manuais.",
     features: [
-      "7.000 cadastros/mês",
+      "minimo 350 cadastros/mês",
       "5 usuários",
-      "2 integrações (Sankhya + Atua)",
+      "1 integração com Atua ou SAT",
       "Antifraude com regras + API",
-      "Suporte priorizado (SLA 36h)",
+      "Suporte (SLA em tempo real)",
     ],
+    popular: true,
+    badge: "Mais popular",
   },
   {
     id: "pro",
     title: "Pro",
-    price: "R$ 890",
-    priceSuffix: "/mês",
-    highlight: "Crescimento com automação logística",
+    price: "Sob consulta",
+    highlight: "Para empresas de médio e grande porte que precisam de velocidade e segurança",
     description: "Workflows completos, múltiplas integrações e API/Webhooks.",
     features: [
-      "15.000 cadastros/mês",
-      "12 usuários",
-      "Integrações múltiplas (Sankhya/Atua/ERP/TMS/BI)",
+      "Cadastros ilimitados/mês",
+      "usuários ilimitados",
+      "Integrações múltiplas (Sankhya/Atua/SAT/KMM/outros)",
       "Antifraude avançado + automação",
-      "SLA 24h",
+      "Suporte (SLA full time)",
     ],
-    popular: true,
-    badge: "Mais popular",
   },
   {
     id: "plus",
@@ -84,6 +83,7 @@ const PLANS = [
 ];
 
 function PlanCard({
+  id, // <- recebendo id para regras específicas
   title,
   price,
   priceSuffix,
@@ -117,9 +117,14 @@ function PlanCard({
             <p className="mt-1 text-white/70 text-xs md:text-sm">A partir de</p>
             <div className="mt-1 md:mt-2 flex items-baseline gap-1">
               <span className="text-2xl md:text-4xl font-extrabold">{price}</span>
-              <span className="text-white/60 text-xs md:text-base">{priceSuffix}</span>
+              {priceSuffix && (
+                <span className="text-white/60 text-xs md:text-base">{priceSuffix}</span>
+              )}
             </div>
-            <p className="mt-1 text-[10px] md:text-xs text-white/50">*no plano anual</p>
+            {/* remove somente no plano PRO */}
+            {id !== "pro" && (
+              <p className="mt-1 text-[10px] md:text-xs text-white/50">*no plano anual</p>
+            )}
           </>
         ) : (
           <div className="mt-2">
@@ -132,12 +137,14 @@ function PlanCard({
         <p className="mt-3 md:mt-4 text-sm md:text-base font-semibold">{highlight}</p>
         <p className="mt-1 text-[13px] md:text-sm text-white/80">{description}</p>
 
+        {/* BOTÃO: largura menor, fixa e centralizada em todos os cards */}
         <a
           href="#contato"
           className="
-            mt-4 md:mt-6 inline-flex w-full items-center justify-center
-            rounded-xl px-3 md:px-4 py-2.5 md:py-3
+            mt-4 md:mt-6 inline-flex items-center justify-center
+            rounded-xl px-4 md:px-5 py-2.5 md:py-1.5
             bg-blue-600 hover:bg-blue-700 font-semibold text-sm md:text-base
+            mx-auto w-[220px] md:w-[240px] lg:w-[260px]
           "
         >
           {enterprise ? "Solicitar Orçamento Personalizado" : "Agendar Demo Gratuita"}
@@ -211,42 +218,7 @@ export default function Plans() {
           </div>
         </header>
 
-        {/* Carrossel com fades */}
         <div className="relative mt-8 px-3 sm:px-6">
-          {/* FADE ESQUERDA */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-16 bg-gradient-to-r from-[#121212] to-transparent z-[5]"
-          />
-          {/* FADE DIREITA */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-[#121212] to-transparent z-[5]"
-          />
-
-          {/* SETAS */}
-          <button
-            type="button"
-            aria-label="Anterior"
-            onClick={() => scrollByCards("prev")}
-            className="grid place-items-center absolute left-0 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#1da7e5] hover:bg-[#1593c8] shadow-lg z-10"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#fff" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            aria-label="Próximo"
-            onClick={() => scrollByCards("next")}
-            className="grid place-items-center absolute right-0 top-1/2 -translate-y-1/2 h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#1da7e5] hover:bg-[#1593c8] shadow-lg z-10"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#fff" d="M8.59 7.41 10 6l6 6-6 6-1.41-1.41L13.17 12z" />
-            </svg>
-          </button>
-
           {/* TRILHO */}
           <div
             ref={trackRef}
@@ -275,9 +247,8 @@ export default function Plans() {
         {/* Chamadas estratégicas */}
         <div className="mt-10">
           <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Teste gratuito — respiro garantido à direita */}
+            {/* Teste gratuito */}
             <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
-              {/* Wrapper interno com PL/PR separados e PR forçado via inline style */}
               <div
                 className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
                 style={{ paddingRight: "3.25rem" }}
@@ -299,7 +270,7 @@ export default function Plans() {
               </div>
             </div>
 
-            {/* Consultoria gratuita de implementação (equilíbrio visual) */}
+            {/* Consultoria gratuita de implementação */}
             <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
               <div
                 className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"

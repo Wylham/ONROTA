@@ -8,7 +8,7 @@ const TESTIMONIALS = [
     role: "Diretoria",
     name: "Pianetto",
     quote:
-      "Com o ONCAD conseguimos reduzir erros de cadastro e validar documentos de forma muito mais rápida. Isso trouxe segurança e eficiência para nossas operações.",
+      "Antes do ONCAD, nosso processo de cadastro era um pesadelo. Cada embarcador precisava digitar manualmente dados de cavalo, carreta, CNH do motorista, proprietário e ANTT, além de consultar sites de governo para verificar validade de documentos. Isso consumia tempo, gerava retrabalho e abria brechas para fraudes. Motoristas adulteravam informações como CNHs cassadas registradas como válidas e ainda existia o risco de corrupção interna, quando algum funcionário aprovava dados errados de propósito. O ONCAD eliminou tudo isso em segundos. O sistema faz todas as consultas automaticamente nos órgãos oficiais, valida documentos em menos de um minuto e impede qualquer fraude, seja do motorista ou do colaborador. Hoje trabalhamos com confiança, agilidade e segurança em cada cadastro. Mais do que uma ferramenta, o ONCAD se tornou um escudo contra erros e fraudes, garantindo eficiência e proteção total para a operação",
     logo: "/logos/@1x/pianetto@1x.webp",
     rating: 5,
   },
@@ -17,7 +17,7 @@ const TESTIMONIALS = [
     role: "Gerente Operacional",
     name: "Boa Viagem",
     quote:
-      "O ONCAD trouxe mais agilidade e confiança na validação de motoristas e veículos. Nosso processo está mais seguro e reduzimos fraudes de forma significativa.",
+      "O transporte rodoviário exige decisões rápidas e seguras, e muitas vezes não tínhamos esse suporte com os processos antigos. O ONCAD veio para mudar essa realidade. O sistema antifraude foi um divisor de águas, porque eliminou as incertezas que tínhamos nas conferências manuais. Antes, a equipe precisava revisar documentos e cadastros diversas vezes, o que atrasava todo o fluxo. Agora, conseguimos validar tudo em segundos, com muito mais precisão. Além de economizar tempo, reduzimos riscos que poderiam gerar grandes prejuízos. Mais do que uma ferramenta, o ONCAD se tornou um parceiro estratégico no dia a dia da nossa operação.",
     logo: "/logos/@1x/boa-viagem@1x.webp",
     rating: 5,
   },
@@ -26,25 +26,32 @@ const TESTIMONIALS = [
     role: "CEO",
     name: "Anderle",
     quote:
-      "Conseguimos automatizar cadastros e reduzir retrabalho. O sistema é prático, confiável e nos ajuda a manter um controle preciso em toda a operação.",
+      "Adotar o ONCAD foi uma das decisões mais acertadas da nossa empresa. Sempre tivemos preocupação com a segurança dos dados e com a confiabilidade das informações, mas era difícil manter um controle eficiente sem gastar muito tempo e recursos. Desde que implementamos a plataforma, percebemos uma transformação completa: os processos ficaram mais organizados, os cadastros passaram a ser validados automaticamente e nossa equipe ganhou liberdade para focar em tarefas mais estratégicas. Hoje nos sentimos preparados para crescer sem medo de inconsistências, porque sabemos que temos uma base sólida, segura e confiável sustentando nossa operação.",
     logo: "/logos/@1x/anderle@1x.webp",
     rating: 5,
   },
   {
     company: "SHR LOG",
-    role: "Gestor de Frota",
+    role: "Gerente Comercial",
     name: "SHR LOG",
     quote:
-      "O ONCAD se tornou essencial na gestão de risco. Conseguimos maior assertividade nas análises e eliminamos erros manuais que antes eram comuns.",
+      "O que mais me surpreendeu no ONCAD foi a facilidade de integração com nosso ERP. Durante anos, nossa rotina foi marcada por planilhas desatualizadas, erros de digitação e processos engessados. Isso gerava retrabalhos constantes e insegurança na hora de tomar decisões. Com a automação que o ONCAD trouxe, conseguimos eliminar quase todos esses gargalos. Hoje temos um fluxo ágil, transparente e confiável, que não apenas agiliza os cadastros, mas também nos permite enxergar de forma clara os pontos de melhoria. Esse ganho de eficiência impactou diretamente nossa produtividade e trouxe muito mais segurança para planejar o futuro.",
     logo: "/logos/@1x/shrlog@1x.webp",
     rating: 5,
   },
 ];
 
-// Correção de escala para arquivos com muito "respiro" interno (somente BV)
+// logos com “respiro” interno
 const LOGO_SCALE_BY_NAME = {
-  "Boa Viagem": "scale-[2.20] md:scale-[1.85]", // ajuste refinado
+  "Boa Viagem": "scale-[1.9] md:scale-[1.6]",
 };
+
+// tipografia do quote conforme comprimento (compacta)
+function quoteSizeClass(len) {
+  if (len > 1100) return "text-[0.82rem] md:text-[0.9rem]"; // ~13–14px
+  if (len > 850) return "text-[0.86rem] md:text-[0.92rem]"; // ~14–15px
+  return "text-[0.9rem] md:text-[0.95rem]"; // ~14.5–15px
+}
 
 export default function Testimonials({
   heading = "Quem experimentou, se encantou!",
@@ -77,8 +84,7 @@ export default function Testimonials({
   const scrollToIndex = (i, smooth = true) => {
     const el = containerRef.current;
     if (!el) return;
-    const offset = el.clientWidth * i;
-    el.scrollTo({ left: offset, behavior: smooth ? "smooth" : "auto" });
+    el.scrollTo({ left: el.clientWidth * i, behavior: smooth ? "smooth" : "auto" });
   };
 
   const goPrev = () => {
@@ -101,7 +107,6 @@ export default function Testimonials({
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
         if (visible) {
           const slideIdx = Number(visible.target.getAttribute("data-slide-index"));
           const pageIdx = Math.floor(slideIdx / cardsPerView);
@@ -122,12 +127,12 @@ export default function Testimonials({
 
   return (
     <section className="bg-gray-100 text-slate-900 scroll-mt-24 md:scroll-mt-28">
-      <div className="mx-auto max-w-7xl px-4 pt-12 md:pt-16 pb-10 md:pb-12">
-        <h2 className="text-center text-4xl md:text-5xl font-extrabold tracking-tight">
+      <div className="mx-auto max-w-7xl px-3 pt-8 md:pt-12 pb-6 md:pb-8">
+        <h2 className="text-center text-3xl md:text-4xl font-extrabold tracking-tight">
           {heading}
         </h2>
 
-        <div className="relative mt-10 md:mt-12">
+        <div className="relative mt-6 md:mt-8">
           {/* trilho */}
           <div
             ref={containerRef}
@@ -138,13 +143,16 @@ export default function Testimonials({
               className="
                 grid grid-flow-col
                 auto-cols-[100%]
-                md:auto-cols-[calc((100%-1rem)/2)]
-                lg:auto-cols-[calc((100%-3rem)/3)]
-                gap-4 lg:gap-6
+                md:auto-cols-[calc((100%-0.5rem)/2)]
+                lg:auto-cols-[calc((100%-1.5rem)/3)]
+                gap-2.5 lg:gap-3
+                items-start
               "
             >
               {items.map((t, i) => {
                 const scaleClass = LOGO_SCALE_BY_NAME[t.name] ?? "";
+                const len = (t.quote || "").length;
+
                 return (
                   <article
                     key={i}
@@ -152,33 +160,39 @@ export default function Testimonials({
                     ref={(el) => (slidesRef.current[i] = el)}
                     className="
                       snap-center snap-always
-                      rounded-3xl border border-slate-200 bg-white
-                      p-6 md:p-8 shadow-sm flex flex-col h-full
+                      rounded-xl border border-slate-200 bg-white
+                      p-4 md:p-5 shadow-sm flex flex-col self-start
                     "
                   >
-                    <Quote className="w-10 h-10 text-indigo-400" />
-                    <p className="mt-5 text-slate-700 leading-relaxed">“{t.quote}”</p>
+                    <Quote className="w-6 h-6 text-indigo-400" />
 
-                    <div className="mt-6 md:mt-8">
-                      <div className="font-semibold text-slate-900">{t.company}</div>
-                      <div className="text-slate-500 text-sm">{t.role}</div>
+                    {/* quote compacto */}
+                    <p className={`mt-3 text-slate-700 leading-[1.5] ${quoteSizeClass(len)}`}>
+                      “{t.quote}”
+                    </p>
 
-                      {/* Logo + estrelas – caixa fixa igual para todos */}
-                      <div className="mt-5 flex items-center justify-between gap-3">
-                        {/* Caixa de logo com altura padrão */}
-                        <div className="h-10 md:h-12 max-w-[46%] flex items-center">
+                    <div className="mt-4 md:mt-5">
+                      <div className="font-semibold text-slate-900 text-[0.9rem] md:text-[0.95rem]">
+                        {t.company}
+                      </div>
+                      <div className="text-slate-500 text-[0.78rem] md:text-[0.82rem]">
+                        {t.role}
+                      </div>
+
+                      {/* logo + estrelas menores */}
+                      <div className="mt-3.5 flex items-center justify-between gap-2">
+                        <div className="h-7 md:h-8 max-w-[46%] flex items-center">
                           <img
                             src={t.logo}
                             alt={t.name}
                             className={`h-full w-auto object-contain shrink-0 origin-left ${scaleClass}`}
                           />
                         </div>
-
-                        <div className="flex items-center gap-1 shrink-0">
+                        <div className="flex items-center gap-[3px] shrink-0">
                           {Array.from({ length: 5 }).map((_, s) => (
                             <Star
                               key={s}
-                              className={`w-4 h-4 ${
+                              className={`w-[12px] h-[12px] ${
                                 s < (t.rating || 5)
                                   ? "fill-yellow-400 text-yellow-400"
                                   : "text-slate-300"
@@ -194,19 +208,19 @@ export default function Testimonials({
             </div>
           </div>
 
-          {/* setas */}
+          {/* setas compactas */}
           <button
             type="button"
             aria-label="Anterior"
             onClick={goPrev}
             className="
               place-items-center
-              absolute -left-3 top-1/2 -translate-y-1/2 z-10
-              w-7 h-7 rounded-full bg-white border border-slate-200 shadow-sm
+              absolute -left-2 top-1/2 -translate-y-1/2 z-10
+              w-5 h-5 rounded-full bg-white border border-slate-200 shadow-sm
               hover:bg-slate-50
             "
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
           <button
             type="button"
@@ -214,16 +228,16 @@ export default function Testimonials({
             onClick={goNext}
             className="
               place-items-center
-              absolute -right-3 top-1/2 -translate-y-1/2 z-10
-              w-7 h-7 rounded-full bg-white border border-slate-200 shadow-sm
+              absolute -right-2 top-1/2 -translate-y-1/2 z-10
+              w-5 h-5 rounded-full bg-white border border-slate-200 shadow-sm
               hover:bg-slate-50
             "
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
-          {/* indicadores */}
-          <div className="mt-6 flex justify-center gap-2">
+          {/* indicadores compactos */}
+          <div className="mt-4 flex justify-center gap-1">
             {Array.from({ length: maxIndex + 1 }).map((_, i) => (
               <button
                 key={i}
@@ -232,8 +246,8 @@ export default function Testimonials({
                   setIndex(i);
                   scrollToIndex(i);
                 }}
-                className={`h-2.5 rounded-full transition-all ${
-                  i === index ? "w-6 bg-slate-800" : "w-2.5 bg-slate-300"
+                className={`h-1.5 rounded-full transition-all ${
+                  i === index ? "w-4 bg-slate-800" : "w-1.5 bg-slate-300"
                 }`}
               />
             ))}
