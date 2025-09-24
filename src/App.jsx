@@ -11,7 +11,7 @@ import Impact from "./sections/Impact";
 import Plans from "./sections/Plans";
 import Contact from "./sections/Contact";
 import { WHATSAPP_LINK } from "./constants";
-import { IconWhatsapp } from "./components/Icons";
+import { IconWhatsapp } from "./components/icons";
 import { DEMO_VIDEO } from "./constants/metrics";
 import Testimonials from "./sections/Testimonials";
 
