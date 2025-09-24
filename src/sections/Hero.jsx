@@ -1,6 +1,6 @@
 ﻿// src/sections/Hero.jsx
 import React from "react";
-import { IconCheck } from "../components/Icons";
+import { IconCheck } from "../components/icons";
 
 export default function Hero() {
   return (

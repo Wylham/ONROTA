@@ -6,7 +6,7 @@ import {
   IconTruck,
   IconVisao,
   IconValores,
-} from "../components/Icons";
+} from "../components/icons";
 import aboutPhoto from "../assets/about-photo.png";
 
 export default function About() {
