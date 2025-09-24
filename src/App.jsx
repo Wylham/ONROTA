@@ -1,5 +1,4 @@
-﻿// src/App.jsx
-import React from "react";
+﻿import React from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./sections/Hero";
@@ -16,6 +15,9 @@ import { IconWhatsapp } from "./components/Icons";
 import { DEMO_VIDEO } from "./constants/metrics";
 import Testimonials from "./sections/Testimonials";
 
+// import do modal
+import PlansPromoModal from "./components/PlansPromoModal";
+
 export default function App() {
   const whatsMsg =
     "Acabei de visitar o site da ONROTA e quero saber mais sobre o produto ONCAD, e como ele pode manter minha operação mais segura, eficiente e livre de fraudes.";
@@ -24,6 +26,14 @@ export default function App() {
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
       {/* Navbar fixo */}
       <Navbar />
+
+      {/* Temporariamente desativado 
+      Tempo: 10s para abrir, 3min para reabrir
+      /* <PlansPromoModal
+        delayMs={10000}
+        reopenMs={180000}
+        imageSrc="/images/promo-phone.png"
+        imageAlt="Pessoa segurando um celular"*/}
 
       {/* Topo (Hero) com gradiente */}
       <div
@@ -62,7 +72,7 @@ export default function App() {
         <Impact />
       </div>
 
-      {/* NOVO: Planos */}
+      {/* Planos */}
       <Plans />
 
       <div id="testimonials" className="scroll-mt-24">
