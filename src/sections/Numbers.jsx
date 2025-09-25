@@ -32,7 +32,7 @@ function Counter({ type, target }) {
   useEffect(() => {
     if (!inView) return;
 
-    setN(0); // contagem do zero
+    setN(0);
     const duration = 900;
     const start = performance.now();
 
@@ -79,7 +79,7 @@ export default function Numbers() {
                 className="rounded-2xl bg-slate-50 border border-slate-200 shadow-sm
                            px-5 py-6 md:px-6 md:py-7 text-center mx-auto w-full max-w-[260px]"
               >
-                <div className={`text-indigo-600 font-extrabold leading-none ${numberSize}`}>
+                <div className={`text-[#1da7e5] font-extrabold leading-none ${numberSize}`}>
                   <Counter type={type} target={value} />
                 </div>
                 <p className="mt-2.5 md:mt-3 text-slate-800 text-[13px] md:text-[14px] leading-[20px] md:leading-[21px] mx-auto max-w-[220px]">

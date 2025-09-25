@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 export default function PlansPromoModal({
   delayMs = 5000,
-  reopenMs = 180000,
+  reopenMs = 500000,
   imageSrc = "/mockups/mulher-popup.png",
   imageAlt = "Mulher segurando um telefone",
   oncadLogoSrc = "/logos/opt/oncad.webp",
