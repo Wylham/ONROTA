@@ -31,9 +31,9 @@ export default function App() {
       <PlansPromoModal
         delayMs={5000}
         reopenMs={180000}
-        imageSrc="/public/mockups/peoples.jpg"
+        imageSrc="/mockups/mulher-popup.png"
         imageAlt="Pessoa segurando um celular"
-        oncadLogoSrc="/public/logos/opt/oncad.webp"
+        oncadLogoSrc="/logos/opt/oncad.webp"
       />
       {/* Topo (Hero) com gradiente */}
       <div

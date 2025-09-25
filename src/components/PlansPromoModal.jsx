@@ -4,8 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 export default function PlansPromoModal({
   delayMs = 5000,
   reopenMs = 180000,
-  // ⚠️ Se o arquivo está em /public/mockups/peoples.jpg, referencie assim:
-  imageSrc = "/mockups/peoples.jpg",
+  imageSrc = "/mockups/mulher-popup.png",
   imageAlt = "Mulher segurando um telefone",
   oncadLogoSrc = "/logos/opt/oncad.webp",
 }) {
@@ -64,23 +63,24 @@ export default function PlansPromoModal({
       aria-labelledby="plans-promo-title"
       className="fixed inset-0 z-[10050] flex items-center justify-center p-3 md:p-4"
     >
-      {/* backdrop (clique fora fecha) */}
+      {/* Backdrop */}
       <div
         className={`absolute inset-0 bg-black/55 md:bg-black/60 backdrop-blur-[2px] transition-opacity duration-150 ${visible ? "opacity-100" : "opacity-0"}`}
         onClick={close}
       />
 
-      {/* CARD — mais largo e mais alto */}
+      {/* Card – agora com cantos arredondados suaves */}
       <div
         className={`
-          relative z-[10100] w-full max-w-[46rem]  /* ≈736px */
+          relative z-[10100] w-full max-w-[56rem]
           overflow-hidden text-white shadow-2xl ring-1 ring-white/10 bg-[#121212]
+          rounded-xl md:rounded-2xl
           transition-all duration-200
           ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
         `}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* botão fechar */}
+        {/* X */}
         <button
           aria-label="Fechar"
           onClick={close}
@@ -91,12 +91,11 @@ export default function PlansPromoModal({
           </svg>
         </button>
 
-        {/* GRID com altura mínima consistente */}
-        <div className="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] md:items-stretch md:min-h-[460px]">
-          {/* COLUNA ESQUERDA (texto) */}
-          <div className="bg-[#121212] px-7 py-7 md:px-9 md:py-9 flex">
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] md:items-stretch md:min-h-[420px]">
+          {/* Texto */}
+          <div className="bg-[#121212] px-6 py-6 md:px-8 md:py-8 flex">
             <div className="my-auto w-full max-w-[34rem]">
-              {/* logo pequena */}
               <div className="mb-3">
                 <img
                   src={oncadLogoSrc}
@@ -109,17 +108,17 @@ export default function PlansPromoModal({
 
               <h3
                 id="plans-promo-title"
-                className="text-[1.2rem] md:text-[1.5rem] font-extrabold leading-tight"
+                className="text-[1.18rem] md:text-[1.45rem] font-extrabold leading-tight"
               >
                 Automatize cadastros. Bloqueie fraudes. Integre seu fluxo.
               </h3>
 
-              <p className="mt-2 text-white/85 text-[0.95rem] md:text-[1rem] leading-relaxed">
-                Planos para reduzir erros, acelerar a operação e conectar seus sistemas — sem
-                fidelidade.
+              <p className="mt-2 text-white/85 text-[0.93rem] md:text-[0.98rem] leading-relaxed">
+                Planos para reduzir erros, acelerar a operação e conectar seus sistemas sem
+                fidelidade!
               </p>
 
-              <ul className="mt-4 space-y-2.5 text-[0.95rem] md:text-[1rem]">
+              <ul className="mt-4 space-y-2.5 text-[0.93rem] md:text-[0.98rem]">
                 <li className="flex gap-2">
                   <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
                   <span>
@@ -150,7 +149,7 @@ export default function PlansPromoModal({
                 <a
                   href="#planos"
                   onClick={close}
-                  className="relative inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#1593c8] px-4 py-2 font-semibold text-[0.95rem]"
+                  className="relative inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#1593c8] px-4 py-2 font-semibold text-[0.94rem]"
                 >
                   <span
                     className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-[#1da7e5]/35 animate-pulse"
@@ -161,28 +160,26 @@ export default function PlansPromoModal({
                 <a
                   href="#contato"
                   onClick={close}
-                  className="inline-flex items-center justify-center rounded-md border border-white/25 bg-white/5 hover:bg-white/10 px-4 py-2 font-semibold text-[0.95rem]"
+                  className="inline-flex items-center justify-center rounded-md border border-white/25 bg-white/5 hover:bg-white/10 px-4 py-2 font-semibold text-[0.94rem]"
                 >
                   Falar com especialista
                 </a>
               </div>
 
-              <div className="mt-4 inline-flex items-center gap-2 rounded px-2 py-0.5 text-[11px] font-medium bg-white/5 ring-1 ring-white/10">
-                <span aria-hidden>⚡</span>
-                Demonstração guiada em 15&nbsp;min
-              </div>
+              {/* Texto flutuante (sem card/emoji) */}
+              <p className="mt-4 text-[11.5px] text-white/70">Demonstração guiada em 15 minutos!</p>
             </div>
           </div>
 
-          {/* COLUNA DIREITA (imagem) — ocupa a mesma altura */}
+          {/* Imagem */}
           <div
             aria-label={imageAlt}
-            className="hidden md:block md:min-h-[460px]"
+            className="hidden md:block md:min-h-[420px]"
             style={{
               backgroundImage: `url(${imageSrc})`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
+              backgroundPosition: "30% center",
             }}
             role="img"
           />
