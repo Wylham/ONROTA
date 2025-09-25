@@ -26,15 +26,15 @@ export default function App() {
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
       {/* Navbar fixo */}
       <Navbar />
-
-      {/* Temporariamente desativado 
+      {/* Modal de promoções de planos */}
       Tempo: 10s para abrir, 3min para reabrir
-      /* <PlansPromoModal
-        delayMs={10000}
+      <PlansPromoModal
+        delayMs={5000}
         reopenMs={180000}
-        imageSrc="/images/promo-phone.png"
-        imageAlt="Pessoa segurando um celular"*/}
-
+        imageSrc="/public/mockups/peoples.jpg"
+        imageAlt="Pessoa segurando um celular"
+        oncadLogoSrc="/public/logos/opt/oncad.webp"
+      />
       {/* Topo (Hero) com gradiente */}
       <div
         id="home"
@@ -46,45 +46,34 @@ export default function App() {
       >
         <Hero />
       </div>
-
       {/* Conteúdo principal */}
       <div id="sobre" className="scroll-mt-24">
         <About />
       </div>
-
       <div id="servicos" className="scroll-mt-24">
         <Services />
       </div>
-
       <div id="clientes" className="scroll-mt-24">
         <Clients />
       </div>
-
       <div id="numbers" className="scroll-mt-24">
         <Numbers />
       </div>
-
       <div id="productdemo" className="scroll-mt-24">
         <ProductDemo {...DEMO_VIDEO} />
       </div>
-
       <div id="impact" className="scroll-mt-24">
         <Impact />
       </div>
-
       {/* Planos */}
       <Plans />
-
       <div id="testimonials" className="scroll-mt-24">
         <Testimonials />
       </div>
-
       <div id="contato" className="scroll-mt-24">
         <Contact />
       </div>
-
       <Footer />
-
       {/* Botão flutuante do WhatsApp */}
       <a
         href={WHATSAPP_LINK}
