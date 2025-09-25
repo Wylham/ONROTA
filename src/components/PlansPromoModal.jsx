@@ -2,37 +2,64 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export default function PlansPromoModal({
-  delayMs = 5000,
-  reopenMs = 500000,
+  delayMs = 10000, // dispara em 10s
+  reopenMs = null, // sem reabrir automaticamente
   imageSrc = "/mockups/mulher-popup.png",
   imageAlt = "Mulher segurando um telefone",
   oncadLogoSrc = "/logos/opt/oncad.webp",
+  oncePerDay = true, // abre 1x por dia
+  resetOnClosePage = true, // reseta ao fechar a página
 }) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const intervalRef = useRef(null);
   const initialTimeoutRef = useRef(null);
 
+  const DAILY_KEY = "plansPromo_lastShownDate";
+
+  // util: string YYYY-MM-DD no fuso do navegador
+  const todayStr = () => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  // agenda primeira abertura respeitando "1x por dia"
   useEffect(() => {
-    initialTimeoutRef.current = setTimeout(() => {
-      setOpen(true);
-      setTimeout(() => setVisible(true), 10);
-      intervalRef.current = setInterval(() => {
-        setOpen((curr) => {
-          if (curr) return curr;
-          setVisible(false);
-          setTimeout(() => setVisible(true), 10);
-          return true;
-        });
-      }, reopenMs);
-    }, delayMs);
+    const canShow = !oncePerDay || localStorage.getItem(DAILY_KEY) !== todayStr();
+
+    if (canShow) {
+      initialTimeoutRef.current = setTimeout(() => {
+        setOpen(true);
+        setTimeout(() => setVisible(true), 10);
+        // grava a data de exibição de hoje
+        if (oncePerDay) {
+          try {
+            localStorage.setItem(DAILY_KEY, todayStr());
+          } catch {}
+        }
+      }, delayMs);
+    }
 
     return () => {
       if (initialTimeoutRef.current) clearTimeout(initialTimeoutRef.current);
-      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [delayMs, reopenMs]);
+  }, [delayMs, oncePerDay]);
 
+  // reseta a chave diária quando o usuário fecha a página/aba
+  useEffect(() => {
+    if (!resetOnClosePage) return;
+    const onUnload = () => {
+      try {
+        localStorage.removeItem(DAILY_KEY);
+      } catch {}
+    };
+    window.addEventListener("beforeunload", onUnload);
+    return () => window.removeEventListener("beforeunload", onUnload);
+  }, [resetOnClosePage]);
+
+  // trava scroll quando aberto
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -47,6 +74,7 @@ export default function PlansPromoModal({
     setTimeout(() => setOpen(false), 150);
   };
 
+  // ESC fecha
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => e.key === "Escape" && close();
@@ -69,7 +97,7 @@ export default function PlansPromoModal({
         onClick={close}
       />
 
-      {/* Card – agora com cantos arredondados suaves */}
+      {/* Card – cantos arredondados suaves */}
       <div
         className={`
           relative z-[10100] w-full max-w-[56rem]
@@ -166,7 +194,6 @@ export default function PlansPromoModal({
                 </a>
               </div>
 
-              {/* Texto flutuante (sem card/emoji) */}
               <p className="mt-4 text-[11.5px] text-white/70">Demonstração guiada em 15 minutos!</p>
             </div>
           </div>
