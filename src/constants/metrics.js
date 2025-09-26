@@ -33,6 +33,6 @@ export const DEMO_VIDEO = {
   title: "Veja o OnCad em ação", // <-- escolha uma das opções acima
   description:
     "Descubra como o OnCad simplifica o cadastro de motoristas e veículos: OCR automático, validações inteligentes e integração em tempo real com seu ERP/TMS.",
-  bgClass: "bg-black-600",
+  bgClass: "bg-[#121212]",
   invert: false,
 };
