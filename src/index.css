@@ -133,11 +133,6 @@ h6 {
     scroll-margin-top: 4.5rem;
 }
 
-/* ==== REMOVIDO: regras que reintroduziam a imagem no Hero ==== */
-/* 1) .hero-bg { ... }  -> APAGADO */
-/* 2) @media (max-width: 767px) { #home { background-image: ..., url('/hero-bg.webp') } } -> APAGADO */
-/* 3) Duplicatas de @media para .hero-bg -> APAGADAS */
-
 /* ==== util: esconder scrollbars onde aplicado ==== */
 .no-scrollbar::-webkit-scrollbar {
     display: none;

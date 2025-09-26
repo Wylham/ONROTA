@@ -1,95 +1,74 @@
 ﻿// src/sections/Hero.jsx
 import React from "react";
-import { IconCheck } from "../components/icons";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden pt-20 md:pt-28">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 md:py-14 grid lg:grid-cols-2 gap-8 md:gap-10 items-center">
-        {/* COLUNA TEXTO */}
-        <div className="relative order-1 md:order-none">
-          <div className="text-white space-y-4 md:space-y-5 max-w-[22rem] md:max-w-xl">
-            {/* Título */}
-            <h1 className="text-[24px] sm:text-[26px] md:text-5xl leading-snug md:leading-tight font-extrabold">
-              Mais segurança, menos riscos: o futuro do transporte é{" "}
-              <span className="text-blue-400">ONROTA.</span>
-            </h1>
+    <section
+      className="relative flex items-center overflow-hidden"
+      style={{
+        minHeight: "88vh",
+        backgroundImage: "url('/mockups/bg-robot.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "right center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "#121212", // dark fallback
+      }}
+    >
+      {/* Degradê suave para legibilidade (curva que você definiu) */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0.62) 42%, rgba(0,0,0,0.38) 65%, rgba(0,0,0,0.18) 75%, rgba(0,0,0,0.00) 95%)",
+        }}
+      />
 
-            {/* Texto de apoio */}
-            <p className="mt-5 text-white/85 text-[14px] sm:text-[15px] md:text-lg leading-relaxed md:text-white/90">
-              Nós combinamos <strong>tecnologia antifraude</strong> e <strong>automação</strong>{" "}
-              para eliminar erros manuais e aumentar a confiabilidade das suas rotas. Reduza custos
-              e opere com mais segurança.
-            </p>
+      {/* Conteúdo */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-14 md:py-20 text-white">
+        <div className="max-w-[22rem] sm:max-w-xl md:max-w-3xl space-y-5 md:space-y-6">
+          {/* Eyebrow com a mesma estética do título, menor */}
+          <p className="font-extrabold tracking-tight leading-tight text-[22px] sm:text-[28px] md:text-[30px]">
+            Mais segurança, menos riscos:
+          </p>
 
-            {/* Bullets + CTAs */}
-            <div className="mt-6 space-y-5">
-              {/* MOBILE: chips */}
-              <div className="flex md:hidden flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs">
-                  <IconCheck className="h-4 w-4" />
-                  <span>Rodoviário</span>
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs">
-                  <IconCheck className="h-4 w-4" />
-                  <span>Antifraude</span>
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs">
-                  <IconCheck className="h-4 w-4" />
-                  <span>Automação</span>
-                </span>
-              </div>
+          {/* Título em duas linhas controladas */}
+          <h1 className="font-extrabold tracking-tight leading-[1.04]">
+            <span className="block text-[30px] sm:text-[40px] md:text-[48px] sm:whitespace-nowrap">
+              O futuro do transporte
+            </span>
+            <span className="block text-[36px] sm:text-[48px] md:text-[68px] text-[#1da7e5]">
+              é OnRota.
+            </span>
+          </h1>
 
-              {/* DESKTOP: lista */}
-              <div className="hidden md:grid gap-3 text-white/90 text-sm">
-                <div className="flex items-start gap-2">
-                  <IconCheck className="mt-0.5" />
-                  <span>Foco exclusivo no transporte rodoviário</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <IconCheck className="mt-0.5" />
-                  <span>Sistema antifraude para validação</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <IconCheck className="mt-0.5" />
-                  <span>Automação logística que elimina erros</span>
-                </div>
-              </div>
+          {/* Parágrafo (aproximado das infos seguintes) */}
+          <p className="text-white/90 text-[14px] md:text-[15px] leading-relaxed md:leading-[1.7] max-w-[65ch]">
+            Combinamos <strong>tecnologia antifraude</strong> e <strong>automação</strong> para
+            eliminar erros
+            <br /> manuais, reduzir custos e aumentar a confiabilidade das suas rotas.
+          </p>
 
-              {/* CTAs */}
-              <div className="flex flex-row gap-3">
-                <a
-                  href="#sobre"
-                  className="inline-flex items-center justify-center rounded-lg px-3 py-2 bg-blue-600 hover:bg-blue-700 text-[13px] font-medium"
-                >
-                  Conhecer mais
-                </a>
-                <a
-                  href="#servicos"
-                  className="inline-flex items-center justify-center rounded-lg px-3 py-2 border border-white text-white font-bold text-[13px] hover:bg-white/10"
-                >
-                  Nossos Produtos
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* Observações — texto pequeno e coeso */}
+          <p className="text-white/75 text-[12px] md:text-[12.5px] leading-snug max-w-[70ch] mt-1">
+            Foco exclusivo no transporte rodoviário, Sistema antifraude para validação e <br />
+            Automação logística que elimina erros.
+          </p>
 
-        {/* COLUNA ROBÔ (sem aura atrás) */}
-        <div className="relative order-2 md:order-none flex justify-center lg:justify-end items-end pt-4 md:pt-6">
-          <div className="relative">
-            <img
-              src="/assets/robot.webp"
-              alt="Robô OnRota"
-              className="relative z-10 w-36 sm:w-44 md:w-72 lg:w-[22rem] xl:w-[24rem] drop-shadow-2xl animate-float"
-            />
-            {/* sombra no chão */}
-            <div
-              className="absolute -z-0 left-1/2 -translate-x-1/2 -bottom-1 md:-bottom-2
-                         w-[60%] md:w-[65%] h-[10px] md:h-[14px]
-                         rounded-full bg-black/50 blur-[6px] md:blur-[10px] opacity-85"
-              aria-hidden="true"
-            />
+          {/* CTAs — primário (azul padrão) + fantasma */}
+          <div className="flex items-center gap-3 pt-1">
+            <a
+              href="#sobre"
+              className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-[13px] font-medium bg-[#168fc3] hover:bg-[#168fc3]"
+            >
+              Conhecer mais
+            </a>
+            <a
+              href="#servicos"
+              className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 border border-white/20 text-white/90 hover:bg-white/10 text-[13px]"
+            >
+              Nossos Produtos
+            </a>
           </div>
         </div>
       </div>

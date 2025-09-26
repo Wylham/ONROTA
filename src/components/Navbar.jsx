@@ -6,9 +6,9 @@ import logo from "../assets/logo-light.png";
 const NAV = [
   { id: "home", label: "Home" },
   { id: "sobre", label: "Sobre nós" },
-  { id: "servicos", label: "Produtos" }, // pai do dropdown
+  { id: "servicos", label: "Produtos" },
   { id: "clientes", label: "Nossos clientes" },
-  { id: "planos", label: "Planos" }, // << NOVO BOTÃO
+  { id: "planos", label: "Planos" },
   { id: "contato", label: "Contato" },
 ];
 
@@ -17,6 +17,16 @@ export default function Navbar() {
   const [prodOpen, setProdOpen] = useState(false); // dropdown desktop
   const prodBtnRef = useRef(null);
   const prodMenuRef = useRef(null);
+
+  // >>> ADIÇÃO: controla cor do navbar conforme o scroll
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll(); // estado inicial
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  // <<<
 
   // scroll suave com offset do header
   const scrollToId = (id) => {
@@ -80,7 +90,10 @@ export default function Navbar() {
   }, [prodOpen]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[9999] h-16 bg-black/85 backdrop-blur border-b border-white/10">
+    <header
+      className={`fixed inset-x-0 top-0 z-[9999] h-16 transition-colors duration-300
+      ${scrolled ? "bg-black/85 backdrop-blur border-b border-white/10" : "bg-transparent border-transparent"}`}
+    >
       <nav className="mx-auto max-w-7xl w-full h-full px-4 flex items-center justify-between text-white">
         <a
           href="#home"

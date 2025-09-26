@@ -1,4 +1,5 @@
-﻿import React from "react";
+﻿// src/App.jsx
+import React from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./sections/Hero";
@@ -14,8 +15,6 @@ import { WHATSAPP_LINK } from "./constants";
 import { IconWhatsapp } from "./components/icons";
 import { DEMO_VIDEO } from "./constants/metrics";
 import Testimonials from "./sections/Testimonials";
-
-// import do modal
 import PlansPromoModal from "./components/PlansPromoModal";
 
 export default function App() {
@@ -24,10 +23,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
-      {/* Navbar fixo */}
+      {/* Navbar fixa (transparente sobre o hero; escurece no scroll) */}
       <Navbar />
+
       {/* Modal de promoções de planos */}
-      Tempo: 10s para abrir, 3min para reabrir
+      {/* Tempo: 10s para abrir, 3min para reabrir */}
       <PlansPromoModal
         delayMs={5000}
         reopenMs={180000}
@@ -35,17 +35,12 @@ export default function App() {
         imageAlt="Pessoa segurando um celular"
         oncadLogoSrc="/logos/opt/oncad.webp"
       />
-      {/* Topo (Hero) com gradiente */}
-      <div
-        id="home"
-        className="relative isolate"
-        style={{
-          backgroundImage: "linear-gradient(135deg, #0A1530 0%, #050A16 55%, #000000 100%)",
-          backgroundColor: "#0A1530",
-        }}
-      >
+
+      {/* HERO com imagem de fundo */}
+      <div id="home" className="relative isolate">
         <Hero />
       </div>
+
       {/* Conteúdo principal */}
       <div id="sobre" className="scroll-mt-24">
         <About />
@@ -65,16 +60,19 @@ export default function App() {
       <div id="impact" className="scroll-mt-24">
         <Impact />
       </div>
-      {/* Planos */}
+
       <Plans />
+
       <div id="testimonials" className="scroll-mt-24">
         <Testimonials />
       </div>
       <div id="contato" className="scroll-mt-24">
         <Contact />
       </div>
+
       <Footer />
-      {/* Botão flutuante do WhatsApp */}
+
+      {/* WhatsApp */}
       <a
         href={WHATSAPP_LINK}
         target="_blank"
