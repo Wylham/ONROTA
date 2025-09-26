@@ -11,10 +11,10 @@ export default function Hero() {
         backgroundSize: "cover",
         backgroundPosition: "right center",
         backgroundRepeat: "no-repeat",
-        backgroundColor: "#121212", // dark fallback
+        backgroundColor: "#121212",
       }}
     >
-      {/* Degradê suave para legibilidade (curva que você definiu) */}
+      {/* Degradê suave para legibilidade */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
@@ -42,7 +42,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          {/* Parágrafo (aproximado das infos seguintes) */}
+          {/* Parágrafo */}
           <p className="text-white/90 text-[14px] md:text-[15px] leading-relaxed md:leading-[1.7] max-w-[65ch]">
             Combinamos <strong>tecnologia antifraude</strong> e <strong>automação</strong> para
             eliminar erros
@@ -55,7 +55,7 @@ export default function Hero() {
             Automação logística que elimina erros.
           </p>
 
-          {/* CTAs — primário (azul padrão) + fantasma */}
+          {/* CTAs */}
           <div className="flex items-center gap-3 pt-1">
             <a
               href="#sobre"

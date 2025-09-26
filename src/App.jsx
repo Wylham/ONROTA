@@ -27,13 +27,14 @@ export default function App() {
       <Navbar />
 
       {/* Modal de promoções de planos */}
-      {/* Tempo: 10s para abrir, 3min para reabrir */}
+      {/* Tempo: 5s para abrir, abre apenas uma vez por dia */}
       <PlansPromoModal
         delayMs={5000}
-        reopenMs={180000}
         imageSrc="/mockups/mulher-popup.png"
         imageAlt="Pessoa segurando um celular"
         oncadLogoSrc="/logos/opt/oncad.webp"
+        oncePerDay={true}
+        resetOnClosePage={false}
       />
 
       {/* HERO com imagem de fundo */}

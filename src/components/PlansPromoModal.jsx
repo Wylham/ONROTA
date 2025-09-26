@@ -2,13 +2,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export default function PlansPromoModal({
-  delayMs = 10000, // dispara em 10s
+  delayMs = 5000, // dispara em 5s
   reopenMs = null, // sem reabrir automaticamente
   imageSrc = "/mockups/mulher-popup.png",
   imageAlt = "Mulher segurando um telefone",
   oncadLogoSrc = "/logos/opt/oncad.webp",
   oncePerDay = true, // abre 1x por dia
-  resetOnClosePage = true, // reseta ao fechar a página
+  resetOnClosePage = false, // Não reseta ao fechar/recarregar
 }) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -27,7 +27,15 @@ export default function PlansPromoModal({
 
   // agenda primeira abertura respeitando "1x por dia"
   useEffect(() => {
-    const canShow = !oncePerDay || localStorage.getItem(DAILY_KEY) !== todayStr();
+    let lastShown = null;
+    try {
+      lastShown = localStorage.getItem(DAILY_KEY);
+    } catch {
+      // se der erro no localStorage, trata como nunca exibido
+      lastShown = null;
+    }
+
+    const canShow = !oncePerDay || lastShown !== todayStr();
 
     if (canShow) {
       initialTimeoutRef.current = setTimeout(() => {
@@ -47,7 +55,7 @@ export default function PlansPromoModal({
     };
   }, [delayMs, oncePerDay]);
 
-  // reseta a chave diária quando o usuário fecha a página/aba
+  // reset diário — por padrão DESLIGADO para manter 1x/dia mesmo com refresh
   useEffect(() => {
     if (!resetOnClosePage) return;
     const onUnload = () => {
@@ -93,7 +101,9 @@ export default function PlansPromoModal({
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black/55 md:bg-black/60 backdrop-blur-[2px] transition-opacity duration-150 ${visible ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-black/55 md:bg-black/60 backdrop-blur-[2px] transition-opacity duration-150 ${
+          visible ? "opacity-100" : "opacity-0"
+        }`}
         onClick={close}
       />
 
@@ -177,7 +187,7 @@ export default function PlansPromoModal({
                 <a
                   href="#planos"
                   onClick={close}
-                  className="relative inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#1593c8] px-4 py-2 font-semibold text-[0.94rem]"
+                  className="relative inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#168fc3] px-4 py-2 font-semibold text-[0.94rem]"
                 >
                   <span
                     className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-[#1da7e5]/35 animate-pulse"
