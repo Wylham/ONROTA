@@ -34,20 +34,20 @@ export default function Impact({
           <p className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">{headingBottom}</p>
         </header>
 
-        {/* Cards */}
+        {/* Cards: fundo azul #1da7e5 + textos brancos */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {cards.map(({ icon: Icon, title, desc }) => (
             <article
               key={title}
-              className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8 shadow-sm flex flex-col"
+              className="rounded-2xl bg-[#1da7e5] p-6 md:p-8 shadow-sm flex flex-col"
             >
-              <Icon className="w-10 h-10 text-indigo-600" />
-              <h3 className="mt-5 text-2xl font-bold">{title}</h3>
-              <p className="mt-3 text-slate-600 flex-grow">{desc}</p>
+              <Icon className="w-10 h-10 text-white" />
+              <h3 className="mt-5 text-2xl font-bold text-white">{title}</h3>
+              <p className="mt-3 text-white/95 flex-grow">{desc}</p>
 
               <a
                 href="#planos"
-                className="mt-5 inline-block font-semibold text-indigo-700 hover:text-indigo-900 transition-colors no-underline"
+                className="mt-5 inline-block font-semibold text-white hover:opacity-90 transition-opacity no-underline"
               >
                 Ver planos
               </a>
@@ -60,8 +60,17 @@ export default function Impact({
           <p className="text-center text-sm md:text-base text-slate-500">
             Realizamos integrações com os principais sistemas do mercado.
           </p>
-          <ul className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-x-14 gap-y-10 opacity-90">
-            <li className="flex items-center justify-center h-28 md:h-32">
+
+          {/* MOBILE: 3 logos na MESMA LINHA (sem quebra). DESKTOP: layout espaçado como antes */}
+          <ul
+            className="
+              mt-6 md:mt-8
+              flex flex-nowrap md:flex-wrap
+              items-center justify-between md:justify-center
+              gap-x-4 md:gap-x-14 gap-y-0 md:gap-y-10
+            "
+          >
+            <li className="w-1/3 md:w-auto flex items-center justify-center h-16 md:h-32">
               <img
                 src="/integrations/atua.webp"
                 alt="Atua"
@@ -69,7 +78,7 @@ export default function Impact({
                 loading="lazy"
               />
             </li>
-            <li className="flex items-center justify-center h-28 md:h-32">
+            <li className="w-1/3 md:w-auto flex items-center justify-center h-16 md:h-32">
               <img
                 src="/integrations/sankhya.webp"
                 alt="Sankhya"
@@ -77,9 +86,7 @@ export default function Impact({
                 loading="lazy"
               />
             </li>
-
-            {/* NOVA LOGO (mesmo tamanho) — troque o src e o alt */}
-            <li className="flex items-center justify-center h-28 md:h-32">
+            <li className="w-1/3 md:w-auto flex items-center justify-center h-16 md:h-32">
               <img
                 src="/integrations/sat.webp"
                 alt="Sat"

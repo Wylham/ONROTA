@@ -20,7 +20,7 @@ const PLANS = [
   },
   {
     id: "basic",
-    title: "Essencial",
+    title: "Essential",
     price: "R$ 8,97",
     priceSuffix: "/por cadastro",
     highlight: "Mais controle para seu time",
@@ -49,41 +49,12 @@ const PLANS = [
       "Suporte (SLA full time)",
     ],
   },
-  {
-    id: "plus",
-    title: "Plus",
-    price: "R$ 1.310",
-    priceSuffix: "/mês",
-    highlight: "Eficiência para operação madura",
-    description: "Orquestração entre áreas e visibilidade ponta a ponta.",
-    features: [
-      "30.000 cadastros/mês",
-      "25 usuários",
-      "Integrações ampliadas (Sankhya, Atua, ERPs, BI)",
-      "Score de risco + automação avançada",
-      "SLA dedicado (12h)",
-    ],
-  },
-  {
-    id: "enterprise",
-    title: "Enterprise",
-    price: "Sob consulta",
-    priceSuffix: "",
-    highlight: "Escala, compliance e customização",
-    description: "Soluções sob medida com segurança e time dedicado.",
-    features: [
-      "Cadastros/mês: sob consulta",
-      "Usuários: sob consulta",
-      "Integrações: sob consulta (Sankhya/Atua/ERP/TMS/BI)",
-      "Antifraude/automação/API: sob consulta",
-      "SLA e onboarding: sob consulta",
-    ],
-    enterprise: true,
-  },
 ];
 
+const VISIBLE_IDS = ["starter", "basic", "pro"];
+
 function PlanCard({
-  id, // <- recebendo id para regras específicas
+  id,
   title,
   price,
   priceSuffix,
@@ -121,9 +92,15 @@ function PlanCard({
                 <span className="text-white/60 text-xs md:text-base">{priceSuffix}</span>
               )}
             </div>
-            {/* remove somente no plano PRO */}
-            {id !== "pro" && (
+
+            {/* Observação alinhamento */}
+            {id === "starter" && (
               <p className="mt-1 text-[10px] md:text-xs text-white/50">*no plano anual</p>
+            )}
+            {id === "basic" && (
+              <p className="mt-1 text-[10px] md:text-xs opacity-0 select-none" aria-hidden="true">
+                placeholder
+              </p>
             )}
           </>
         ) : (
@@ -137,18 +114,20 @@ function PlanCard({
         <p className="mt-3 md:mt-4 text-sm md:text-base font-semibold">{highlight}</p>
         <p className="mt-1 text-[13px] md:text-sm text-white/80">{description}</p>
 
-        {/* BOTÃO: largura menor, fixa e centralizada em todos os cards */}
-        <a
-          href="#contato"
-          className="
-            mt-4 md:mt-6 inline-flex items-center justify-center
-            rounded-xl px-4 md:px-5 py-2.5 md:py-1.5
-            bg-blue-600 hover:bg-blue-700 font-semibold text-sm md:text-base
-            mx-auto w-[220px] md:w-[240px] lg:w-[260px]
-          "
-        >
-          {enterprise ? "Solicitar Orçamento Personalizado" : "Agendar Demo Gratuita"}
-        </a>
+        {/* CTA CENTRALIZADO */}
+        <div className="mt-4 md:mt-6 flex justify-center">
+          <a
+            href="#contato"
+            className="
+              inline-flex items-center justify-center
+              rounded-xl px-4 md:px-5 py-2.5 md:py-1.5
+              bg-[#1da7e5] hover:bg-[#168fc3] font-semibold text-sm md:text-base
+              w-[220px] md:w-[240px] lg:w-[260px]
+            "
+          >
+            {enterprise ? "Solicitar Orçamento Personalizado" : "Agendar Demo Gratuita"}
+          </a>
+        </div>
 
         <div className="mt-5 md:mt-6 h-px bg-white/10" />
 
@@ -180,12 +159,15 @@ export default function Plans() {
     const el = trackRef.current;
     if (!el) return;
     const card = el.querySelector("[data-card]");
-    const delta = card ? card.getBoundingClientRect().width + 24 : 320;
+    const gap = 24;
+    const delta = card ? card.getBoundingClientRect().width + gap : 320;
     el.scrollBy({ left: (dir === "next" ? 1 : -1) * delta, behavior: "smooth" });
   };
 
+  const plansToRender = PLANS.filter((p) => VISIBLE_IDS.includes(p.id));
+
   return (
-    <section id="planos" className="relative py-16 md:py-20 bg-[#121212]">
+    <section id="planos" className="relative py-16 md:py-20 bg-[#121212] text-white">
       <div className="mx-auto max-w-7xl px-4">
         {/* Header */}
         <header className="text-center max-w-3xl mx-auto">
@@ -197,7 +179,6 @@ export default function Plans() {
 
           {/* Selos */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            {/* Garantia */}
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#1da7e5" d="M12 2l7 4v6c0 5-7 10-7 10S5 17 5 12V6l7-4z" />
@@ -205,7 +186,6 @@ export default function Plans() {
               Garantia de Satisfação de 30 dias
             </span>
 
-            {/* Sem fidelidade */}
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -219,6 +199,37 @@ export default function Plans() {
         </header>
 
         <div className="relative mt-8 px-3 sm:px-6">
+          {/* SETAS (mobile) */}
+          <button
+            type="button"
+            aria-label="Plano anterior"
+            onClick={() => scrollByCards("prev")}
+            className="
+              md:hidden absolute left-1 top-1/2 -translate-y-1/2 z-10
+              grid place-items-center w-9 h-9 rounded-full
+              bg-white/10 hover:bg-white/15 border border-white/15
+            "
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke="#fff" strokeWidth="2" fill="none" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            aria-label="Próximo plano"
+            onClick={() => scrollByCards("next")}
+            className="
+              md:hidden absolute right-1 top-1/2 -translate-y-1/2 z-10
+              grid place-items-center w-9 h-9 rounded-full
+              bg-white/10 hover:bg-white/15 border border-white/15
+            "
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="#fff" strokeWidth="2" fill="none" />
+            </svg>
+          </button>
+
           {/* TRILHO */}
           <div
             ref={trackRef}
@@ -227,7 +238,7 @@ export default function Plans() {
               snap-x snap-mandatory pb-2 justify-start z-0
             "
           >
-            {PLANS.map((p) => (
+            {plansToRender.map((p) => (
               <div
                 key={p.id}
                 data-card
@@ -247,7 +258,6 @@ export default function Plans() {
         {/* Chamadas estratégicas */}
         <div className="mt-10">
           <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Teste gratuito */}
             <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
               <div
                 className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
@@ -270,7 +280,6 @@ export default function Plans() {
               </div>
             </div>
 
-            {/* Consultoria gratuita de implementação */}
             <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
               <div
                 className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
