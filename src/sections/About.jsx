@@ -40,8 +40,8 @@ export default function About() {
             <p className="text-[11px] md:text-xs tracking-widest uppercase text-white/70">
               Sobre a ONROTA
             </p>
-            <h2 className="mt-1 text-[clamp(1.6rem,4.8vw,3rem)] font-extrabold leading-tight text-white">
-              Tecnologia que gera <span style={{ color: BRAND_BLUE }}>confiança</span> em cada rota
+            <h2 className="mt-1 text-[clamp(1.6rem,4.8vw,2.9rem)] font-extrabold leading-tight text-white">
+              Tecnologia que gera <span style={{ color: BRAND_BLUE }}>confiança</span> em cada rota.
             </h2>
             <p className="mt-3 text-[15px] md:text-base leading-relaxed text-white/90">
               Unimos <strong>antifraude</strong>, <strong>automação logística</strong> e

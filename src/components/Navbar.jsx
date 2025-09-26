@@ -6,27 +6,20 @@ import logo from "../assets/logo-light.png";
 const NAV = [
   { id: "home", label: "Home" },
   { id: "sobre", label: "Sobre nós" },
-  { id: "servicos", label: "Produtos" },
+  { id: "servicos", label: "Produtos" }, // pai do dropdown
   { id: "clientes", label: "Nossos clientes" },
   { id: "planos", label: "Planos" },
   { id: "contato", label: "Contato" },
 ];
 
+const MOBILE_BG = "#121212"; // painel do sheet mobile
+
 export default function Navbar() {
-  const [open, setOpen] = useState(false); // drawer mobile
+  const [open, setOpen] = useState(false); // sheet mobile
   const [prodOpen, setProdOpen] = useState(false); // dropdown desktop
+  const [scrolled, setScrolled] = useState(false);
   const prodBtnRef = useRef(null);
   const prodMenuRef = useRef(null);
-
-  // >>> ADIÇÃO: controla cor do navbar conforme o scroll
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll(); // estado inicial
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-  // <<<
 
   // scroll suave com offset do header
   const scrollToId = (id) => {
@@ -41,16 +34,15 @@ export default function Navbar() {
     window.scrollTo({ top: y, behavior: "smooth" });
   };
 
-  // bloquear scroll quando o drawer abre (mobile)
+  // detectar scroll para mudar o fundo do header
   useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = open ? "hidden" : prev || "";
-    return () => {
-      document.body.style.overflow = prev || "";
-    };
-  }, [open]);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  // ESC fecha drawer e dropdown
+  // ESC fecha tudo
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -89,10 +81,21 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", onClickAway);
   }, [prodOpen]);
 
+  // trava scroll do body quando o sheet abre
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = open ? "hidden" : prev || "";
+    return () => {
+      document.body.style.overflow = prev || "";
+    };
+  }, [open]);
+
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-[9999] h-16 transition-colors duration-300
-      ${scrolled ? "bg-black/85 backdrop-blur border-b border-white/10" : "bg-transparent border-transparent"}`}
+      className={[
+        "fixed inset-x-0 top-0 z-[9999] h-16 transition-colors",
+        scrolled ? "bg-black/85 backdrop-blur border-b border-white/10" : "bg-transparent",
+      ].join(" ")}
     >
       <nav className="mx-auto max-w-7xl w-full h-full px-4 flex items-center justify-between text-white">
         <a
@@ -115,7 +118,7 @@ export default function Navbar() {
                 <li key={n.id}>
                   <a
                     href={`#${n.id}`}
-                    className="text-white/80 hover:text-indigo-400"
+                    className="text-white/80 hover:text-[#1da7e5]"
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToId(n.id);
@@ -128,7 +131,7 @@ export default function Navbar() {
               );
             }
 
-            // Produtos com submenu
+            // Produtos com submenu (desktop)
             return (
               <li key="produtos" className="relative">
                 <button
@@ -137,7 +140,7 @@ export default function Navbar() {
                   aria-haspopup="menu"
                   aria-expanded={prodOpen}
                   onClick={() => setProdOpen((v) => !v)}
-                  className="inline-flex items-center gap-1 text-white/80 hover:text-indigo-400"
+                  className="inline-flex items-center gap-1 text-white/80 hover:text-[#1da7e5]"
                 >
                   Produtos
                   <svg
@@ -202,10 +205,8 @@ export default function Navbar() {
 
         {/* botão mobile */}
         <button
-          className={`md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-white/15 transition ${
-            open ? "invisible" : "visible"
-          }`}
-          onClick={() => setOpen(true)}
+          className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 hover:bg-white/15 transition"
+          onClick={() => setOpen((v) => !v)}
           aria-label="Abrir menu"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
@@ -214,36 +215,36 @@ export default function Navbar() {
         </button>
       </nav>
 
-      <MobileDrawer open={open} onClose={() => setOpen(false)} scrollToId={scrollToId} />
+      {/* Sheet mobile (não tela inteira) */}
+      <MobileSheet open={open} onClose={() => setOpen(false)} scrollToId={scrollToId} />
     </header>
   );
 }
 
-function MobileDrawer({ open, onClose, scrollToId }) {
-  const panelRef = useRef(null);
+/* ===================== MOBILE SHEET ===================== */
+function MobileSheet({ open, onClose, scrollToId }) {
   const [prodOpen, setProdOpen] = useState(false);
 
-  if (!open) return null;
-
-  const go = (id) => {
-    onClose();
-    setTimeout(() => scrollToId(id), 80); // garante scroll após fechar drawer
-  };
-
-  const drawer = (
-    <div className="fixed inset-0 z-[100000]">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
-      <aside
-        ref={panelRef}
-        className="absolute left-0 top-0 h-full w-[88%] max-w-sm bg-black text-white shadow-2xl flex flex-col"
-        role="dialog"
-        aria-modal="true"
+  return createPortal(
+    <div className="md:hidden fixed left-0 right-0 top-0 z-[10000] pointer-events-none">
+      <div
+        className={`
+          mx-auto max-w-7xl
+          origin-top transform transition-all duration-300 ease-out
+          ${open ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0"}
+          rounded-b-2xl shadow-2xl overflow-hidden
+          bg-[#121212]
+        `}
       >
+        {/* Topo com logo + X */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
           <img src={logo} alt="OnRota" className="h-7" />
           <button
             className="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-white/10 hover:bg-white/15"
-            onClick={onClose}
+            onClick={() => {
+              setProdOpen(false);
+              onClose();
+            }}
             aria-label="Fechar menu"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -255,17 +256,19 @@ function MobileDrawer({ open, onClose, scrollToId }) {
           </button>
         </div>
 
-        <ul className="flex-1 overflow-y-auto px-4 py-4 space-y-1 text-base">
+        {/* Itens alinhados à direita + submenu de Produtos */}
+        <ul className="px-6 pb-6 space-y-4 text-right uppercase tracking-[0.18em] text-[13px] text-white/90">
           {NAV.map((n) => {
             if (n.id !== "servicos") {
               return (
                 <li key={n.id}>
                   <a
                     href={`#${n.id}`}
-                    className="block py-3 px-2 rounded-lg hover:bg-white/05"
+                    className="inline-block py-2 hover:text-white transition"
                     onClick={(e) => {
                       e.preventDefault();
-                      go(n.id);
+                      onClose();
+                      setTimeout(() => scrollToId(n.id), 80);
                     }}
                   >
                     {n.label}
@@ -279,10 +282,10 @@ function MobileDrawer({ open, onClose, scrollToId }) {
                 <button
                   type="button"
                   onClick={() => setProdOpen((v) => !v)}
-                  className="w-full text-left block py-3 px-2 rounded-lg hover:bg-white/05 inline-flex items-center justify-between"
+                  className="w-full inline-flex items-center justify-end gap-2 py-2 hover:text-white transition"
                   aria-expanded={prodOpen}
                 >
-                  <span>Produtos</span>
+                  <span>PRODUTOS</span>
                   <svg
                     width="16"
                     height="16"
@@ -293,34 +296,38 @@ function MobileDrawer({ open, onClose, scrollToId }) {
                     <path fill="currentColor" d="M7 10l5 5 5-5z" />
                   </svg>
                 </button>
+
                 {prodOpen && (
-                  <div className="mt-1 ml-2 space-y-1">
+                  <div className="mt-1 space-y-1 text-white/85 text-right normal-case tracking-normal text-[14px]">
                     <a
                       href="#servicos"
-                      className="block py-2 px-3 rounded-lg text-sm text-white/90 hover:bg-white/05"
+                      className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();
-                        go("servicos");
+                        onClose();
+                        setTimeout(() => scrollToId("servicos"), 80);
                       }}
                     >
                       OnCad
                     </a>
                     <a
                       href="#impact"
-                      className="block py-2 px-3 rounded-lg text-sm text-white/90 hover:bg-white/05"
+                      className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();
-                        go("impact");
+                        onClose();
+                        setTimeout(() => scrollToId("impact"), 80);
                       }}
                     >
                       Integrações
                     </a>
                     <a
                       href="#productdemo"
-                      className="block py-2 px-3 rounded-lg text-sm text-white/90 hover:bg-white/05"
+                      className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();
-                        go("productdemo");
+                        onClose();
+                        setTimeout(() => scrollToId("productdemo"), 80);
                       }}
                     >
                       Demonstração
@@ -331,23 +338,8 @@ function MobileDrawer({ open, onClose, scrollToId }) {
             );
           })}
         </ul>
-
-        <div className="p-4 border-t border-white/10">
-          <a
-            href="#contato"
-            className="block w-full text-center rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700"
-            onClick={(e) => {
-              e.preventDefault();
-              go("contato");
-            }}
-          >
-            Fale com a OnRota
-          </a>
-          <p className="mt-3 text-xs text-white/40">© 2025 OnRota</p>
-        </div>
-      </aside>
-    </div>
+      </div>
+    </div>,
+    document.body
   );
-
-  return createPortal(drawer, document.body);
 }
