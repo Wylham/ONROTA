@@ -40,7 +40,7 @@ export default function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-10 md:py-20 text-white">
         <div className="max-w-[22rem] sm:max-w-xl md:max-w-3xl space-y-3 md:space-y-6">
           {/* Eyebrow */}
-          <p className="font-extrabold tracking-tight leading-tight text-[18px] sm:text-[28px] md:text-[26px]">
+          <p className="tracking-tight leading-tight text-[18px] sm:text-[28px] md:text-[24px]">
             Mais segurança, menos riscos:
           </p>
 
@@ -49,7 +49,7 @@ export default function Hero() {
             <span className="block text-[30px] sm:text-[40px] md:text-[48px] sm:whitespace-nowrap">
               O futuro do transporte
             </span>
-            <span className="block text-[36px] sm:text-[48px] md:text-[68px] text-[#1da7e5]">
+            <span className="block text-[36px] sm:text-[48px] md:text-[68px] text-[white]">
               é OnRota.
             </span>
           </h1>
@@ -60,13 +60,6 @@ export default function Hero() {
             e <strong className="font-extrabold text-white">automação</strong> para eliminar erros
             <br className="hidden md:inline" /> manuais, reduzir custos e aumentar a confiabilidade
             das suas rotas.
-          </p>
-
-          {/* Observações — <br> só no desktop */}
-          <p className="text-white/75 text-[12px] md:text-[12.5px] leading-snug max-w-[70ch] mt-1">
-            Foco exclusivo no transporte rodoviário, Sistema antifraude para validação
-            <span className="hidden md:inline"> e</span>
-            <br className="hidden md:inline" /> Automação logística que elimina erros.
           </p>
 
           {/* CTAs */}

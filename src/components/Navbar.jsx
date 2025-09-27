@@ -7,7 +7,7 @@ const NAV = [
   { id: "home", label: "Home" },
   { id: "sobre", label: "Sobre nós" },
   { id: "servicos", label: "Produtos" }, // pai do dropdown
-  { id: "clientes", label: "Nossos clientes" },
+  { id: "clientes", label: "Clientes" },
   { id: "planos", label: "Planos" },
   { id: "contato", label: "Contato" },
 ];
