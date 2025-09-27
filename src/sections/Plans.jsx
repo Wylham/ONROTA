@@ -300,7 +300,7 @@ export default function Plans() {
         </div>
 
         <p className="mt-8 text-center text-sm text-white/60">
-          Valores fictícios para demonstração. assim que validado, irei ajustar os valores reais.
+          Para informações sobre planos personalizados para grandes volumes, entre em contato.
         </p>
       </div>
     </section>

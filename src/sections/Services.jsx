@@ -50,7 +50,7 @@ export default function Services() {
             />
 
             <h2 className="mt-3 text-[32px] md:text-[44px] font-extrabold leading-[1.08] tracking-tight">
-              Automatize seu cadastro em minutos com o OnCad.
+              Automatize seu cadastro em segundos com o OnCad.
             </h2>
 
             <p className="mt-4 text-white/75 text-[15px] md:text-[16px] leading-relaxed max-w-xl">
