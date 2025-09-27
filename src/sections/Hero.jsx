@@ -1,12 +1,35 @@
 ﻿// src/sections/Hero.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Hero() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      const id2 = requestAnimationFrame(() => setReady(true));
+      return () => cancelAnimationFrame(id2);
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const slideIn = (extra = "") =>
+    [
+      "transform transition-transform transition-opacity duration-[1500ms]",
+      "ease-[cubic-bezier(0.22,1,0.36,1)]",
+      "motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100",
+      ready ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-[100%]",
+      "will-change-transform will-change-opacity",
+      extra,
+    ].join(" ");
+
   return (
     <section
       className="
         relative flex items-center overflow-hidden
-        min-h-[68vh] md:min-h-[88vh]
+        /* MOBILE: altura proporcional (antes 68vh) */
+        min-h-[76vh]
+        /* DESKTOP/TABLET: tela cheia */
+        md:min-h-screen
         bg-no-repeat bg-cover
         bg-[position:center] md:bg-[position:right_center]
       "
@@ -26,7 +49,7 @@ export default function Hero() {
             "linear-gradient(90deg, rgba(0,0,0,0.92) 6%, rgba(0,0,0,0.78) 36%, rgba(0,0,0,0.58) 55%, rgba(0,0,0,0.30) 82%, rgba(0,0,0,0.00) 96%)",
         }}
       />
-      {/* DESKTOP/TABLET: curva original que você aprovou */}
+      {/* DESKTOP/TABLET: curva aprovada */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none hidden md:block"
@@ -39,13 +62,15 @@ export default function Hero() {
       {/* Conteúdo */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-10 md:py-20 text-white">
         <div className="max-w-[22rem] sm:max-w-xl md:max-w-3xl space-y-3 md:space-y-6">
-          {/* Eyebrow */}
-          <p className="tracking-tight leading-tight text-[18px] sm:text-[28px] md:text-[24px]">
+          <p
+            className={slideIn(
+              "delay-[150ms] tracking-tight leading-tight text-[18px] sm:text-[28px] md:text-[24px]"
+            )}
+          >
             Mais segurança, menos riscos:
           </p>
 
-          {/* Título */}
-          <h1 className="font-extrabold tracking-tight leading-[1.04]">
+          <h1 className={slideIn("delay-[300ms] font-extrabold tracking-tight leading-[1.04]")}>
             <span className="block text-[30px] sm:text-[40px] md:text-[48px] sm:whitespace-nowrap">
               O futuro do transporte
             </span>
@@ -54,25 +79,27 @@ export default function Hero() {
             </span>
           </h1>
 
-          {/* Parágrafo — bold com keywords ainda mais densas; <br> só no desktop */}
-          <p className="font-semibold text-white/90 text-[14px] md:text-[15px] leading-relaxed md:leading-[1.7] max-w-[65ch]">
+          <p
+            className={slideIn(
+              "delay-[450ms] font-semibold text-white/90 text-[14px] md:text-[15px] leading-relaxed md:leading-[1.7] max-w-[65ch]"
+            )}
+          >
             Combinamos <strong className="font-extrabold text-white">tecnologia antifraude</strong>{" "}
             e <strong className="font-extrabold text-white">automação</strong> para eliminar erros
             <br className="hidden md:inline" /> manuais, reduzir custos e aumentar a confiabilidade
             das suas rotas.
           </p>
 
-          {/* CTAs */}
-          <div className="flex items-center gap-3 pt-1">
+          <div className={slideIn("delay-[650ms] flex items-center gap-3 pt-1")}>
             <a
               href="#sobre"
-              className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-[13px] font-medium bg-[#1da7e5] hover:bg-[#168fc3]"
+              className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-[13px] font-medium bg-[#1da7e5] hover:bg-[#168fc3] focus:outline-none focus:ring-2 focus:ring-white/30"
             >
               Conhecer mais
             </a>
             <a
               href="#servicos"
-              className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 border border-white/20 text-white/90 hover:bg-white/10 text-[13px]"
+              className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 border border-white/20 text-white/90 hover:bg-white/10 text-[13px] focus:outline-none focus:ring-2 focus:ring-white/20"
             >
               Nossos Produtos
             </a>
