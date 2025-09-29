@@ -292,7 +292,7 @@ function LeadRow() {
               <div className={fadeUp(lead.inView, "mt-6 flex flex-wrap gap-3")}>
                 <a
                   href="#contato"
-                  className="inline-flex items-center justify-center border px-4 py-2 text-white text-sm font-medium transition-colors"
+                  className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-white text-sm font-medium border transition-colors"
                   style={{ backgroundColor: colors.primary, borderColor: colors.primary }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.backgroundColor = colors.primaryHover)
@@ -301,9 +301,10 @@ function LeadRow() {
                 >
                   Falar com a OnRota
                 </a>
+
                 <a
                   href="#clientes"
-                  className="inline-flex items-center justify-center rounded-none border px-4 py-2 text-sm font-medium transition-colors"
+                  className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium border transition-colors"
                   style={{
                     color: "#0f172a",
                     borderColor: "rgba(2,6,23,0.12)",
@@ -357,24 +358,28 @@ function PillarsBanner() {
           Nossos Pilares
         </p>
         <h3
-          {...landUp(view.inView, "mt-2 font-extrabold text-white leading-[1.05]", 80)}
-          style={{ fontSize: "clamp(1.9rem,5vw,3.2rem)" }}
+          {...landUp(
+            view.inView,
+            // menor, mais compacto e com "text-balance" para quebras inteligentes
+            "mt-1 font-extrabold text-white leading-[1.12] tracking-tight text-balance max-w-2xl",
+            80
+          )}
+          style={{ fontSize: "clamp(1.8rem,4.2vw,2.8rem)" }}
         >
-          <span className="block">Segurança em primeiro lugar</span>
-          <span className="block">Inovação que simplifica</span>
-          <span className="block">
-            Eficiência no <span style={{ color: colors.primary }}>transporte</span>
-          </span>
+          Segurança em primeiro lugar, inovação que simplifica e eficiência no{" "}
+          <span style={{ color: colors.primary }}>transporte</span>
         </h3>
+
         <p
           {...landUp(
             view.inView,
-            "mt-4 max-w-3xl text-white/90 text-sm md:text-base leading-relaxed",
+            // texto mais curto, largura menor e quebras bonitas
+            "mt-4 max-w-2xl text-white/85 text-sm md:text-[15.5px] leading-relaxed text-pretty",
             140
           )}
         >
           Segurança como base, inovação para simplificar e eficiência para mover a logística com
-          confiança — pilares que sustentam tudo o que construímos.
+          confiança são pilares que sustentam tudo o que construímos.
         </p>
       </div>
     </section>
@@ -415,7 +420,7 @@ function MissionVisionValues() {
               <p>
                 Ser a referência em antifraude e automação no transporte rodoviário, definindo o
                 novo padrão de segurança, simplicidade e inteligência do setor. Enxergamos um
-                ecossistema onde cada etapa — da contratação à entrega — é validada, rastreada e
+                ecossistema onde cada etapa da contratação à entrega é validada, rastreada e
                 mensurada.
               </p>
               <p>
@@ -440,7 +445,7 @@ function MissionVisionValues() {
               </p>
               <p>
                 Esses valores orientam nossas escolhas de produto, nossas parcerias e a forma como
-                implementamos cada projeto — sempre com foco em resultado, segurança e confiança.
+                implementamos cada projeto sempre com foco em resultado, segurança e confiança.
               </p>
             </>
           }
