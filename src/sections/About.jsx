@@ -7,26 +7,44 @@ import missionImg from "../assets/missao.jpg";
 import visionImg from "../assets/visao.jpg";
 import valuesImg from "../assets/valores.jpg";
 
-/* ===== GATILHO PADRÃO (dispara pouco antes do meio do bloco) ===== */
-const TRIGGER = { threshold: 0.4, rootMargin: "0px 0px -12% 0px" };
+/* ===== TRIGGERS =====
+   - DEFAULT: pouco antes do meio (Lead/Pilares)
+   - TOUCH_ROW: dispara ao encostar o bloco na viewport (MVV), com leve folga
+   - *_MOBILE: mais tardios (disparam quando o conteúdo realmente aparece)
+   - CARD_MOBILE: dispara no próprio card da imagem (evita adiantar/anular)
+*/
+const TRIGGER_DEFAULT = { threshold: 0.34, rootMargin: "0px 0px -8% 0px" };
+const TRIGGER_TOUCH_ROW = { threshold: 0.05, rootMargin: "0px 0px -5% 0px" };
+const TRIGGER_DEFAULT_MOBILE = { threshold: 0.5, rootMargin: "0px" }; // ↑ um pouco mais tardio
+const TRIGGER_TOUCH_ROW_MOBILE = { threshold: 0.48, rootMargin: "0px" }; // ↑ idem
+const TRIGGER_CARD_MOBILE = { threshold: 0.55, rootMargin: "0px 0px -4% 0px" }; // foco no card
 
-/* Hook in-view (IO + fallback) */
-function useInView(opts = TRIGGER) {
+/* Detecta mobile por media query (sem SSR breaking) */
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < breakpoint : false
+  );
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, [breakpoint]);
+  return isMobile;
+}
+
+/* Hook in-view (IO + fallback), aceita opções */
+function useInView(opts = TRIGGER_DEFAULT) {
   const {
-    threshold = TRIGGER.threshold,
+    threshold = TRIGGER_DEFAULT.threshold,
     root = null,
-    rootMargin = TRIGGER.rootMargin,
+    rootMargin = TRIGGER_DEFAULT.rootMargin,
   } = opts || {};
   const ref = useRef(null);
-  const [inView, setInView] = useState(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return true;
-    }
-    return false;
-  });
+  // sempre começa false para o IO registrar e a animação disparar
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     if (!ref.current || inView) return;
@@ -36,7 +54,7 @@ function useInView(opts = TRIGGER) {
       const r = el.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
       const vw = window.innerWidth || document.documentElement.clientWidth;
-      const height = r.height || 1;
+      const height = Math.max(r.height, 1);
       const visiblePart = Math.min(r.bottom, vh) - Math.max(r.top, 0);
       const frac = visiblePart / height;
       const intersects = r.left < vw && r.right > 0 && r.bottom > 0 && r.top < vh;
@@ -55,7 +73,7 @@ function useInView(opts = TRIGGER) {
           const e = entries[0];
           if (e.isIntersecting) {
             setInView(true);
-            io.unobserve(el);
+            io.unobserve(el); // dispara uma vez
           }
         },
         { threshold, root, rootMargin }
@@ -83,7 +101,27 @@ function useInView(opts = TRIGGER) {
   return { ref, inView };
 }
 
-/** Suspiro padrão (gradiente de respiro) */
+/** Pré-carrega levemente as imagens de MVV para evitar decode no momento da animação */
+function usePreloadMVV() {
+  useEffect(() => {
+    const run = () => {
+      [missionImg, visionImg, valuesImg].forEach((src) => {
+        const img = new Image();
+        img.decoding = "async";
+        img.src = src;
+      });
+    };
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(run, { timeout: 1200 });
+      } else {
+        setTimeout(run, 400);
+      }
+    }
+  }, []);
+}
+
+/** Suspiro (respiro visual entre blocos) */
 function Suspiro({ dir = "down", size = "md" }) {
   const h = size === "sm" ? "h-6 md:h-8" : size === "lg" ? "h-12 md:h-16" : "h-8 md:h-12";
   const rotate = dir === "up" ? "rotate-180" : "";
@@ -92,126 +130,137 @@ function Suspiro({ dir = "down", size = "md" }) {
   );
 }
 
-/* ===== Helpers de animação ===== */
+/* ===== Helpers de animação — MESMO MODELO DO HERO ===== */
 const EASE =
   "ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100";
-const BASE = `transform transition-transform transition-opacity duration-[1000ms] ${EASE} will-change-transform will-change-opacity`;
+const BASE = `transform transition-transform transition-opacity duration-[900ms] ${EASE} will-change-transform will-change-opacity`;
 
-/* slideX padrão (14% / 1000ms) */
 function slideX(on, dir, extra = "") {
-  const off = dir === "left" ? "-translate-x-[14%]" : "translate-x-[14%]";
-  return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
-}
-
-/* slideX sutil (Missão priority: 10% / 850ms) */
-function slideXSoft(on, dir, extra = "") {
-  const off = dir === "left" ? "-translate-x-[10%]" : "translate-x-[10%]";
-  const baseSoft = BASE.replace("duration-[1000ms]", "duration-[850ms]");
-  return [baseSoft, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
-}
-
-/* fade up (mobile e pequenos elementos) */
-function fadeUp(on, extra = "", soft = false) {
-  const base = soft ? BASE.replace("duration-[1000ms]", "duration-[850ms]") : BASE;
-  return [base, on ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", extra].join(" ");
-}
-
-/* pouso suave (Pilares): de baixo pra cima + scale leve (mais presente, porém sutil) */
-function landUp(on, extra = "", delayMs = 0) {
-  const cls = [
-    BASE.replace("duration-[1000ms]", "duration-[800ms]"),
-    on ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-[0.992]",
+  const off = dir === "left" ? "-translate-x-[12%]" : "translate-x-[12%]";
+  return [
+    BASE,
+    on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`,
+    "will-change-transform",
     extra,
   ].join(" ");
-  const style = { transitionDelay: on ? `${delayMs}ms` : "0ms" };
+}
+function fadeUp(on, extra = "", dur = "800ms", dy = 6) {
+  const base = BASE.replace("duration-[900ms]", `duration-[${dur}]`);
+  return [
+    base,
+    on ? "opacity-100 translate-y-0" : `opacity-0 translate-y-[${dy}px]`,
+    "will-change-transform",
+    extra,
+  ].join(" ");
+}
+/* Pouso suave (permanece) – usado nos Pilares */
+function landUp(on, extra = "", delayMs = 0) {
+  const cls = [
+    BASE.replace("duration-[900ms]", "duration-[780ms]"),
+    on ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-[0.992]",
+    "will-change-transform",
+    extra,
+  ].join(" ");
+  const style = { transitionDelay: on ? `${delayMs}ms` : "0ms", transform: "translateZ(0)" };
   return { className: cls, style };
 }
 
 export default function About() {
+  usePreloadMVV(); // ✅ pré-carrega as imagens de Missão/Visão/Valores
   return (
     <section id="sobre" className="bg-white text-slate-900">
-      {/* Suspiro entre o HERO e o About */}
+      {/* respiro com o HERO */}
       <Suspiro dir="up" size="md" />
 
-      {/* TOPO (Sobre nós) no mesmo modelo dos blocos abaixo – imagem à esquerda */}
+      {/* TOPO (Sobre nós) – hero pattern */}
       <LeadRow />
 
-      {/* Suspiro abaixo do bloco topo */}
       <Suspiro dir="down" size="md" />
 
-      {/* Pilares (landUp: de baixo pra cima e pousando) */}
+      {/* Pilares – pouso (mantido) */}
       <PillarsBanner />
 
-      {/* Missão / Visão / Valores */}
+      {/* Missão / Visão / Valores – hero pattern + trigger ao encostar */}
       <MissionVisionValues />
     </section>
   );
 }
 
-/** PRIMEIRO BLOCO: imagem metade ESQUERDA (bg absoluto) + texto direita centralizado */
+/** LEAD: imagem ESQ + texto DIR */
 function LeadRow() {
-  const bgIn = useInView();
-  const mobImg = useInView();
-  const txtIn = useInView();
-  const mobTxtIn = useInView();
-
+  const isMobile = useIsMobile();
+  const lead = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
   const ROW_H = "md:h-[clamp(380px,42vh,520px)] lg:h-[clamp(420px,46vh,560px)]";
 
+  // 🔎 Gatilho específico para o CARD da imagem no MOBILE
+  const leadImgMob = useInView(TRIGGER_CARD_MOBILE);
+
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* BG metade esquerda (desktop) — slide da ESQUERDA */}
-      <div
-        ref={bgIn.ref}
-        className={slideX(
-          bgIn.inView,
-          "left",
-          "pointer-events-none hidden md:block absolute inset-y-0 left-0 right-1/2"
-        )}
-      >
+    <section
+      ref={lead.ref}
+      className="relative overflow-hidden bg-white"
+      style={{
+        contentVisibility: "auto",
+        contain: "layout paint style",
+        containIntrinsicSize: "600px 520px",
+      }}
+    >
+      {/* Imagem (desktop) — card RETANGULAR (mantido) */}
+      <div className="pointer-events-none hidden md:block absolute inset-y-0 left-0 right-1/2">
+        <div className="h-full w-full flex items-center justify-center px-6">
+          <div
+            className={[
+              "relative aspect-[16/10] w-full max-w-[600px] overflow-hidden border border-black/5 shadow-sm bg-white/30 backdrop-blur-[1px]",
+              slideX(lead.inView, "left"),
+            ].join(" ")}
+          >
+            <img
+              src={aboutPhoto}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              decoding="async"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Imagem (mobile) — RETANGULAR + animação idêntica aos textos (gatilho do próprio card) */}
+      <div className="md:hidden mb-2 px-6">
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${aboutPhoto})` }}
-          aria-hidden="true"
-        />
+          ref={leadImgMob.ref}
+          className={[
+            "relative aspect-[16/10] w-[80%] max-w-[320px] overflow-hidden border border-black/5 shadow-sm bg-white",
+            slideX(leadImgMob.inView, "left"), // ✅ agora dispara exatamente quando o card entra
+          ].join(" ")}
+        >
+          <img
+            src={aboutPhoto}
+            alt="Equipe monitorando operações logísticas com a plataforma ONROTA"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+          />
+        </div>
       </div>
 
-      {/* imagem no mobile (fade-up) */}
-      <div ref={mobImg.ref} className={fadeUp(mobImg.inView, "md:hidden")}>
-        <img
-          src={aboutPhoto}
-          alt="Equipe monitorando operações logísticas com a plataforma ONROTA"
-          className="w-full h-[200px] sm:h-[220px] object-cover"
-          loading="lazy"
-          decoding="async"
-          fetchpriority="low"
-        />
-      </div>
-
-      {/* linha de conteúdo */}
+      {/* Linha de texto (desktop intacto) */}
       <div className={`relative mx-auto max-w-7xl px-6 md:px-10 ${ROW_H}`}>
         <div className="flex flex-col md:flex-row h-full items-stretch md:items-center gap-6 md:gap-8">
-          {/* placeholder da metade da imagem (esquerda) */}
           <div className="hidden md:block basis-1/2 h-full" aria-hidden="true" />
-
-          {/* texto (direita) — slide da DIREITA */}
           <div
-            ref={txtIn.ref}
             className={slideX(
-              txtIn.inView,
+              lead.inView,
               "right",
               "basis-full md:basis-1/2 h-full flex items-center justify-center"
             )}
           >
-            <div
-              ref={mobTxtIn.ref}
-              className={fadeUp(
-                mobTxtIn.inView,
-                "w-full max-w-[640px] mx-auto text-left md:opacity-100 md:translate-y-0"
-              )}
-            >
+            <div className="w-full max-w-[640px] mx-auto text-left">
               <p
                 className={fadeUp(
-                  txtIn.inView,
+                  lead.inView,
                   "mb-2 text-xs font-semibold tracking-wide text-slate-500"
                 )}
               >
@@ -220,7 +269,7 @@ function LeadRow() {
 
               <h2
                 className={slideX(
-                  txtIn.inView,
+                  lead.inView,
                   "right",
                   "font-extrabold leading-tight text-slate-900"
                 )}
@@ -232,7 +281,7 @@ function LeadRow() {
 
               <p
                 className={fadeUp(
-                  txtIn.inView,
+                  lead.inView,
                   "mt-4 text-[15px] md:text-[15.5px] leading-relaxed text-slate-700"
                 )}
               >
@@ -240,11 +289,11 @@ function LeadRow() {
                 objetivas e menos atrito no dia a dia da rota.
               </p>
 
-              <div className={fadeUp(txtIn.inView, "mt-6 flex flex-wrap gap-3")}>
+              <div className={fadeUp(lead.inView, "mt-6 flex flex-wrap gap-3")}>
                 <a
                   href="#contato"
-                  className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-white text-sm font-medium transition-colors"
-                  style={{ backgroundColor: colors.primary }}
+                  className="inline-flex items-center justify-center border px-4 py-2 text-white text-sm font-medium transition-colors"
+                  style={{ backgroundColor: colors.primary, borderColor: colors.primary }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.backgroundColor = colors.primaryHover)
                   }
@@ -254,7 +303,7 @@ function LeadRow() {
                 </a>
                 <a
                   href="#clientes"
-                  className="inline-flex items-center justify-center rounded-xl border px-4 py-2 text-sm font-medium transition-colors"
+                  className="inline-flex items-center justify-center rounded-none border px-4 py-2 text-sm font-medium transition-colors"
                   style={{
                     color: "#0f172a",
                     borderColor: "rgba(2,6,23,0.12)",
@@ -274,16 +323,28 @@ function LeadRow() {
   );
 }
 
+/** PILARES (pouso) — mantido */
 function PillarsBanner() {
-  // landUp (de baixo pra cima e pousando) + stagger
-  const view = useInView();
-
+  const view = useInView(TRIGGER_DEFAULT);
   return (
-    <section ref={view.ref} className="relative overflow-hidden">
-      <div
-        className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center"
-        style={{ backgroundImage: `url(${pillarsBg})` }}
-      />
+    <section
+      ref={view.ref}
+      className="relative overflow-hidden"
+      style={{
+        contentVisibility: "auto",
+        contain: "layout paint style",
+        containIntrinsicSize: "600px 420px",
+      }}
+    >
+      <div className="absolute inset-0 z-0">
+        <img
+          src={pillarsBg}
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
       <div
         className="absolute inset-0 z-0"
         style={{
@@ -291,14 +352,10 @@ function PillarsBanner() {
             "linear-gradient(90deg, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.98) 45%, rgba(0,0,0,0.92) 55%, rgba(0,0,0,0.78) 65%, rgba(0,0,0,0.55) 74%, rgba(0,0,0,0.28) 90%, rgba(0,0,0,0.00) 97%)",
         }}
       />
-
       <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-10 py-12 md:py-16">
-        {/* label */}
         <p {...landUp(view.inView, "text-white/80 text-xs tracking-widest uppercase", 0)}>
           Nossos Pilares
         </p>
-
-        {/* título */}
         <h3
           {...landUp(view.inView, "mt-2 font-extrabold text-white leading-[1.05]", 80)}
           style={{ fontSize: "clamp(1.9rem,5vw,3.2rem)" }}
@@ -309,13 +366,11 @@ function PillarsBanner() {
             Eficiência no <span style={{ color: colors.primary }}>transporte</span>
           </span>
         </h3>
-
-        {/* parágrafo */}
         <p
           {...landUp(
             view.inView,
             "mt-4 max-w-3xl text-white/90 text-sm md:text-base leading-relaxed",
-            160
+            140
           )}
         >
           Segurança como base, inovação para simplificar e eficiência para mover a logística com
@@ -326,16 +381,14 @@ function PillarsBanner() {
   );
 }
 
+/** MVV — mesmo padrão do hero */
 function MissionVisionValues() {
   return (
     <section className="py-12 md:py-16 bg-white">
       <div className="space-y-12 md:space-y-16">
-        {/* Missão com perfil priority (gatilho mais cedo + animações mais sutis) */}
         <SplitRow
           img={missionImg}
-          reverse={false}
           title="Missão"
-          priority
           desc={
             <>
               <p>
@@ -353,11 +406,9 @@ function MissionVisionValues() {
             </>
           }
         />
-
-        {/* Visão e Valores com padrão geral */}
         <SplitRow
           img={visionImg}
-          reverse={true}
+          reverse
           title="Visão"
           desc={
             <>
@@ -375,10 +426,8 @@ function MissionVisionValues() {
             </>
           }
         />
-
         <SplitRow
           img={valuesImg}
-          reverse={false}
           title="Valores"
           desc={
             <>
@@ -401,55 +450,69 @@ function MissionVisionValues() {
   );
 }
 
-/** ROW compacta: metade imagem (bg absoluto) + metade texto — animações padronizadas + mobile */
-function SplitRow({ img, reverse = false, title, desc, priority = false }) {
-  // Gatilho: padrão ou mais cedo/sutil para priority (Missão)
-  const opts = priority ? { threshold: 0.28, rootMargin: "0px 0px -8% 0px" } : undefined;
-
-  const bgIn = useInView(opts);
-  const mobImg = useInView(opts);
-  const txtIn = useInView(opts);
-  const mobTxtIn = useInView(opts);
-
+/** ROW (MVV): imagem entra da ESQ→DIR; texto mantém direção original. Mobile com trigger no card. */
+function SplitRow({ img, reverse = false, title, desc }) {
+  const isMobile = useIsMobile();
+  const row = useInView(isMobile ? TRIGGER_TOUCH_ROW_MOBILE : TRIGGER_TOUCH_ROW); // seção
   const HALF_SIDE = reverse ? "right-0 left-1/2" : "left-0 right-1/2";
-  const ROW_H = "md:h-[clamp(380px,42vh,520px)] lg:h-[clamp(420px,46vh,560px)]";
-
-  const imgDir = reverse ? "right" : "left";
   const txtDir = reverse ? "left" : "right";
+  const ROW_H = "md:h-[clamp(360px,40vh,520px)] lg:h-[clamp(400px,44vh,560px)]";
 
-  // escolhe o perfil de movimento conforme priority
-  const slide = priority ? slideXSoft : slideX;
-  const fade = (on, extra = "") => fadeUp(on, extra, priority);
+  // 🔎 Gatilho específico do CARD da imagem no MOBILE
+  const mobImg = useInView(TRIGGER_CARD_MOBILE);
 
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* BG metade (desktop) */}
+    <section
+      ref={row.ref}
+      className="relative overflow-hidden bg-white"
+      style={{
+        contentVisibility: "auto",
+        contain: "layout paint style",
+        containIntrinsicSize: "600px 480px",
+      }}
+    >
+      {/* Imagem desktop — card RETANGULAR (mantido) */}
       <div
-        ref={bgIn.ref}
-        className={slide(
-          bgIn.inView,
-          imgDir,
-          ["pointer-events-none hidden md:block absolute inset-y-0", HALF_SIDE].join(" ")
-        )}
+        className={["pointer-events-none hidden md:block absolute inset-y-0", HALF_SIDE].join(" ")}
       >
+        <div className="h-full w-full flex items-center justify-center px-6">
+          <div
+            className={[
+              "relative aspect-[16/10] w-full max-w-[560px] overflow-hidden border border-black/5 shadow-sm bg-white/30 backdrop-blur-[1px]",
+              slideX(row.inView, "left"),
+            ].join(" ")}
+          >
+            <img
+              src={img}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Imagem mobile — RETANGULAR + animação com trigger do próprio card */}
+      <div className="md:hidden mb-3 sm:mb-4 px-6">
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${img})` }}
-          aria-hidden="true"
-        />
+          ref={mobImg.ref}
+          className={[
+            "relative aspect-[16/10] w-[78%] max-w-[300px] overflow-hidden border border-black/5 shadow-sm bg-white",
+            slideX(mobImg.inView, "left"),
+          ].join(" ")}
+        >
+          <img
+            src={img}
+            alt={typeof title === "string" ? title : "Imagem"}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
 
-      {/* Mobile image (fade-up) */}
-      <div ref={mobImg.ref} className={fade(mobImg.inView, "md:hidden")}>
-        <img
-          src={img}
-          alt={typeof title === "string" ? title : "Imagem"}
-          className="w-full h-[200px] sm:h-[220px] object-cover"
-          loading="lazy"
-        />
-      </div>
-
-      {/* Linha */}
+      {/* Texto */}
       <div className={`relative mx-auto max-w-7xl px-6 md:px-10 ${ROW_H}`}>
         <div
           className={[
@@ -460,25 +523,18 @@ function SplitRow({ img, reverse = false, title, desc, priority = false }) {
           {/* placeholder da metade da imagem */}
           <div className="hidden md:block basis-1/2 h-full" aria-hidden="true" />
 
-          {/* Texto — slide oposto (desktop) + fadeUp (mobile) */}
+          {/* Texto — mantém direções originais */}
           <div
-            ref={txtIn.ref}
-            className={slide(
-              txtIn.inView,
+            className={slideX(
+              row.inView,
               txtDir,
               "basis-full md:basis-1/2 h-full flex items-center justify-center"
             )}
           >
-            <div
-              ref={mobTxtIn.ref}
-              className={fade(
-                mobTxtIn.inView,
-                "w-full max-w-[560px] md:max-w-[640px] mx-auto text-left md:opacity-100 md:translate-y-0"
-              )}
-            >
+            <div className="w-full max-w-[560px] md:max-w-[640px] mx-auto text-left">
               <h3
-                className={slide(
-                  txtIn.inView,
+                className={slideX(
+                  row.inView,
                   txtDir,
                   "font-extrabold leading-tight text-slate-900"
                 )}
@@ -487,14 +543,16 @@ function SplitRow({ img, reverse = false, title, desc, priority = false }) {
                 {title}
               </h3>
 
-              <div
-                className={fade(
-                  txtIn.inView,
-                  "mt-3 space-y-3 text-[15px] md:text-[15.5px] leading-relaxed text-slate-700"
-                )}
-              >
-                {desc}
-              </div>
+              {desc ? (
+                <div
+                  className={fadeUp(
+                    row.inView,
+                    "mt-3 sm:mt-4 text-[15px] md:text-[15.5px] leading-relaxed text-slate-700 space-y-3"
+                  )}
+                >
+                  {desc}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
