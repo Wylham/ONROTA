@@ -22,12 +22,11 @@ export default function App() {
     "Acabei de visitar o site da ONROTA e quero saber mais sobre o produto ONCAD, e como ele pode manter minha operação mais segura, eficiente e livre de fraudes.";
 
   return (
-    <div className="min-h-screen w-full bg-black text-white selection:bg-indigo-500/40">
+    <div className="min-h-screen w-full overflow-x-hidden overscroll-x-none bg-black text-white selection:bg-indigo-500/40">
       {/* Navbar fixa (transparente sobre o hero; escurece no scroll) */}
       <Navbar />
 
       {/* Modal de promoções de planos */}
-      {/* Tempo: 5s para abrir, abre apenas uma vez por dia */}
       <PlansPromoModal
         delayMs={5000}
         imageSrc="/mockups/mulher-popup.png"

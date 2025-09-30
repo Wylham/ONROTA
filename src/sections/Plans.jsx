@@ -1,7 +1,9 @@
 // src/sections/Plans.jsx
-import React, { useEffect, useRef } from "react";
-import { CalendarCheck2, Wrench } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { CalendarCheck2, Wrench } from "@/components/icons.jsx";
+import { colors } from "@/components/brand.jsx";
 
+/* DATA */
 const PLANS = [
   {
     id: "starter",
@@ -50,9 +52,112 @@ const PLANS = [
     ],
   },
 ];
-
 const VISIBLE_IDS = ["starter", "basic", "pro"];
 
+/* ANIMATION UTILS */
+const TRIGGER_DEFAULT = { threshold: 0.34, rootMargin: "0px 0px -8% 0px" };
+const TRIGGER_DEFAULT_MOBILE = { threshold: 0.45, rootMargin: "0px" };
+
+function useIsMobile(bp = 768) {
+  const [m, setM] = useState(typeof window !== "undefined" ? window.innerWidth < bp : false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia(`(max-width:${bp - 1}px)`);
+    const on = () => setM(mq.matches);
+    on();
+    mq.addEventListener?.("change", on);
+    return () => mq.removeEventListener?.("change", on);
+  }, [bp]);
+  return m;
+}
+
+function useInView(opts = TRIGGER_DEFAULT) {
+  const {
+    threshold = TRIGGER_DEFAULT.threshold,
+    root = null,
+    rootMargin = TRIGGER_DEFAULT.rootMargin,
+  } = opts || {};
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current || inView) return;
+    const el = ref.current;
+
+    const isNowVisible = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const vw = window.innerWidth || document.documentElement.clientWidth;
+      const height = Math.max(r.height, 1);
+      const visiblePart = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+      const frac = visiblePart / height;
+      const intersects = r.left < vw && r.right > 0 && r.bottom > 0 && r.top < vh;
+      return intersects && frac >= threshold;
+    };
+
+    if (isNowVisible()) {
+      setInView(true);
+      return;
+    }
+
+    let io;
+    if ("IntersectionObserver" in window) {
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setInView(true);
+            io.unobserve(el);
+          }
+        },
+        { threshold, root, rootMargin }
+      );
+      io.observe(el);
+    }
+
+    const onScroll = () => {
+      if (!inView && isNowVisible()) {
+        setInView(true);
+        window.removeEventListener("scroll", onScroll, { passive: true });
+        window.removeEventListener("resize", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      if (io) io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [inView, threshold, root, rootMargin]);
+
+  return { ref, inView };
+}
+
+const EASE =
+  "ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100";
+const BASE = `transform-gpu transition-transform transition-opacity duration-[820ms] ${EASE} will-change-transform will-change-opacity`;
+function slideX(on, dir, extra = "") {
+  const off = dir === "left" ? "-translate-x-[12%]" : "translate-x-[12%]";
+  return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
+}
+function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
+  const base = BASE.replace("duration-[820ms]", `duration-[${dur}]`);
+  return [base, on ? "opacity-100 translate-y-0" : `opacity-0 translate-y-[${dy}px]`, extra].join(
+    " "
+  );
+}
+function landUp(on, extra = "", delayMs = 0) {
+  const cls = [
+    BASE.replace("duration-[820ms]", "duration-[760ms]"),
+    on ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
+    extra,
+  ].join(" ");
+  const style = { transitionDelay: on ? `${delayMs}ms` : "0ms" };
+  return { className: cls, style };
+}
+
+/* CARD */
 function PlanCard({
   id,
   title,
@@ -64,38 +169,55 @@ function PlanCard({
   popular,
   badge,
   enterprise,
+  inView,
+  delay = 0,
 }) {
   return (
     <div
-      className="
+      {...landUp(
+        inView,
+        `
         relative h-full w-full max-w-[420px]
         rounded-2xl border border-white/10 bg-white/5
         shadow-lg overflow-hidden transition
-        hover:ring-1 hover:ring-[#1da7e5]/50
-      "
+        hover:ring-1 hover:ring-white/20
+      `,
+        delay
+      )}
+      style={{ boxShadow: "0 6px 22px rgba(0,0,0,.18)" }}
     >
       {popular && (
-        <div className="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] md:text-xs font-medium bg-[#1da7e5] text-white">
+        <div
+          className={fadeUp(
+            inView,
+            "absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] md:text-xs font-medium text-white"
+          )}
+          style={{
+            backgroundColor: colors.primary,
+            transitionDelay: inView ? `${delay + 40}ms` : "0ms",
+          }}
+        >
           {badge || "Popular"}
         </div>
       )}
 
       <div className="p-5 md:p-7">
-        <h3 className="text-lg md:text-xl font-semibold">{title}</h3>
+        <h3 className={slideX(inView, "right", "text-lg md:text-xl font-semibold")}>{title}</h3>
 
         {!enterprise ? (
           <>
-            <p className="mt-1 text-white/70 text-xs md:text-sm">A partir de</p>
-            <div className="mt-1 md:mt-2 flex items-baseline gap-1">
+            <p className={fadeUp(inView, "mt-1 text-white/70 text-xs md:text-sm")}>A partir de</p>
+            <div className={slideX(inView, "right", "mt-1 md:mt-2 flex items-baseline gap-1")}>
               <span className="text-2xl md:text-4xl font-extrabold">{price}</span>
               {priceSuffix && (
                 <span className="text-white/60 text-xs md:text-base">{priceSuffix}</span>
               )}
             </div>
 
-            {/* Observação alinhamento */}
             {id === "starter" && (
-              <p className="mt-1 text-[10px] md:text-xs text-white/50">*no plano anual</p>
+              <p className={fadeUp(inView, "mt-1 text-[10px] md:text-xs text-white/50")}>
+                *no plano anual
+              </p>
             )}
             {id === "basic" && (
               <p className="mt-1 text-[10px] md:text-xs opacity-0 select-none" aria-hidden="true">
@@ -104,26 +226,32 @@ function PlanCard({
             )}
           </>
         ) : (
-          <div className="mt-2">
+          <div className={fadeUp(inView, "mt-2")}>
             <span className="inline-flex items-center rounded-lg border border-white/15 px-2.5 py-1 text-[13px] md:text-sm text-white/90">
               {price}
             </span>
           </div>
         )}
 
-        <p className="mt-3 md:mt-4 text-sm md:text-base font-semibold">{highlight}</p>
-        <p className="mt-1 text-[13px] md:text-sm text-white/80">{description}</p>
+        <p className={fadeUp(inView, "mt-3 md:mt-4 text-sm md:text-base font-semibold")}>
+          {highlight}
+        </p>
+        <p className={fadeUp(inView, "mt-1 text-[13px] md:text-sm text-white/80")}>{description}</p>
 
-        {/* CTA CENTRALIZADO */}
-        <div className="mt-4 md:mt-6 flex justify-center">
+        {/* CTA */}
+        <div className={fadeUp(inView, "mt-4 md:mt-6 flex justify-center")}>
           <a
             href="#contato"
             className="
               inline-flex items-center justify-center
               rounded-xl px-4 md:px-5 py-2.5 md:py-1.5
-              bg-[#1da7e5] hover:bg-[#168fc3] font-semibold text-sm md:text-base
+              font-semibold text-sm md:text-base
               w-[220px] md:w-[240px] lg:w-[260px]
+              transition-colors
             "
+            style={{ backgroundColor: colors.primary, color: "#fff" }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = colors.primaryHover)}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = colors.primary)}
           >
             {enterprise ? "Solicitar Orçamento Personalizado" : "Agendar Demo Gratuita"}
           </a>
@@ -132,11 +260,18 @@ function PlanCard({
         <div className="mt-5 md:mt-6 h-px bg-white/10" />
 
         <div className="mt-3 md:mt-4">
-          <p className="text-sm md:text-base font-semibold">Incluso:</p>
+          <p className={slideX(inView, "right", "text-sm md:text-base font-semibold")}>Incluso:</p>
           <ul className="mt-3 space-y-2 text-[13px] md:text-sm text-white/90">
             {features.map((f, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
+              <li
+                key={idx}
+                className={fadeUp(inView, "flex items-start gap-2")}
+                style={{ transitionDelay: inView ? `${delay + 80 + idx * 40}ms` : "0ms" }}
+              >
+                <span
+                  className="mt-1 inline-block h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: colors.primary }}
+                />
                 <span>{f}</span>
               </li>
             ))}
@@ -147,54 +282,87 @@ function PlanCard({
   );
 }
 
+/* SECTION  */
 export default function Plans() {
   const trackRef = useRef(null);
-
-  useEffect(() => {
-    const el = trackRef.current;
-    if (el) el.scrollLeft = 0;
-  }, []);
-
-  const scrollByCards = (dir) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const card = el.querySelector("[data-card]");
-    const gap = 24;
-    const delta = card ? card.getBoundingClientRect().width + gap : 320;
-    el.scrollBy({ left: (dir === "next" ? 1 : -1) * delta, behavior: "smooth" });
-  };
+  const slideRefs = useRef([]);
+  const [index, setIndex] = useState(0);
 
   const plansToRender = PLANS.filter((p) => VISIBLE_IDS.includes(p.id));
 
+  // centraliza um slide pelo índice
+  const centerToIndex = (i, smooth = true) => {
+    const track = trackRef.current;
+    const slide = slideRefs.current[i];
+    if (!track || !slide) return;
+    const target = slide.offsetLeft + slide.offsetWidth / 2 - track.clientWidth / 2;
+    track.scrollTo({ left: target, behavior: smooth ? "smooth" : "auto" });
+  };
+
+  useEffect(() => {
+    // ao montar, centraliza o primeiro card
+    centerToIndex(0, false);
+
+    const onResize = () => centerToIndex(index, false);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const go = (dir) => {
+    const max = plansToRender.length - 1;
+    const next = dir === "next" ? Math.min(index + 1, max) : Math.max(index - 1, 0);
+    setIndex(next);
+    centerToIndex(next);
+  };
+
+  // Animations
+  const isMobile = useIsMobile();
+  const head = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
+  const trackSentinel = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
+  const extras = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
+
   return (
-    <section id="planos" className="relative py-16 md:py-20 bg-[#121212] text-white">
+    <section
+      id="planos"
+      className="relative py-16 md:py-20 bg-[#121212] text-white overflow-x-hidden"
+    >
       <div className="mx-auto max-w-7xl px-4">
         {/* Header */}
-        <header className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-extrabold">Planos OnCad</h2>
-          <p className="mt-3 text-white/80 text-sm md:text-base">
+        <header ref={head.ref} className="text-center max-w-3xl mx-auto overflow-x-hidden">
+          <h2 className={fadeUp(head.inView, "text-3xl md:text-5xl font-extrabold")}>
+            Planos OnCad
+          </h2>
+          <p className={fadeUp(head.inView, "mt-3 text-white/80 text-sm md:text-base")}>
             Escolha o plano ideal para impulsionar seus cadastros e reduzir fraudes dos seus
             clientes!
           </p>
 
           {/* Selos */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#1da7e5" d="M12 2l7 4v6c0 5-7 10-7 10S5 17 5 12V6l7-4z" />
-              </svg>
-              Garantia de Satisfação de 30 dias
-            </span>
-
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  fill="#1da7e5"
-                  d="M12 1a5 5 0 0 0-5 5v2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm0 2a3 3 0 0 1 3 3v2H9V6a3 3 0 0 1 3-3Z"
-                />
-              </svg>
-              Sem fidelidade em todos os planos
-            </span>
+          <div className="overflow-x-hidden">
+            <div
+              className={slideX(
+                head.inView,
+                "right",
+                "mt-4 flex flex-wrap items-center justify-center gap-2"
+              )}
+            >
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill={colors.primary} d="M12 2l7 4v6c0 5-7 10-7 10S5 17 5 12V6l7-4z" />
+                </svg>
+                Garantia de Satisfação de 30 dias
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs md:text-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    fill={colors.primary}
+                    d="M12 1a5 5 0 0 0-5 5v2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm0 2a3 3 0 0 1 3 3v2H9V6a3 3 0 0 1 3-3Z"
+                  />
+                </svg>
+                Sem fidelidade em todos os planos
+              </span>
+            </div>
           </div>
         </header>
 
@@ -203,7 +371,7 @@ export default function Plans() {
           <button
             type="button"
             aria-label="Plano anterior"
-            onClick={() => scrollByCards("prev")}
+            onClick={() => go("prev")}
             className="
               md:hidden absolute left-1 top-1/2 -translate-y-1/2 z-10
               grid place-items-center w-9 h-9 rounded-full
@@ -218,7 +386,7 @@ export default function Plans() {
           <button
             type="button"
             aria-label="Próximo plano"
-            onClick={() => scrollByCards("next")}
+            onClick={() => go("next")}
             className="
               md:hidden absolute right-1 top-1/2 -translate-y-1/2 z-10
               grid place-items-center w-9 h-9 rounded-full
@@ -230,35 +398,40 @@ export default function Plans() {
             </svg>
           </button>
 
-          {/* TRILHO */}
+          {/* Sentinela para disparar animação */}
+          <div ref={trackSentinel.ref} className="h-1 w-full" aria-hidden />
+
+          {/* Trilho — respiro + snap padding */}
           <div
             ref={trackRef}
             className="
               relative flex items-stretch gap-6 overflow-x-auto scroll-smooth no-scrollbar
-              snap-x snap-mandatory pb-2 justify-start z-0
+              snap-x snap-mandatory pb-2 justify-start z-0 px-4
             "
+            style={{ scrollPaddingLeft: "1rem", scrollPaddingRight: "1rem" }}
           >
-            {plansToRender.map((p) => (
+            {plansToRender.map((p, idx) => (
               <div
                 key={p.id}
+                ref={(el) => (slideRefs.current[idx] = el)}
                 data-card
                 className="
-                  snap-center shrink-0
-                  w-[86vw] sm:w-[60vw]
+                  snap-center shrink-0 overflow-visible
+                  w-[82vw] sm:w-[60vw]
                   md:w-[360px] lg:w-[380px]
                   flex justify-center
                 "
               >
-                <PlanCard {...p} />
+                <PlanCard {...p} inView={trackSentinel.inView} delay={80 + idx * 120} />
               </div>
             ))}
           </div>
         </div>
 
         {/* Chamadas estratégicas */}
-        <div className="mt-10">
+        <div ref={extras.ref} className={fadeUp(extras.inView, "mt-10")}>
           <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
+            <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-white/20 transition">
               <div
                 className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
                 style={{ paddingRight: "3.25rem" }}
@@ -266,7 +439,7 @@ export default function Plans() {
                 <CalendarCheck2
                   size={20}
                   strokeWidth={2}
-                  color="#1da7e5"
+                  color={colors.primary}
                   className="shrink-0 mt-0.5"
                 />
                 <div className="flex-1 min-w-0 leading-relaxed">
@@ -280,12 +453,17 @@ export default function Plans() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-[#1da7e5]/50 transition">
+            <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-white/20 transition">
               <div
                 className="flex items-start gap-3 pl-5 md:pl-6 py-5 md:py-6"
                 style={{ paddingRight: "2.5rem" }}
               >
-                <Wrench size={20} strokeWidth={2} color="#1da7e5" className="shrink-0 mt-0.5" />
+                <Wrench
+                  size={20}
+                  strokeWidth={2}
+                  color={colors.primary}
+                  className="shrink-0 mt-0.5"
+                />
                 <div className="flex-1 min-w-0 leading-relaxed">
                   <strong className="block font-semibold">
                     Consultoria gratuita de implementação
@@ -299,7 +477,7 @@ export default function Plans() {
           </div>
         </div>
 
-        <p className="mt-8 text-center text-sm text-white/60">
+        <p className={fadeUp(extras.inView, "mt-8 text-center text-sm text-white/60")}>
           Para informações sobre planos personalizados para grandes volumes, entre em contato.
         </p>
       </div>

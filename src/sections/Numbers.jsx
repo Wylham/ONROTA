@@ -1,5 +1,6 @@
 // src/sections/Numbers.jsx
 import React, { useEffect, useRef, useState } from "react";
+import { colors } from "@/components/brand.jsx";
 
 const STATS = [
   { type: "mil", value: 149, label: "cadastros realizados" },
@@ -79,8 +80,11 @@ export default function Numbers() {
                 className="rounded-2xl bg-slate-50 border border-slate-200 shadow-sm
                            px-5 py-6 md:px-6 md:py-7 text-center mx-auto w-full max-w-[260px]"
               >
-                {/* Azul mais forte (já usado nos hovers): #168fc3 */}
-                <div className={`text-[#168fc3] font-extrabold leading-none ${numberSize}`}>
+                {/* Cores */}
+                <div
+                  className={`font-extrabold leading-none ${numberSize}`}
+                  style={{ color: colors.primary }}
+                >
                   <Counter type={type} target={value} />
                 </div>
                 <p className="mt-2.5 md:mt-3 text-slate-800 text-[13px] md:text-[14px] leading-[20px] md:leading-[21px] mx-auto max-w-[220px]">

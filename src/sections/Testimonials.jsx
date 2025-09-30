@@ -1,7 +1,9 @@
 // src/sections/Testimonials.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Quote, Star, ChevronLeft, ChevronRight } from "@/components/icons.jsx";
+import { colors } from "@/components/brand.jsx";
 
+//* Depoimentos reais de clientes satisfeitos *//
 const TESTIMONIALS = [
   {
     company: "Pianetto Transportes",
@@ -53,6 +55,109 @@ function quoteSizeClass(len) {
   return "text-[0.9rem] md:text-[0.95rem]"; // ~14.5–15px
 }
 
+/* Animação */
+const TRIGGER_DEFAULT = { threshold: 0.34, rootMargin: "0px 0px -8% 0px" };
+const TRIGGER_DEFAULT_MOBILE = { threshold: 0.45, rootMargin: "0px" };
+
+function useIsMobile(bp = 768) {
+  const [m, setM] = useState(typeof window !== "undefined" ? window.innerWidth < bp : false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia(`(max-width:${bp - 1}px)`);
+    const on = () => setM(mq.matches);
+    on();
+    mq.addEventListener?.("change", on);
+    return () => mq.removeEventListener?.("change", on);
+  }, [bp]);
+  return m;
+}
+
+function useInView(opts = TRIGGER_DEFAULT) {
+  const {
+    threshold = TRIGGER_DEFAULT.threshold,
+    root = null,
+    rootMargin = TRIGGER_DEFAULT.rootMargin,
+  } = opts || {};
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current || inView) return;
+    const el = ref.current;
+
+    const isNowVisible = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const vw = window.innerWidth || document.documentElement.clientWidth;
+      const height = Math.max(r.height, 1);
+      const visiblePart = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+      const frac = visiblePart / height;
+      const intersects = r.left < vw && r.right > 0 && r.bottom > 0 && r.top < vh;
+      return intersects && frac >= threshold;
+    };
+
+    if (isNowVisible()) {
+      setInView(true);
+      return;
+    }
+
+    let io;
+    if ("IntersectionObserver" in window) {
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setInView(true);
+            io.unobserve(el);
+          }
+        },
+        { threshold, root, rootMargin }
+      );
+      io.observe(el);
+    }
+
+    const onScroll = () => {
+      if (!inView && isNowVisible()) {
+        setInView(true);
+        window.removeEventListener("scroll", onScroll, { passive: true });
+        window.removeEventListener("resize", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      if (io) io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [inView, threshold, root, rootMargin]);
+
+  return { ref, inView };
+}
+
+const EASE =
+  "ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100";
+const BASE = `transform-gpu transition-transform transition-opacity duration-[820ms] ${EASE} will-change-transform will-change-opacity`;
+function slideX(on, dir, extra = "") {
+  const off = dir === "left" ? "-translate-x-[12%]" : "translate-x-[12%]";
+  return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
+}
+function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
+  const base = BASE.replace("duration-[820ms]", `duration-[${dur}]`);
+  return [base, on ? "opacity-100 translate-y-0" : `opacity-0 translate-y-[${dy}px]`, extra].join(
+    " "
+  );
+}
+function landUp(on, extra = "", delayMs = 0) {
+  const cls = [
+    BASE.replace("duration-[820ms]", "duration-[760ms]"),
+    on ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
+    extra,
+  ].join(" ");
+  const style = { transitionDelay: on ? `${delayMs}ms` : "0ms" };
+  return { className: cls, style };
+}
+
 export default function Testimonials({
   heading = "Quem experimentou, se encantou!",
   items = TESTIMONIALS,
@@ -61,6 +166,10 @@ export default function Testimonials({
   const slidesRef = useRef([]);
   const [cardsPerView, setCardsPerView] = useState(1);
   const [index, setIndex] = useState(0);
+
+  const isMobile = useIsMobile();
+  const head = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
+  const railSentinel = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT); // dispara animações dos cards
 
   const computePerView = () => {
     const w = window.innerWidth;
@@ -128,15 +237,28 @@ export default function Testimonials({
   return (
     <section className="bg-gray-100 text-slate-900 scroll-mt-24 md:scroll-mt-28">
       <div className="mx-auto max-w-7xl px-3 pt-8 md:pt-12 pb-6 md:pb-8">
-        <h2 className="text-center text-3xl md:text-4xl font-extrabold tracking-tight">
+        <h2
+          ref={head.ref}
+          className={fadeUp(
+            head.inView,
+            "text-center text-3xl md:text-4xl font-extrabold tracking-tight"
+          )}
+          style={{ color: "inherit" }}
+        >
           {heading}
         </h2>
 
         <div className="relative mt-6 md:mt-8">
+          {/* Sentinela para disparar as animações dos cards */}
+          <div ref={railSentinel.ref} className="h-1 w-full" aria-hidden />
+
           {/* trilho */}
           <div
             ref={containerRef}
-            className="overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory"
+            className={fadeUp(
+              railSentinel.inView,
+              "overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory"
+            )}
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             <div
@@ -158,45 +280,78 @@ export default function Testimonials({
                     key={i}
                     data-slide-index={i}
                     ref={(el) => (slidesRef.current[i] = el)}
-                    className="
+                    {...landUp(
+                      railSentinel.inView,
+                      `
                       snap-center snap-always
                       rounded-xl border border-slate-200 bg-white
                       p-4 md:p-5 shadow-sm flex flex-col self-start
-                    "
+                    `,
+                      80 + i * 90
+                    )}
                   >
-                    <Quote className="w-6 h-6 text-indigo-400" />
+                    <Quote className="w-6 h-6" style={{ color: colors.primary }} />
 
                     {/* quote compacto */}
-                    <p className={`mt-3 text-slate-700 leading-[1.5] ${quoteSizeClass(len)}`}>
+                    <p
+                      className={fadeUp(
+                        railSentinel.inView,
+                        `mt-3 text-slate-700 leading-[1.5] ${quoteSizeClass(len)}`
+                      )}
+                    >
                       “{t.quote}”
                     </p>
 
                     <div className="mt-4 md:mt-5">
-                      <div className="font-semibold text-slate-900 text-[0.9rem] md:text-[0.95rem]">
+                      <div
+                        className={slideX(
+                          railSentinel.inView,
+                          "right",
+                          "font-semibold text-slate-900 text-[0.9rem] md:text-[0.95rem]"
+                        )}
+                      >
                         {t.company}
                       </div>
-                      <div className="text-slate-500 text-[0.78rem] md:text-[0.82rem]">
+                      <div
+                        className={fadeUp(
+                          railSentinel.inView,
+                          "text-slate-500 text-[0.78rem] md:text-[0.82rem]"
+                        )}
+                      >
                         {t.role}
                       </div>
 
-                      {/* logo + estrelas menores */}
+                      {/* logo + estrelas */}
                       <div className="mt-3.5 flex items-center justify-between gap-2">
-                        <div className="h-7 md:h-8 max-w-[46%] flex items-center">
+                        <div
+                          className={slideX(
+                            railSentinel.inView,
+                            "left",
+                            "h-7 md:h-8 max-w-[46%] flex items-center"
+                          )}
+                        >
                           <img
                             src={t.logo}
                             alt={t.name}
                             className={`h-full w-auto object-contain shrink-0 origin-left ${scaleClass}`}
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
-                        <div className="flex items-center gap-[3px] shrink-0">
+                        <div
+                          className={fadeUp(
+                            railSentinel.inView,
+                            "flex items-center gap-[3px] shrink-0"
+                          )}
+                        >
                           {Array.from({ length: 5 }).map((_, s) => (
                             <Star
                               key={s}
-                              className={`w-[12px] h-[12px] ${
-                                s < (t.rating || 5)
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-slate-300"
-                              }`}
+                              className="w-[12px] h-[12px]"
+                              style={{
+                                color: s < (t.rating || 5) ? "#facc15" : "#cbd5e1",
+                                fill: s < (t.rating || 5) ? "#facc15" : "none",
+                              }}
                             />
                           ))}
                         </div>
@@ -246,9 +401,11 @@ export default function Testimonials({
                   setIndex(i);
                   scrollToIndex(i);
                 }}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === index ? "w-4 bg-slate-800" : "w-1.5 bg-slate-300"
-                }`}
+                className="h-1.5 rounded-full transition-all"
+                style={{
+                  width: i === index ? 16 : 6,
+                  backgroundColor: i === index ? colors.primary : "#cbd5e1",
+                }}
               />
             ))}
           </div>

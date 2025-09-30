@@ -1,8 +1,9 @@
 // src/sections/ProductDemo.jsx
 import React from "react";
 import { DEMO_VIDEO as DEFAULTS } from "@/constants/metrics";
+import { colors } from "/src/components/brand.jsx";
 
-/* Banda de vídeo com altura mais compacta, mantendo conteúdo igual */
+/* Banda de Vídeo */
 export default function ProductDemo(props) {
   const videoId = props.videoId || DEFAULTS.videoId;
   const title = props.title || DEFAULTS.title;
@@ -25,7 +26,12 @@ export default function ProductDemo(props) {
           </div>
 
           {/* Vídeo */}
-          <div className="w-full max-w-[680px] justify-self-center rounded-2xl bg-black/10 p-1 shadow-xl">
+          <div
+            className="w-full max-w-[680px] justify-self-center rounded-2xl p-1 shadow-xl"
+            style={{
+              background: "rgba(0,0,0,0.10)",
+            }}
+          >
             <div className="relative h-0 pb-[56.25%] overflow-hidden rounded-xl">
               <iframe
                 className="absolute inset-0 h-full w-full rounded-xl"
@@ -35,6 +41,7 @@ export default function ProductDemo(props) {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
+                style={{ outline: "none", boxShadow: "none" }}
               />
             </div>
           </div>

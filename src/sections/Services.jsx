@@ -1,9 +1,9 @@
 ﻿// src/sections/Services.jsx
 import React, { useEffect, useMemo, useRef } from "react";
 import { IconOCR, IconCadastro, IconAPI, IconValidacao } from "@/components/icons.jsx";
-import { colors as brandColors } from "/src/components/brand.jsx"; // <- pega as cores padronizadas
+import { colors as brandColors } from "/src/components/brand.jsx";
 
-/* ====== Mapa de cores com fallbacks ====== */
+/* Mapa de cores com fallbacks */
 const theme = {
   primary: brandColors?.primary || "#1da7e5",
   primaryHover: brandColors?.primaryHover || "#168fc3",
@@ -17,7 +17,7 @@ const theme = {
   outline: brandColors?.outline || "rgba(255,255,255,0.20)",
 };
 
-/* ========= Reveal util (leve e sem libs) ========= */
+/* Reveal util (leve e sem libs) */
 function useReveal({ once = true, rootMargin = "0px 0px -12% 0px" } = {}) {
   const observerRef = useRef(null);
 
@@ -79,7 +79,6 @@ function Reveal({ children, className = "", delay = 0, as: Tag = "div" }) {
     </Tag>
   );
 }
-/* ========================================= */
 
 export default function Services() {
   const ASSETS = {

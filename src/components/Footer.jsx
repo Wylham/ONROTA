@@ -23,9 +23,12 @@ export default function Footer() {
             md:grid md:grid-cols-3 md:items-center md:text-left md:gap-6
           "
         >
-          {/* ESQUERDA — copyright */}
+          {/* ESQUERDA — copyright + CNPJ em nova linha */}
           <div className="text-white/70 text-sm">
-            © {new Date().getFullYear()} OnRota. Todos os direitos reservados.
+            <div>© {new Date().getFullYear()} OnRota. Todos os direitos reservados.</div>
+            <div className="mt-1">
+              CNPJ: <span className="text-white/80">62.762.345/0001-30</span>
+            </div>
           </div>
 
           {/* CENTRO — Política e Termos */}
@@ -83,7 +86,7 @@ export default function Footer() {
                     scrollToId("servicos");
                   }}
                 >
-                  Serviços
+                  Produtos
                 </a>
               </li>
               <li>

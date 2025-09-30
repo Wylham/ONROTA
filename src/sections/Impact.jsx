@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { IconValidacao, IconOCR, IconAPI } from "@/components/icons.jsx";
 import { colors } from "@/components/brand.jsx";
 
-/* ====== Dados (inalterados) ====== */
+/* Dados */
 const CARDS = [
   {
     icon: IconValidacao,
@@ -22,7 +22,7 @@ const CARDS = [
   },
 ];
 
-/* ====== Triggers / hooks ====== */
+/* Triggers / hooks */
 const TRIGGER_DEFAULT = { threshold: 0.34, rootMargin: "0px 0px -8% 0px" };
 const TRIGGER_DEFAULT_MOBILE = { threshold: 0.45, rootMargin: "0px" };
 
@@ -104,7 +104,7 @@ function useInView(opts = TRIGGER_DEFAULT) {
   return { ref, inView };
 }
 
-/* ====== Helpers de animação ====== */
+/* Helpers de animação */
 const EASE =
   "ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100";
 const BASE = `transform-gpu transition-transform transition-opacity duration-[820ms] ${EASE} will-change-transform will-change-opacity`;
@@ -129,7 +129,7 @@ function landUp(on, extra = "", delayMs = 0) {
   return { className: cls, style };
 }
 
-/* ====== Componente ====== */
+/* Componente */
 export default function Impact({
   headingTop = "Por que escolher o ONCAD?",
   headingBottom = "Porque por aqui, só há vantagens!",
@@ -139,6 +139,11 @@ export default function Impact({
   const head = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
   const grid = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
   const logos = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
+
+  const brand = {
+    primary: colors?.primary || "#1da7e5",
+    primaryHover: colors?.primaryHover || "#168fc3",
+  };
 
   return (
     <section className="bg-white text-slate-900 scroll-mt-24 md:scroll-mt-28">
@@ -154,23 +159,25 @@ export default function Impact({
               "right",
               "mt-2 text-3xl md:text-4xl font-extrabold tracking-tight"
             )}
-            style={{ color: colors.primary }}
+            style={{ color: brand.primary }}
           >
             {headingBottom}
           </p>
         </header>
 
-        {/* Cards: usam a paleta do brand */}
+        {/* Cards */}
         <div ref={grid.ref} className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {cards.map(({ icon: Icon, title, desc }, i) => (
             <article
               key={title}
               {...landUp(
                 grid.inView,
-                "rounded-2xl p-6 md:p-8 shadow-sm flex flex-col",
+                "rounded-2xl p-6 md:p-8 shadow-sm flex flex-col transition-colors",
                 80 + i * 90
               )}
-              style={{ backgroundColor: colors.primary }}
+              style={{ backgroundColor: brand.primary }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = brand.primaryHover)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = brand.primary)}
             >
               <Icon className={fadeUp(grid.inView, "w-10 h-10 text-white")} />
               <h3 className={slideX(grid.inView, "right", "mt-5 text-2xl font-bold text-white")}>
@@ -183,12 +190,15 @@ export default function Impact({
                 className={slideX(
                   grid.inView,
                   "right",
-                  "mt-5 inline-block font-semibold hover:opacity-90 transition-opacity no-underline"
+                  "mt-5 inline-block font-semibold transition-opacity no-underline"
                 )}
                 style={{
                   color: "#fff",
+                  opacity: grid.inView ? 1 : 0,
                   transitionDelay: grid.inView ? `${180 + i * 90}ms` : "0ms",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.9)}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
               >
                 Ver planos
               </a>
@@ -202,7 +212,7 @@ export default function Impact({
             Realizamos integrações com os principais sistemas do mercado.
           </p>
 
-          {/* MOBILE: 3 logos na MESMA LINHA (sem quebra). DESKTOP: layout espaçado como antes */}
+          {/* MOBILE: 3 logos na MESMA LINHA (sem quebra). */}
           <ul
             className={slideX(
               logos.inView,
