@@ -115,9 +115,7 @@ function slideX(on, dir, extra = "") {
 }
 function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
   const base = BASE.replace("duration-[820ms]", `duration-[${dur}]`);
-  return [base, on ? "opacity-100 translate-y-0" : `opacity-0 translate-y-[${dy}px]`, extra].join(
-    " "
-  );
+  return [base, (on ? "opacity-100" : "opacity-0") + " translate-y-[var(--dy)]", extra].join(" ");
 }
 function landUp(on, extra = "", delayMs = 0) {
   const cls = [

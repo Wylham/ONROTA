@@ -148,7 +148,7 @@ function fadeUp(on, extra = "", dur = "800ms", dy = 6) {
   const base = BASE.replace("duration-[900ms]", `duration-[${dur}]`);
   return [
     base,
-    on ? "opacity-100 translate-y-0" : `opacity-0 translate-y-[${dy}px]`,
+    (on ? "opacity-100" : "opacity-0") + " translate-y-[var(--dy)]",
     "will-change-transform",
     extra,
   ].join(" ");
