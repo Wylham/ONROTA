@@ -138,7 +138,7 @@ export default function Services() {
               delay={90}
               className="mt-3 text-[32px] md:text-[44px] font-extrabold leading-[1.08] tracking-tight"
             >
-              Automatize seu cadastro em segundos com o OnCad.
+              Automatize seu cadastro em minutos com o OnCad.
             </Reveal>
 
             <Reveal
@@ -242,7 +242,7 @@ export default function Services() {
             {/* CTA final dentro do painel */}
             <Reveal as="div" delay={120} className="mt-8 md:mt-10 flex justify-center">
               <a
-                href="#contato"
+                href="#planos"
                 className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold transition"
                 style={{ backgroundColor: theme.primary }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = theme.primaryHover)}

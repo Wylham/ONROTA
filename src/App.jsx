@@ -1,5 +1,5 @@
 ﻿// src/App.jsx
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./sections/Hero";
@@ -20,6 +20,28 @@ import PlansPromoModal from "./components/PlansPromoModal";
 export default function App() {
   const whatsMsg =
     "Acabei de visitar o site da ONROTA e quero saber mais sobre o produto ONCAD, e como ele pode manter minha operação mais segura, eficiente e livre de fraudes.";
+
+  // >>> Novo: observar a seção de Contato
+  const contatoRef = useRef(null);
+  const [hideWhats, setHideWhats] = useState(false);
+
+  useEffect(() => {
+    const el = contatoRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHideWhats(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.25, // 25% da seção visível
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden overscroll-x-none bg-black text-white selection:bg-indigo-500/40">
@@ -66,19 +88,25 @@ export default function App() {
       <div id="testimonials" className="scroll-mt-24">
         <Testimonials />
       </div>
-      <div id="contato" className="scroll-mt-24">
+
+      {/* >>> Adicionei ref aqui para observar a seção de contato */}
+      <div id="contato" ref={contatoRef} className="scroll-mt-24">
         <Contact />
       </div>
 
       <Footer />
 
-      {/* WhatsApp */}
+      {/* WhatsApp (oculta quando #contato está visível) */}
       <a
         href={WHATSAPP_LINK}
         target="_blank"
         rel="noreferrer noopener"
         aria-label="Falar com um especialista no WhatsApp"
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[9998]"
+        className={[
+          "fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[9998]",
+          "transition-all duration-300 ease-out",
+          hideWhats ? "opacity-0 translate-y-2 pointer-events-none" : "opacity-100 translate-y-0",
+        ].join(" ")}
       >
         <div className="rounded-full p-4 shadow-xl bg-green-500 hover:scale-105 transition-transform">
           <IconWhatsapp className="w-6 h-6 text-white" />

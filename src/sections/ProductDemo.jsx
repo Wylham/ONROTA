@@ -1,11 +1,9 @@
 // src/sections/ProductDemo.jsx
 import React from "react";
 import { DEMO_VIDEO as DEFAULTS } from "@/constants/metrics";
-import { colors } from "/src/components/brand.jsx";
 
-/* Banda de Vídeo */
+/* Banda de Vídeo (arquivo local, sem YouTube) */
 export default function ProductDemo(props) {
-  const videoId = props.videoId || DEFAULTS.videoId;
   const title = props.title || DEFAULTS.title;
   const description = props.description || DEFAULTS.description;
   const bgClass = props.bgClass || DEFAULTS.bgClass;
@@ -25,24 +23,20 @@ export default function ProductDemo(props) {
             <p className="mt-3 md:mt-4 text-white/90">{description}</p>
           </div>
 
-          {/* Vídeo */}
-          <div
-            className="w-full max-w-[680px] justify-self-center rounded-2xl p-1 shadow-xl"
-            style={{
-              background: "rgba(0,0,0,0.10)",
-            }}
-          >
-            <div className="relative h-0 pb-[56.25%] overflow-hidden rounded-xl">
-              <iframe
-                className="absolute inset-0 h-full w-full rounded-xl"
-                src={`https://www.youtube.com/embed/${videoId}?rel=0`}
-                title={title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-                style={{ outline: "none", boxShadow: "none" }}
-              />
+          {/* Vídeo local (bordas retas, sem ring) */}
+          <div className="w-full max-w-[680px] justify-self-center shadow-xl">
+            {/* Mantém aspecto 16:9 em qualquer tela */}
+            <div className="relative h-0 pb-[56.25%] overflow-hidden bg-black">
+              <video
+                className="absolute inset-0 h-full w-full object-cover"
+                src="/videos/oncad-demo.mp4"
+                poster="/posters/miniatura.png" // troque a extensão se necessário
+                controls
+                preload="metadata"
+                playsInline
+              >
+                Seu navegador não suporta a tag de vídeo.
+              </video>
             </div>
           </div>
         </div>
