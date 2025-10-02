@@ -174,7 +174,7 @@ export default function Contato() {
                   className="hover:underline"
                   style={{ color: "#fff" }}
                 >
-                  +55 64 99903-2381
+                  +55 62 99263-1996
                 </a>
               </div>
               <div className="whitespace-nowrap">

@@ -2,13 +2,17 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export default function PlansPromoModal({
-  delayMs = 5000, // dispara em 5s
-  reopenMs = null, // sem reabrir automaticamente
-  imageSrc = "/mockups/mulher-popup.png",
-  imageAlt = "Mulher segurando um telefone",
+  // Abre a primeira vez após este atraso
+  delayMs = 5000,
+  // Não reabrir automaticamente
+  reopenMs = null,
+  imageSrc = "/mockups/homem-segurando-celular.webp",
+  imageAlt = "Homem segurando um telefone",
   oncadLogoSrc = "/logos/opt/oncad.webp",
-  oncePerDay = true, // abre 1x por dia
-  resetOnClosePage = false, // NÃO reseta ao fechar/recarregar
+
+  // 1x por dia (padrão) e NÃO resetar ao fechar/recarregar
+  oncePerDay = true,
+  resetOnClosePage = false,
 }) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -25,7 +29,7 @@ export default function PlansPromoModal({
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  // primeira abertura respeitando "1x por dia"
+  // Primeira abertura respeitando "1x por dia"
   useEffect(() => {
     let lastShown = null;
     try {
@@ -52,7 +56,7 @@ export default function PlansPromoModal({
     };
   }, [delayMs, oncePerDay]);
 
-  // reset diário — por padrão DESLIGADO (mantém 1x/dia mesmo com refresh)
+  // Reset diário — por padrão DESLIGADO (mantém 1x/dia mesmo com refresh)
   useEffect(() => {
     if (!resetOnClosePage) return;
     const onUnload = () => {
@@ -64,7 +68,7 @@ export default function PlansPromoModal({
     return () => window.removeEventListener("beforeunload", onUnload);
   }, [resetOnClosePage]);
 
-  // trava scroll quando aberto
+  // Trava scroll quando aberto
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -131,14 +135,20 @@ export default function PlansPromoModal({
           {/* Texto */}
           <div className="bg-[#121212] px-6 py-6 md:px-8 md:py-8 flex">
             <div className="my-auto w-full max-w-[34rem]">
-              {/* Logo */}
-              <div className="mb-3">
+              {/* Logo (maior com limite) */}
+              <div className="mb-4">
                 <img
                   src={oncadLogoSrc}
                   alt="OnCad"
-                  className="h-10 w-auto opacity-90"
                   loading="lazy"
                   decoding="async"
+                  className="
+                    w-auto
+                    h-12 md:h-14
+                    max-w-[220px] md:max-w-[260px]
+                    object-contain
+                    opacity-90
+                  "
                 />
               </div>
 
@@ -179,7 +189,7 @@ export default function PlansPromoModal({
                   Sem fidelidade
                 </span>
                 <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[12px]">
-                  Garantia 30 dias
+                  Grátis por 30 dias
                 </span>
               </div>
 
@@ -188,7 +198,7 @@ export default function PlansPromoModal({
             </div>
           </div>
 
-          {/* Imagem */}
+          {/* Imagem (centralizada) */}
           <div
             aria-label={imageAlt}
             className="hidden md:block md:min-h-[420px]"
@@ -196,7 +206,7 @@ export default function PlansPromoModal({
               backgroundImage: `url(${imageSrc})`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "30% center",
+              backgroundPosition: "center center", // foco central
             }}
             role="img"
           />

@@ -51,7 +51,7 @@ export default function App() {
       {/* Modal de promoções de planos */}
       <PlansPromoModal
         delayMs={5000}
-        imageSrc="/mockups/mulher-popup.png"
+        imageSrc="/mockups/homem-segurando-celular.webp"
         imageAlt="Pessoa segurando um celular"
         oncadLogoSrc="/logos/opt/oncad.webp"
         oncePerDay={true}
