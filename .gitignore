@@ -1,3 +1,4 @@
 dist.zip
 public/videos/*.mp4
+dist/videos/
 node_modules
