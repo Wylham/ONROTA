@@ -8,7 +8,7 @@ const PLANS = [
   {
     id: "starter",
     title: "Starter",
-    price: "R$ 850",
+    price: "R$ 850,00",
     priceSuffix: "/mês",
     highlight: "Essencial para começar com segurança",
     description: "Validações confiáveis integrado para sair do processo manual com rapidez.",
@@ -143,7 +143,7 @@ function slideX(on, dir, extra = "") {
   return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
 }
 
-/* >>> fix: fadeUp agora retorna { className, style } e usa var(--dy) */
+/* fadeUp retorna { className, style } e usa var(--dy) */
 function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
   const className = [BASE, on ? "opacity-100" : "opacity-0", "translate-y-[var(--dy)]", extra].join(
     " "
@@ -180,6 +180,8 @@ function PlanCard({
   inView,
   delay = 0,
 }) {
+  const isQuotePlan = enterprise || id === "pro";
+
   return (
     <div
       {...landUp(
@@ -210,62 +212,64 @@ function PlanCard({
         </div>
       )}
 
-      <div className="p-5 md:p-7">
-        <h3 className={slideX(inView, "right", "text-lg md:text-xl font-semibold")}>{title}</h3>
+      {/* Wrapper em coluna para alinhar CTA na mesma linha entre os cards */}
+      <div className="p-5 md:p-7 flex flex-col h-full min-h-[540px] md:min-h-[580px]">
+        {/* BLOCO PRÉ-FEATURES: altura consistente + CTA mais próximo do texto */}
+        <div className="flex flex-col min-h-[240px] md:min-h-[260px]">
+          <h3 className={slideX(inView, "right", "text-lg md:text-xl font-semibold")}>{title}</h3>
 
-        {!enterprise ? (
-          <>
-            <p {...fadeUp(inView, "mt-1 text-white/70 text-xs md:text-sm")}>A partir de</p>
+          {/* Preço / Destaque (modelo do print) */}
+          {!isQuotePlan ? (
+            <>
+              <p {...fadeUp(inView, "mt-1 text-white/70 text-xs md:text-sm")}>A partir de</p>
+              <div className={slideX(inView, "right", "mt-1 md:mt-2 flex items-baseline gap-1")}>
+                <span className="text-2xl md:text-4xl font-extrabold">{price}</span>
+                {priceSuffix && (
+                  <span className="text-white/60 text-xs md:text-base">{priceSuffix}</span>
+                )}
+              </div>
+              {id === "starter" && (
+                <p {...fadeUp(inView, "mt-1 text-[10px] md:text-xs text-white/50")}>
+                  *no plano anual
+                </p>
+              )}
+            </>
+          ) : (
             <div className={slideX(inView, "right", "mt-1 md:mt-2 flex items-baseline gap-1")}>
               <span className="text-2xl md:text-4xl font-extrabold">{price}</span>
-              {priceSuffix && (
-                <span className="text-white/60 text-xs md:text-base">{priceSuffix}</span>
-              )}
             </div>
+          )}
 
-            {id === "starter" && (
-              <p {...fadeUp(inView, "mt-1 text-[10px] md:text-xs text-white/50")}>
-                *no plano anual
-              </p>
-            )}
-            {id === "basic" && (
-              <p className="mt-1 text-[10px] md:text-xs opacity-0 select-none" aria-hidden="true">
-                placeholder
-              </p>
-            )}
-          </>
-        ) : (
-          <div {...fadeUp(inView, "mt-2")}>
-            <span className="inline-flex items-center rounded-lg border border-white/15 px-2.5 py-1 text-[13px] md:text-sm text-white/90">
-              {price}
-            </span>
+          <p {...fadeUp(inView, "mt-3 md:mt-3 text-sm md:text-base font-semibold")}>{highlight}</p>
+          <p {...fadeUp(inView, "mt-1 text-[13px] md:text-sm text-white/80")}>{description}</p>
+
+          {/* Spacer mantém o alinhamento vertical do CTA entre os cards */}
+          <div className="flex-1" />
+
+          {/* CTA — colado o suficiente, sem espaços falsos */}
+          <div {...fadeUp(inView, "mt-2 md:mt-3 flex justify-start")}>
+            <a
+              href="#contato"
+              className="
+                inline-flex items-center justify-center
+                rounded-xl px-4 md:px-5 py-2.5 md:py-2
+                font-semibold text-sm md:text-base
+                whitespace-nowrap
+                transition-colors
+              "
+              style={{ backgroundColor: colors.primary, color: "#fff" }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = colors.primaryHover)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = colors.primary)}
+            >
+              {isQuotePlan ? "Fale com o Comercial" : "Agendar Demo Gratuita"}
+            </a>
           </div>
-        )}
-
-        <p {...fadeUp(inView, "mt-3 md:mt-4 text-sm md:text-base font-semibold")}>{highlight}</p>
-        <p {...fadeUp(inView, "mt-1 text-[13px] md:text-sm text-white/80")}>{description}</p>
-
-        {/* CTA */}
-        <div {...fadeUp(inView, "mt-4 md:mt-6 flex justify-center")}>
-          <a
-            href="#contato"
-            className="
-              inline-flex items-center justify-center
-              rounded-xl px-4 md:px-5 py-2.5 md:py-1.5
-              font-semibold text-sm md:text-base
-              w-[220px] md:w-[240px] lg:w-[260px]
-              transition-colors
-            "
-            style={{ backgroundColor: colors.primary, color: "#fff" }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = colors.primaryHover)}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = colors.primary)}
-          >
-            {enterprise ? "Solicitar Orçamento Personalizado" : "Agendar Demo Gratuita"}
-          </a>
         </div>
 
+        {/* Divider */}
         <div className="mt-5 md:mt-6 h-px bg-white/10" />
 
+        {/* Features (não afetam a linha do CTA) */}
         <div className="mt-3 md:mt-4">
           <p className={slideX(inView, "right", "text-sm md:text-base font-semibold")}>Incluso:</p>
           <ul className="mt-3 space-y-2 text-[13px] md:text-sm text-white/90">
