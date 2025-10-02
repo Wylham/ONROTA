@@ -15,9 +15,9 @@ import valuesImg from "../assets/valores.jpg";
 */
 const TRIGGER_DEFAULT = { threshold: 0.34, rootMargin: "0px 0px -8% 0px" };
 const TRIGGER_TOUCH_ROW = { threshold: 0.05, rootMargin: "0px 0px -5% 0px" };
-const TRIGGER_DEFAULT_MOBILE = { threshold: 0.5, rootMargin: "0px" }; // ↑ um pouco mais tardio
-const TRIGGER_TOUCH_ROW_MOBILE = { threshold: 0.48, rootMargin: "0px" }; // ↑ idem
-const TRIGGER_CARD_MOBILE = { threshold: 0.55, rootMargin: "0px 0px -4% 0px" }; // foco no card
+const TRIGGER_DEFAULT_MOBILE = { threshold: 0.5, rootMargin: "0px" };
+const TRIGGER_TOUCH_ROW_MOBILE = { threshold: 0.48, rootMargin: "0px" };
+const TRIGGER_CARD_MOBILE = { threshold: 0.55, rootMargin: "0px 0px -4% 0px" };
 
 /* Detecta mobile por media query (sem SSR breaking) */
 function useIsMobile(breakpoint = 768) {
@@ -43,7 +43,6 @@ function useInView(opts = TRIGGER_DEFAULT) {
     rootMargin = TRIGGER_DEFAULT.rootMargin,
   } = opts || {};
   const ref = useRef(null);
-  // sempre começa false para o IO registrar e a animação disparar
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -73,7 +72,7 @@ function useInView(opts = TRIGGER_DEFAULT) {
           const e = entries[0];
           if (e.isIntersecting) {
             setInView(true);
-            io.unobserve(el); // dispara uma vez
+            io.unobserve(el);
           }
         },
         { threshold, root, rootMargin }
@@ -144,15 +143,23 @@ function slideX(on, dir, extra = "") {
     extra,
   ].join(" ");
 }
+
+/* >>> fix: fadeUp agora retorna { className, style } e usa CSS var --dy */
 function fadeUp(on, extra = "", dur = "800ms", dy = 6) {
-  const base = BASE.replace("duration-[900ms]", `duration-[${dur}]`);
-  return [
-    base,
-    (on ? "opacity-100" : "opacity-0") + " translate-y-[var(--dy)]",
+  const className = [
+    BASE,
+    on ? "opacity-100" : "opacity-0",
+    "translate-y-[var(--dy)]",
     "will-change-transform",
     extra,
   ].join(" ");
+  const style = {
+    "--dy": on ? "0px" : `${dy}px`,
+    transitionDuration: dur, // sobrescreve a duration padrão, sem depender de classe dinâmica
+  };
+  return { className, style };
 }
+
 /* Pouso suave (permanece) – usado nos Pilares */
 function landUp(on, extra = "", delayMs = 0) {
   const cls = [
@@ -166,21 +173,13 @@ function landUp(on, extra = "", delayMs = 0) {
 }
 
 export default function About() {
-  usePreloadMVV(); // ✅ pré-carrega as imagens de Missão/Visão/Valores
+  usePreloadMVV();
   return (
     <section id="sobre" className="bg-white text-slate-900">
-      {/* respiro com o HERO */}
       <Suspiro dir="up" size="md" />
-
-      {/* TOPO (Sobre nós) – hero pattern */}
       <LeadRow />
-
       <Suspiro dir="down" size="md" />
-
-      {/* Pilares – pouso (mantido) */}
       <PillarsBanner />
-
-      {/* Missão / Visão / Valores – hero pattern + trigger ao encostar */}
       <MissionVisionValues />
     </section>
   );
@@ -192,7 +191,7 @@ function LeadRow() {
   const lead = useInView(isMobile ? TRIGGER_DEFAULT_MOBILE : TRIGGER_DEFAULT);
   const ROW_H = "md:h-[clamp(380px,42vh,520px)] lg:h-[clamp(420px,46vh,560px)]";
 
-  // 🔎 Gatilho específico para o CARD da imagem no MOBILE
+  // Gatilho específico para o CARD da imagem no MOBILE
   const leadImgMob = useInView(TRIGGER_CARD_MOBILE);
 
   return (
@@ -205,7 +204,7 @@ function LeadRow() {
         containIntrinsicSize: "600px 520px",
       }}
     >
-      {/* Imagem (desktop) — card RETANGULAR (mantido) */}
+      {/* Imagem (desktop) */}
       <div className="pointer-events-none hidden md:block absolute inset-y-0 left-0 right-1/2">
         <div className="h-full w-full flex items-center justify-center px-6">
           <div
@@ -226,13 +225,13 @@ function LeadRow() {
         </div>
       </div>
 
-      {/* Imagem (mobile) — RETANGULAR + animação idêntica aos textos (gatilho do próprio card) */}
+      {/* Imagem (mobile) */}
       <div className="md:hidden mb-2 px-6">
         <div
           ref={leadImgMob.ref}
           className={[
             "relative aspect-[16/10] w-[80%] max-w-[320px] overflow-hidden border border-black/5 shadow-sm bg-white",
-            slideX(leadImgMob.inView, "left"), // ✅ agora dispara exatamente quando o card entra
+            slideX(leadImgMob.inView, "left"),
           ].join(" ")}
         >
           <img
@@ -246,7 +245,7 @@ function LeadRow() {
         </div>
       </div>
 
-      {/* Linha de texto (desktop intacto) */}
+      {/* Linha de texto */}
       <div className={`relative mx-auto max-w-7xl px-6 md:px-10 ${ROW_H}`}>
         <div className="flex flex-col md:flex-row h-full items-stretch md:items-center gap-6 md:gap-8">
           <div className="hidden md:block basis-1/2 h-full" aria-hidden="true" />
@@ -259,10 +258,7 @@ function LeadRow() {
           >
             <div className="w-full max-w-[640px] mx-auto text-left">
               <p
-                className={fadeUp(
-                  lead.inView,
-                  "mb-2 text-xs font-semibold tracking-wide text-slate-500"
-                )}
+                {...fadeUp(lead.inView, "mb-2 text-xs font-semibold tracking-wide text-slate-500")}
               >
                 Sobre nós
               </p>
@@ -280,7 +276,7 @@ function LeadRow() {
               </h2>
 
               <p
-                className={fadeUp(
+                {...fadeUp(
                   lead.inView,
                   "mt-4 text-[15px] md:text-[15.5px] leading-relaxed text-slate-700"
                 )}
@@ -289,7 +285,7 @@ function LeadRow() {
                 objetivas e menos atrito no dia a dia da rota.
               </p>
 
-              <div className={fadeUp(lead.inView, "mt-6 flex flex-wrap gap-3")}>
+              <div {...fadeUp(lead.inView, "mt-6 flex flex-wrap gap-3")}>
                 <a
                   href="#contato"
                   className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-white text-sm font-medium border transition-colors"
@@ -324,7 +320,7 @@ function LeadRow() {
   );
 }
 
-/** PILARES (pouso) — mantido */
+/** PILARES (pouso) */
 function PillarsBanner() {
   const view = useInView(TRIGGER_DEFAULT);
   return (
@@ -360,7 +356,6 @@ function PillarsBanner() {
         <h3
           {...landUp(
             view.inView,
-            // menor, mais compacto e com "text-balance" para quebras inteligentes
             "mt-1 font-extrabold text-white leading-[1.12] tracking-tight text-balance max-w-2xl",
             80
           )}
@@ -373,7 +368,6 @@ function PillarsBanner() {
         <p
           {...landUp(
             view.inView,
-            // texto mais curto, largura menor e quebras bonitas
             "mt-4 max-w-2xl text-white/85 text-sm md:text-[15.5px] leading-relaxed text-pretty",
             140
           )}
@@ -458,12 +452,11 @@ function MissionVisionValues() {
 /** ROW (MVV): imagem entra da ESQ→DIR; texto mantém direção original. Mobile com trigger no card. */
 function SplitRow({ img, reverse = false, title, desc }) {
   const isMobile = useIsMobile();
-  const row = useInView(isMobile ? TRIGGER_TOUCH_ROW_MOBILE : TRIGGER_TOUCH_ROW); // seção
+  const row = useInView(isMobile ? TRIGGER_TOUCH_ROW_MOBILE : TRIGGER_TOUCH_ROW);
   const HALF_SIDE = reverse ? "right-0 left-1/2" : "left-0 right-1/2";
   const txtDir = reverse ? "left" : "right";
   const ROW_H = "md:h-[clamp(360px,40vh,520px)] lg:h-[clamp(400px,44vh,560px)]";
 
-  // 🔎 Gatilho específico do CARD da imagem no MOBILE
   const mobImg = useInView(TRIGGER_CARD_MOBILE);
 
   return (
@@ -476,7 +469,7 @@ function SplitRow({ img, reverse = false, title, desc }) {
         containIntrinsicSize: "600px 480px",
       }}
     >
-      {/* Imagem desktop — card RETANGULAR (mantido) */}
+      {/* Imagem desktop */}
       <div
         className={["pointer-events-none hidden md:block absolute inset-y-0", HALF_SIDE].join(" ")}
       >
@@ -498,7 +491,7 @@ function SplitRow({ img, reverse = false, title, desc }) {
         </div>
       </div>
 
-      {/* Imagem mobile — RETANGULAR + animação com trigger do próprio card */}
+      {/* Imagem mobile */}
       <div className="md:hidden mb-3 sm:mb-4 px-6">
         <div
           ref={mobImg.ref}
@@ -525,10 +518,8 @@ function SplitRow({ img, reverse = false, title, desc }) {
             reverse ? "md:flex-row-reverse" : "md:flex-row",
           ].join(" ")}
         >
-          {/* placeholder da metade da imagem */}
           <div className="hidden md:block basis-1/2 h-full" aria-hidden="true" />
 
-          {/* Texto — mantém direções originais */}
           <div
             className={slideX(
               row.inView,
@@ -550,7 +541,7 @@ function SplitRow({ img, reverse = false, title, desc }) {
 
               {desc ? (
                 <div
-                  className={fadeUp(
+                  {...fadeUp(
                     row.inView,
                     "mt-3 sm:mt-4 text-[15px] md:text-[15.5px] leading-relaxed text-slate-700 space-y-3"
                   )}

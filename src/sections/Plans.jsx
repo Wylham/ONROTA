@@ -137,14 +137,24 @@ function useInView(opts = TRIGGER_DEFAULT) {
 const EASE =
   "ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100";
 const BASE = `transform-gpu transition-transform transition-opacity duration-[820ms] ${EASE} will-change-transform will-change-opacity`;
+
 function slideX(on, dir, extra = "") {
   const off = dir === "left" ? "-translate-x-[12%]" : "translate-x-[12%]";
   return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
 }
+
+/* >>> fix: fadeUp agora retorna { className, style } e usa var(--dy) */
 function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
-  const base = BASE.replace("duration-[820ms]", `duration-[${dur}]`);
-  return [base, (on ? "opacity-100" : "opacity-0") + " translate-y-[var(--dy)]", extra].join(" ");
+  const className = [BASE, on ? "opacity-100" : "opacity-0", "translate-y-[var(--dy)]", extra].join(
+    " "
+  );
+  const style = {
+    "--dy": on ? "0px" : `${dy}px`,
+    transitionDuration: dur,
+  };
+  return { className, style };
 }
+
 function landUp(on, extra = "", delayMs = 0) {
   const cls = [
     BASE.replace("duration-[820ms]", "duration-[760ms]"),
@@ -186,11 +196,12 @@ function PlanCard({
     >
       {popular && (
         <div
-          className={fadeUp(
+          {...fadeUp(
             inView,
             "absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] md:text-xs font-medium text-white"
           )}
           style={{
+            ...fadeUp(inView).style,
             backgroundColor: colors.primary,
             transitionDelay: inView ? `${delay + 40}ms` : "0ms",
           }}
@@ -204,7 +215,7 @@ function PlanCard({
 
         {!enterprise ? (
           <>
-            <p className={fadeUp(inView, "mt-1 text-white/70 text-xs md:text-sm")}>A partir de</p>
+            <p {...fadeUp(inView, "mt-1 text-white/70 text-xs md:text-sm")}>A partir de</p>
             <div className={slideX(inView, "right", "mt-1 md:mt-2 flex items-baseline gap-1")}>
               <span className="text-2xl md:text-4xl font-extrabold">{price}</span>
               {priceSuffix && (
@@ -213,7 +224,7 @@ function PlanCard({
             </div>
 
             {id === "starter" && (
-              <p className={fadeUp(inView, "mt-1 text-[10px] md:text-xs text-white/50")}>
+              <p {...fadeUp(inView, "mt-1 text-[10px] md:text-xs text-white/50")}>
                 *no plano anual
               </p>
             )}
@@ -224,20 +235,18 @@ function PlanCard({
             )}
           </>
         ) : (
-          <div className={fadeUp(inView, "mt-2")}>
+          <div {...fadeUp(inView, "mt-2")}>
             <span className="inline-flex items-center rounded-lg border border-white/15 px-2.5 py-1 text-[13px] md:text-sm text-white/90">
               {price}
             </span>
           </div>
         )}
 
-        <p className={fadeUp(inView, "mt-3 md:mt-4 text-sm md:text-base font-semibold")}>
-          {highlight}
-        </p>
-        <p className={fadeUp(inView, "mt-1 text-[13px] md:text-sm text-white/80")}>{description}</p>
+        <p {...fadeUp(inView, "mt-3 md:mt-4 text-sm md:text-base font-semibold")}>{highlight}</p>
+        <p {...fadeUp(inView, "mt-1 text-[13px] md:text-sm text-white/80")}>{description}</p>
 
         {/* CTA */}
-        <div className={fadeUp(inView, "mt-4 md:mt-6 flex justify-center")}>
+        <div {...fadeUp(inView, "mt-4 md:mt-6 flex justify-center")}>
           <a
             href="#contato"
             className="
@@ -260,19 +269,25 @@ function PlanCard({
         <div className="mt-3 md:mt-4">
           <p className={slideX(inView, "right", "text-sm md:text-base font-semibold")}>Incluso:</p>
           <ul className="mt-3 space-y-2 text-[13px] md:text-sm text-white/90">
-            {features.map((f, idx) => (
-              <li
-                key={idx}
-                className={fadeUp(inView, "flex items-start gap-2")}
-                style={{ transitionDelay: inView ? `${delay + 80 + idx * 40}ms` : "0ms" }}
-              >
-                <span
-                  className="mt-1 inline-block h-1.5 w-1.5 rounded-full"
-                  style={{ backgroundColor: colors.primary }}
-                />
-                <span>{f}</span>
-              </li>
-            ))}
+            {features.map((f, idx) => {
+              const fUp = fadeUp(inView, "flex items-start gap-2");
+              return (
+                <li
+                  key={idx}
+                  {...fUp}
+                  style={{
+                    ...fUp.style,
+                    transitionDelay: inView ? `${delay + 80 + idx * 40}ms` : "0ms",
+                  }}
+                >
+                  <span
+                    className="mt-1 inline-block h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: colors.primary }}
+                  />
+                  <span>{f}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -288,7 +303,6 @@ export default function Plans() {
 
   const plansToRender = PLANS.filter((p) => VISIBLE_IDS.includes(p.id));
 
-  // centraliza um slide pelo índice
   const centerToIndex = (i, smooth = true) => {
     const track = trackRef.current;
     const slide = slideRefs.current[i];
@@ -298,9 +312,7 @@ export default function Plans() {
   };
 
   useEffect(() => {
-    // ao montar, centraliza o primeiro card
     centerToIndex(0, false);
-
     const onResize = () => centerToIndex(index, false);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
@@ -328,10 +340,8 @@ export default function Plans() {
       <div className="mx-auto max-w-7xl px-4">
         {/* Header */}
         <header ref={head.ref} className="text-center max-w-3xl mx-auto overflow-x-hidden">
-          <h2 className={fadeUp(head.inView, "text-3xl md:text-5xl font-extrabold")}>
-            Planos OnCad
-          </h2>
-          <p className={fadeUp(head.inView, "mt-3 text-white/80 text-sm md:text-base")}>
+          <h2 {...fadeUp(head.inView, "text-3xl md:text-5xl font-extrabold")}>Planos OnCad</h2>
+          <p {...fadeUp(head.inView, "mt-3 text-white/80 text-sm md:text-base")}>
             Escolha o plano ideal para impulsionar seus cadastros e reduzir fraudes dos seus
             clientes!
           </p>
@@ -427,7 +437,7 @@ export default function Plans() {
         </div>
 
         {/* Chamadas estratégicas */}
-        <div ref={extras.ref} className={fadeUp(extras.inView, "mt-10")}>
+        <div ref={extras.ref} {...fadeUp(extras.inView, "mt-10")}>
           <div className="mx-auto max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="rounded-2xl border border-white/10 bg-white/5 hover:ring-1 hover:ring-white/20 transition">
               <div
@@ -475,7 +485,7 @@ export default function Plans() {
           </div>
         </div>
 
-        <p className={fadeUp(extras.inView, "mt-8 text-center text-sm text-white/60")}>
+        <p {...fadeUp(extras.inView, "mt-8 text-center text-sm text-white/60")}>
           Para informações sobre planos personalizados para grandes volumes, entre em contato.
         </p>
       </div>

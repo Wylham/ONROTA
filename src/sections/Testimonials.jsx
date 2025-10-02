@@ -142,9 +142,17 @@ function slideX(on, dir, extra = "") {
   const off = dir === "left" ? "-translate-x-[12%]" : "translate-x-[12%]";
   return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
 }
+
+/* >>> fix: fadeUp retorna { className, style } com var(--dy) */
 function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
-  const base = BASE.replace("duration-[820ms]", `duration-[${dur}]`);
-  return [base, (on ? "opacity-100" : "opacity-0") + " translate-y-[var(--dy)]", extra].join(" ");
+  const className = [BASE, on ? "opacity-100" : "opacity-0", "translate-y-[var(--dy)]", extra].join(
+    " "
+  );
+  const style = {
+    "--dy": on ? "0px" : `${dy}px`,
+    transitionDuration: dur,
+  };
+  return { className, style };
 }
 function landUp(on, extra = "", delayMs = 0) {
   const cls = [
@@ -237,11 +245,7 @@ export default function Testimonials({
       <div className="mx-auto max-w-7xl px-3 pt-8 md:pt-12 pb-6 md:pb-8">
         <h2
           ref={head.ref}
-          className={fadeUp(
-            head.inView,
-            "text-center text-3xl md:text-4xl font-extrabold tracking-tight"
-          )}
-          style={{ color: "inherit" }}
+          {...fadeUp(head.inView, "text-center text-3xl md:text-4xl font-extrabold tracking-tight")}
         >
           {heading}
         </h2>
@@ -253,11 +257,14 @@ export default function Testimonials({
           {/* trilho */}
           <div
             ref={containerRef}
-            className={fadeUp(
+            {...fadeUp(
               railSentinel.inView,
               "overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory"
             )}
-            style={{ WebkitOverflowScrolling: "touch" }}
+            style={{
+              ...fadeUp(railSentinel.inView).style,
+              WebkitOverflowScrolling: "touch",
+            }}
           >
             <div
               className="
@@ -292,7 +299,7 @@ export default function Testimonials({
 
                     {/* quote compacto */}
                     <p
-                      className={fadeUp(
+                      {...fadeUp(
                         railSentinel.inView,
                         `mt-3 text-slate-700 leading-[1.5] ${quoteSizeClass(len)}`
                       )}
@@ -311,7 +318,7 @@ export default function Testimonials({
                         {t.company}
                       </div>
                       <div
-                        className={fadeUp(
+                        {...fadeUp(
                           railSentinel.inView,
                           "text-slate-500 text-[0.78rem] md:text-[0.82rem]"
                         )}
@@ -337,10 +344,7 @@ export default function Testimonials({
                           />
                         </div>
                         <div
-                          className={fadeUp(
-                            railSentinel.inView,
-                            "flex items-center gap-[3px] shrink-0"
-                          )}
+                          {...fadeUp(railSentinel.inView, "flex items-center gap-[3px] shrink-0")}
                         >
                           {Array.from({ length: 5 }).map((_, s) => (
                             <Star

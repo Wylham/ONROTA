@@ -21,7 +21,7 @@ export default function App() {
   const whatsMsg =
     "Acabei de visitar o site da ONROTA e quero saber mais sobre o produto ONCAD, e como ele pode manter minha operação mais segura, eficiente e livre de fraudes.";
 
-  // >>> Novo: observar a seção de Contato
+  // observa a seção de Contato
   const contatoRef = useRef(null);
   const [hideWhats, setHideWhats] = useState(false);
 

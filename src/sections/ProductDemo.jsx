@@ -29,7 +29,7 @@ export default function ProductDemo(props) {
             <div className="relative h-0 pb-[56.25%] overflow-hidden bg-black">
               <video
                 className="absolute inset-0 h-full w-full object-cover"
-                src="/videos/oncad-demo.mp4"
+                src="/videos/oncad-demo-720p.webm"
                 poster="/posters/miniatura.png"
                 controls
                 preload="metadata"

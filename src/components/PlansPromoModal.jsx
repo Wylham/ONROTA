@@ -8,7 +8,7 @@ export default function PlansPromoModal({
   imageAlt = "Mulher segurando um telefone",
   oncadLogoSrc = "/logos/opt/oncad.webp",
   oncePerDay = true, // abre 1x por dia
-  resetOnClosePage = false, // Não reseta ao fechar/recarregar
+  resetOnClosePage = false, // NÃO reseta ao fechar/recarregar
 }) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -25,23 +25,20 @@ export default function PlansPromoModal({
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  // agenda primeira abertura respeitando "1x por dia"
+  // primeira abertura respeitando "1x por dia"
   useEffect(() => {
     let lastShown = null;
     try {
       lastShown = localStorage.getItem(DAILY_KEY);
     } catch {
-      // se der erro no localStorage, trata como nunca exibido
       lastShown = null;
     }
-
     const canShow = !oncePerDay || lastShown !== todayStr();
 
     if (canShow) {
       initialTimeoutRef.current = setTimeout(() => {
         setOpen(true);
         setTimeout(() => setVisible(true), 10);
-        // grava a data de exibição de hoje
         if (oncePerDay) {
           try {
             localStorage.setItem(DAILY_KEY, todayStr());
@@ -55,7 +52,7 @@ export default function PlansPromoModal({
     };
   }, [delayMs, oncePerDay]);
 
-  // reset diário — por padrão DESLIGADO para manter 1x/dia mesmo com refresh
+  // reset diário — por padrão DESLIGADO (mantém 1x/dia mesmo com refresh)
   useEffect(() => {
     if (!resetOnClosePage) return;
     const onUnload = () => {
@@ -107,7 +104,7 @@ export default function PlansPromoModal({
         onClick={close}
       />
 
-      {/* Card – cantos arredondados suaves */}
+      {/* Card */}
       <div
         className={`
           relative z-[10100] w-full max-w-[56rem]
@@ -129,21 +126,23 @@ export default function PlansPromoModal({
           </svg>
         </button>
 
-        {/* Grid */}
+        {/* Grid (texto esquerda / imagem direita) */}
         <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] md:items-stretch md:min-h-[420px]">
           {/* Texto */}
           <div className="bg-[#121212] px-6 py-6 md:px-8 md:py-8 flex">
             <div className="my-auto w-full max-w-[34rem]">
+              {/* Logo */}
               <div className="mb-3">
                 <img
                   src={oncadLogoSrc}
                   alt="OnCad"
-                  className="h-5 w-auto opacity-90"
+                  className="h-10 w-auto opacity-90"
                   loading="lazy"
                   decoding="async"
                 />
               </div>
 
+              {/* Headline */}
               <h3
                 id="plans-promo-title"
                 className="text-[1.18rem] md:text-[1.45rem] font-extrabold leading-tight"
@@ -151,49 +150,19 @@ export default function PlansPromoModal({
                 Automatize cadastros. Bloqueie fraudes. Integre seu fluxo.
               </h3>
 
+              {/* Subhead */}
               <p className="mt-2 text-white/85 text-[0.93rem] md:text-[0.98rem] leading-relaxed">
-                Planos para reduzir erros, acelerar a operação e conectar seus sistemas sem
-                fidelidade!
+                Planos para reduzir erros, acelerar a operação e conectar seus sistemas.
               </p>
 
-              <ul className="mt-4 space-y-2.5 text-[0.93rem] md:text-[0.98rem]">
-                <li className="flex gap-2">
-                  <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
-                  <span>
-                    <strong>Antifraude</strong> com validações automáticas de motorista e veículo.
-                  </span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
-                  <span>
-                    <strong>Integrações</strong> com ERP/TMS e <strong>APIs/Webhooks</strong>.
-                  </span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
-                  <span>
-                    <strong>Workflows</strong> para menos digitação e retrabalho.
-                  </span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[#1da7e5]" />
-                  <span>
-                    <strong>Suporte em tempo real</strong> quando precisar.
-                  </span>
-                </li>
-              </ul>
-
+              {/* CTAs */}
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
                   href="#planos"
                   onClick={close}
-                  className="relative inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#168fc3] px-4 py-2 font-semibold text-[0.94rem]"
+                  className="inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#168fc3] px-4 py-2 font-semibold text-[0.94rem]"
                 >
-                  <span
-                    className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-[#1da7e5]/35 animate-pulse"
-                    aria-hidden
-                  />
-                  <span className="relative">Ver planos →</span>
+                  Ver planos →
                 </a>
                 <a
                   href="#contato"
@@ -204,6 +173,17 @@ export default function PlansPromoModal({
                 </a>
               </div>
 
+              {/* Duas pills */}
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[12px]">
+                  Sem fidelidade
+                </span>
+                <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[12px]">
+                  Garantia 30 dias
+                </span>
+              </div>
+
+              {/* Demo guiada */}
               <p className="mt-4 text-[11.5px] text-white/70">Demonstração guiada em 15 minutos!</p>
             </div>
           </div>

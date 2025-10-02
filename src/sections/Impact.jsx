@@ -113,10 +113,19 @@ function slideX(on, dir, extra = "") {
   const off = dir === "left" ? "-translate-x-[10%]" : "translate-x-[10%]";
   return [BASE, on ? "opacity-100 translate-x-0" : `opacity-0 ${off}`, extra].join(" ");
 }
+
+/* >>> fix: fadeUp agora retorna { className, style } com CSS var --dy */
 function fadeUp(on, extra = "", dur = "760ms", dy = 8) {
-  const base = BASE.replace("duration-[820ms]", `duration-[${dur}]`);
-  return [base, (on ? "opacity-100" : "opacity-0") + " translate-y-[var(--dy)]", extra].join(" ");
+  const className = [BASE, on ? "opacity-100" : "opacity-0", "translate-y-[var(--dy)]", extra].join(
+    " "
+  );
+  const style = {
+    "--dy": on ? "0px" : `${dy}px`,
+    transitionDuration: dur,
+  };
+  return { className, style };
 }
+
 function landUp(on, extra = "", delayMs = 0) {
   const cls = [
     BASE.replace("duration-[820ms]", "duration-[760ms]"),
@@ -148,7 +157,7 @@ export default function Impact({
       <div className="mx-auto max-w-7xl px-2 pt-12 md:pt-16 pb-2 md:pb-4">
         {/* Heading */}
         <header ref={head.ref} className="text-center mb-10 md:mb-12">
-          <h2 className={fadeUp(head.inView, "text-4xl md:text-5xl font-extrabold tracking-tight")}>
+          <h2 {...fadeUp(head.inView, "text-4xl md:text-5xl font-extrabold tracking-tight")}>
             {headingTop}
           </h2>
           <p
@@ -177,11 +186,11 @@ export default function Impact({
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = brand.primaryHover)}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = brand.primary)}
             >
-              <Icon className={fadeUp(grid.inView, "w-10 h-10 text-white")} />
+              <Icon {...fadeUp(grid.inView, "w-10 h-10 text-white")} />
               <h3 className={slideX(grid.inView, "right", "mt-5 text-2xl font-bold text-white")}>
                 {title}
               </h3>
-              <p className={fadeUp(grid.inView, "mt-3 text-white/95 flex-grow")}>{desc}</p>
+              <p {...fadeUp(grid.inView, "mt-3 text-white/95 flex-grow")}>{desc}</p>
 
               <a
                 href="#planos"
@@ -206,7 +215,7 @@ export default function Impact({
 
         {/* Logos de integrações */}
         <div className="mt-10 md:mt-12" ref={logos.ref}>
-          <p className={fadeUp(logos.inView, "text-center text-sm md:text-base text-slate-500")}>
+          <p {...fadeUp(logos.inView, "text-center text-sm md:text-base text-slate-500")}>
             Realizamos integrações com os principais sistemas do mercado.
           </p>
 
@@ -236,7 +245,7 @@ export default function Impact({
                 <img
                   src={logo.src}
                   alt={logo.alt}
-                  className={fadeUp(logos.inView, "max-h-full object-contain")}
+                  {...fadeUp(logos.inView, "max-h-full object-contain")}
                   loading="lazy"
                   decoding="async"
                 />
