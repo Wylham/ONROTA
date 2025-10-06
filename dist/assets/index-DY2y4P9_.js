@@ -8424,7 +8424,7 @@ const ls = "/assets/logo-light-rYlcd_Au.png",
   Vc = [
     { id: "home", label: "Home" },
     { id: "sobre", label: "Sobre nós" },
-    { id: "servicos", label: "Produtos" },
+    { id: "produtos", label: "Produtos" },
     { id: "clientes", label: "Clientes" },
     { id: "planos", label: "Planos" },
     { id: "contato", label: "Contato" },
@@ -8516,7 +8516,7 @@ function Cm() {
             s.jsx("ul", {
               className: "hidden md:flex items-center gap-6 text-sm",
               children: Vc.map((c) =>
-                c.id !== "servicos"
+                c.id !== "produtos"
                   ? s.jsx(
                       "li",
                       {
@@ -8568,11 +8568,11 @@ function Cm() {
                               children: [
                                 s.jsx("a", {
                                   role: "menuitem",
-                                  href: "#servicos",
+                                  href: "#produtos",
                                   className:
                                     "block px-4 py-3 text-sm text-white/90 hover:bg-white/10",
                                   onClick: (d) => {
-                                    (d.preventDefault(), r(!1), u("servicos"));
+                                    (d.preventDefault(), r(!1), u("produtos"));
                                   },
                                   children: "OnCad",
                                 }),
@@ -8669,7 +8669,7 @@ function _m({ open: e, onClose: t, scrollToId: n }) {
             className:
               "px-6 pb-6 space-y-4 text-right uppercase tracking-[0.18em] text-[13px] text-white/90",
             children: Vc.map((o) =>
-              o.id !== "servicos"
+              o.id !== "produtos"
                 ? s.jsx(
                     "li",
                     {
@@ -8715,10 +8715,10 @@ function _m({ open: e, onClose: t, scrollToId: n }) {
                               "mt-1 space-y-1 text-white/85 text-right normal-case tracking-normal text-[14px]",
                             children: [
                               s.jsx("a", {
-                                href: "#servicos",
+                                href: "#produtos",
                                 className: "block py-2 px-2 rounded-lg hover:bg-white/05",
                                 onClick: (i) => {
-                                  (i.preventDefault(), t(), setTimeout(() => n("servicos"), 80));
+                                  (i.preventDefault(), t(), setTimeout(() => n("produtos"), 80));
                                 },
                                 children: "OnCad",
                               }),
@@ -8836,10 +8836,10 @@ function zm() {
                 }),
                 s.jsx("li", {
                   children: s.jsx("a", {
-                    href: "#servicos",
+                    href: "#produtos",
                     className: "hover:text-white",
                     onClick: (t) => {
-                      (t.preventDefault(), e("servicos"));
+                      (t.preventDefault(), e("produtos"));
                     },
                     children: "Produtos",
                   }),
@@ -8975,7 +8975,7 @@ function Lm() {
                   children: "Conhecer mais",
                 }),
                 s.jsx("a", {
-                  href: "#servicos",
+                  href: "#produtos",
                   className:
                     "inline-flex items-center justify-center rounded-lg px-4 py-2.5 border border-white/20 text-white/90 hover:bg-white/10 text-[13px] focus:outline-none focus:ring-2 focus:ring-white/20",
                   children: "Nossos Produtos",
@@ -9840,7 +9840,7 @@ function Sp() {
       []
     );
   return s.jsx("section", {
-    id: "servicos",
+    id: "produtos",
     className: "relative py-12 md:py-16 scroll-mt-24 md:scroll-mt-28",
     style: { backgroundColor: B.bg, color: B.text },
     children: s.jsxs("div", {
@@ -11979,7 +11979,7 @@ function ih() {
         }),
         s.jsx("div", { id: "home", className: "relative isolate", children: s.jsx(Lm, {}) }),
         s.jsx("div", { id: "sobre", className: "scroll-mt-24", children: s.jsx(Dm, {}) }),
-        s.jsx("div", { id: "servicos", className: "scroll-mt-24", children: s.jsx(Sp, {}) }),
+        s.jsx("div", { id: "produtos", className: "scroll-mt-24", children: s.jsx(Sp, {}) }),
         s.jsx("div", { id: "clientes", className: "scroll-mt-24", children: s.jsx(Np, {}) }),
         s.jsx("div", { id: "numbers", className: "scroll-mt-24", children: s.jsx(zp, {}) }),
         s.jsx("div", {

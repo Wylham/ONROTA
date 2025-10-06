@@ -1,4 +1,4 @@
-﻿// src/sections/Services.jsx
+﻿// src/sections/Products.jsx
 import React, { useEffect, useMemo, useRef } from "react";
 import { IconOCR, IconCadastro, IconAPI, IconValidacao } from "@/components/icons.jsx";
 import { colors as brandColors } from "/src/components/brand.jsx";
@@ -80,7 +80,7 @@ function Reveal({ children, className = "", delay = 0, as: Tag = "div" }) {
   );
 }
 
-export default function Services() {
+export default function Products() {
   const ASSETS = {
     mockup: "/mockups/phone-oncad2.webp",
     oncadLogo: "/logos/opt/oncad.webp",
@@ -114,7 +114,7 @@ export default function Services() {
 
   return (
     <section
-      id="servicos"
+      id="produtos"
       className="relative py-12 md:py-16 scroll-mt-24 md:scroll-mt-28"
       style={{ backgroundColor: theme.bg, color: theme.text }}
     >

@@ -6,7 +6,7 @@ import logo from "../assets/logo-light.png";
 const NAV = [
   { id: "home", label: "Home" },
   { id: "sobre", label: "Sobre nós" },
-  { id: "servicos", label: "Produtos" }, // pai do dropdown
+  { id: "produtos", label: "Produtos" }, // pai do dropdown
   { id: "clientes", label: "Clientes" },
   { id: "planos", label: "Planos" },
   { id: "contato", label: "Contato" },
@@ -113,7 +113,7 @@ export default function Navbar() {
         {/* desktop */}
         <ul className="hidden md:flex items-center gap-6 text-sm">
           {NAV.map((n) => {
-            if (n.id !== "servicos") {
+            if (n.id !== "produtos") {
               return (
                 <li key={n.id}>
                   <a
@@ -162,12 +162,12 @@ export default function Navbar() {
                   >
                     <a
                       role="menuitem"
-                      href="#servicos"
+                      href="#produtos"
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
                       onClick={(e) => {
                         e.preventDefault();
                         setProdOpen(false);
-                        scrollToId("servicos");
+                        scrollToId("produtos");
                       }}
                     >
                       OnCad
@@ -259,7 +259,7 @@ function MobileSheet({ open, onClose, scrollToId }) {
         {/* Itens alinhados à direita + submenu de Produtos */}
         <ul className="px-6 pb-6 space-y-4 text-right uppercase tracking-[0.18em] text-[13px] text-white/90">
           {NAV.map((n) => {
-            if (n.id !== "servicos") {
+            if (n.id !== "produtos") {
               return (
                 <li key={n.id}>
                   <a
@@ -300,12 +300,12 @@ function MobileSheet({ open, onClose, scrollToId }) {
                 {prodOpen && (
                   <div className="mt-1 space-y-1 text-white/85 text-right normal-case tracking-normal text-[14px]">
                     <a
-                      href="#servicos"
+                      href="#produtos"
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();
                         onClose();
-                        setTimeout(() => scrollToId("servicos"), 80);
+                        setTimeout(() => scrollToId("produtos"), 80);
                       }}
                     >
                       OnCad

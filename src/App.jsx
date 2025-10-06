@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
-import Services from "./sections/Services";
+import Products from "./sections/Products";
 import Clients from "./sections/Clients";
 import Numbers from "./sections/Numbers";
 import ProductDemo from "./sections/ProductDemo";
@@ -67,8 +67,8 @@ export default function App() {
       <div id="sobre" className="scroll-mt-24">
         <About />
       </div>
-      <div id="servicos" className="scroll-mt-24">
-        <Services />
+      <div id="produtos" className="scroll-mt-24">
+        <Products />
       </div>
       <div id="clientes" className="scroll-mt-24">
         <Clients />

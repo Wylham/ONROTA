@@ -69,7 +69,7 @@ export const IconWhatsApp = (props) => <MessageCircle {...props} />;
 export const IconWhatsapp = IconWhatsApp;
 export const IconMessage = (props) => <MessagesSquare {...props} />;
 
-// Services (OnCad)
+// Products (OnCad)
 export const IconOCR = (props) => <FileText {...props} />; // OCR em PDFs
 export const IconCadastro = (props) => <UserCheck {...props} />; // Cadastro automático
 export const IconAPI = (props) => <Plug {...props} />; // Integração API

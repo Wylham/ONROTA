@@ -79,11 +79,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#servicos"
+                  href="#produtos"
                   className="hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
-                    scrollToId("servicos");
+                    scrollToId("produtos");
                   }}
                 >
                   Produtos
