@@ -174,24 +174,24 @@ export default function Navbar() {
                     </a>
                     <a
                       role="menuitem"
-                      href="#impact"
+                      href="#impacto"
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
                       onClick={(e) => {
                         e.preventDefault();
                         setProdOpen(false);
-                        scrollToId("impact");
+                        scrollToId("impacto");
                       }}
                     >
                       Integrações
                     </a>
                     <a
                       role="menuitem"
-                      href="#productdemo"
+                      href="#produto-demo"
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
                       onClick={(e) => {
                         e.preventDefault();
                         setProdOpen(false);
-                        scrollToId("productdemo");
+                        scrollToId("produto-demo");
                       }}
                     >
                       Demonstração
@@ -311,23 +311,23 @@ function MobileSheet({ open, onClose, scrollToId }) {
                       OnCad
                     </a>
                     <a
-                      href="#impact"
+                      href="#impacto"
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();
                         onClose();
-                        setTimeout(() => scrollToId("impact"), 80);
+                        setTimeout(() => scrollToId("impacto"), 80);
                       }}
                     >
                       Integrações
                     </a>
                     <a
-                      href="#productdemo"
+                      href="#produto-demo"
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();
                         onClose();
-                        setTimeout(() => scrollToId("productdemo"), 80);
+                        setTimeout(() => scrollToId("produto-demo"), 80);
                       }}
                     >
                       Demonstração

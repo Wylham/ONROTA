@@ -64,7 +64,7 @@ export default function App() {
       </div>
 
       {/* Conteúdo principal */}
-      <div id="sobre" className="scroll-mt-24">
+      <div id="sobre-nos" className="scroll-mt-24">
         <About />
       </div>
       <div id="produtos" className="scroll-mt-24">
@@ -73,13 +73,13 @@ export default function App() {
       <div id="clientes" className="scroll-mt-24">
         <Clients />
       </div>
-      <div id="numbers" className="scroll-mt-24">
+      <div id="numeros" className="scroll-mt-24">
         <Numbers />
       </div>
-      <div id="productdemo" className="scroll-mt-24">
+      <div id="produto-demo" className="scroll-mt-24">
         <ProductDemo {...DEMO_VIDEO} />
       </div>
-      <div id="impact" className="scroll-mt-24">
+      <div id="impacto" className="scroll-mt-24">
         <Impact />
       </div>
 
