@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { colors } from "../components/brand";
 import aboutPhoto from "../assets/about-photo.png";
 import pillarsBg from "../assets/bg-pilar.jpeg";
-import missionImg from "../assets/missao.jpg";
-import visionImg from "../assets/visao.jpg";
-import valuesImg from "../assets/valores.jpg";
+import missionImg from "../assets/missao.webp";
+import visionImg from "../assets/visao.webp";
+import valuesImg from "../assets/valores.webp";
 
 /* ===== TRIGGERS =====
    - DEFAULT: pouco antes do meio (Lead/Pilares)
