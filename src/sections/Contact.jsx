@@ -180,11 +180,11 @@ export default function Contato() {
               <div className="whitespace-nowrap">
                 <span className="text-white font-semibold">E-mail:</span>{" "}
                 <a
-                  href="mailto:contato@onrota.com"
+                  href="mailto:contato@onrota.tech"
                   className="hover:underline"
                   style={{ color: "#fff" }}
                 >
-                  contato@onrota.com
+                  contato@onrota.tech
                 </a>
               </div>
               <div className="md:basis-full pt-1">
