@@ -148,3 +148,14 @@ h6 {
 #clientes img[data-logo] {
     max-width: none !important;
 }
+
+[id] {
+    scroll-margin-top: 96px;
+}
+
+/* ajuste 96px à altura do header */
+@media (max-width:768px) {
+    [id] {
+        scroll-margin-top: 72px;
+    }
+}

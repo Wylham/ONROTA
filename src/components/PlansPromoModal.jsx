@@ -168,14 +168,14 @@ export default function PlansPromoModal({
               {/* CTAs */}
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
-                  href="#planos"
+                  href="/planos"
                   onClick={close}
                   className="inline-flex items-center justify-center rounded-md bg-[#1da7e5] hover:bg-[#168fc3] px-4 py-2 font-semibold text-[0.94rem]"
                 >
                   Ver planos →
                 </a>
                 <a
-                  href="#contato"
+                  href="/contato"
                   onClick={close}
                   className="inline-flex items-center justify-center rounded-md border border-white/25 bg-white/5 hover:bg-white/10 px-4 py-2 font-semibold text-[0.94rem]"
                 >

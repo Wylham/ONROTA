@@ -92,13 +92,13 @@ export default function Hero() {
 
           <div className={slideIn("delay-[650ms] flex items-center gap-3 pt-1")}>
             <a
-              href="#sobre"
+              href="/sobre-nos"
               className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-[13px] font-medium bg-[#1da7e5] hover:bg-[#168fc3] focus:outline-none focus:ring-2 focus:ring-white/30"
             >
               Conhecer mais
             </a>
             <a
-              href="#produtos"
+              href="/produtos"
               className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 border border-white/20 text-white/90 hover:bg-white/10 text-[13px] focus:outline-none focus:ring-2 focus:ring-white/20"
             >
               Nossos Produtos

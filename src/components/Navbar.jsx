@@ -162,7 +162,7 @@ export default function Navbar() {
                   >
                     <a
                       role="menuitem"
-                      href="#produtos"
+                      href="/produtos"
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
                       onClick={(e) => {
                         e.preventDefault();
@@ -300,7 +300,7 @@ function MobileSheet({ open, onClose, scrollToId }) {
                 {prodOpen && (
                   <div className="mt-1 space-y-1 text-white/85 text-right normal-case tracking-normal text-[14px]">
                     <a
-                      href="#produtos"
+                      href="/produtos"
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
                       onClick={(e) => {
                         e.preventDefault();

@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { colors } from "../components/brand";
 import aboutPhoto from "../assets/about-photo.png";
 import pillarsBg from "../assets/bg-pilar.jpeg";
-import missionImg from "../assets/missao.webp";
-import visionImg from "../assets/visao.webp";
-import valuesImg from "../assets/valores.webp";
+import missionImg from "../assets/missao1.webp";
+import visionImg from "../assets/visao1.webp";
+import valuesImg from "../assets/valores1.webp";
 
 /* ===== TRIGGERS =====
    - DEFAULT: pouco antes do meio (Lead/Pilares)
@@ -175,7 +175,7 @@ function landUp(on, extra = "", delayMs = 0) {
 export default function About() {
   usePreloadMVV();
   return (
-    <section id="sobre" className="bg-white text-slate-900">
+    <section id="sobre-nos" className="bg-white text-slate-900">
       <Suspiro dir="up" size="md" />
       <LeadRow />
       <Suspiro dir="down" size="md" />
@@ -287,7 +287,7 @@ function LeadRow() {
 
               <div {...fadeUp(lead.inView, "mt-6 flex flex-wrap gap-3")}>
                 <a
-                  href="#contato"
+                  href="/contato"
                   className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-white text-sm font-medium border transition-colors"
                   style={{ backgroundColor: colors.primary, borderColor: colors.primary }}
                   onMouseEnter={(e) =>
@@ -299,7 +299,7 @@ function LeadRow() {
                 </a>
 
                 <a
-                  href="#clientes"
+                  href="/clientes"
                   className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium border transition-colors"
                   style={{
                     color: "#0f172a",

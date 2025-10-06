@@ -153,7 +153,7 @@ export default function Products() {
 
             <Reveal as="div" delay={190} className="mt-6 flex items-center gap-2 sm:gap-3">
               <a
-                href="#contato"
+                href="/contato"
                 className="flex-1 md:flex-none inline-flex items-center justify-center rounded-lg
                px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm font-semibold transition"
                 style={{ backgroundColor: theme.primary }}
@@ -164,7 +164,7 @@ export default function Products() {
               </a>
 
               <a
-                href="#planos"
+                href="/planos"
                 className="flex-1 md:flex-none inline-flex items-center justify-center rounded-lg
                px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm font-semibold transition"
                 style={{
@@ -242,7 +242,7 @@ export default function Products() {
             {/* CTA final dentro do painel */}
             <Reveal as="div" delay={120} className="mt-8 md:mt-10 flex justify-center">
               <a
-                href="#planos"
+                href="/planos"
                 className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold transition"
                 style={{ backgroundColor: theme.primary }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = theme.primaryHover)}

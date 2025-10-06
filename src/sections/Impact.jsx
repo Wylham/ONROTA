@@ -193,7 +193,7 @@ export default function Impact({
               <p {...fadeUp(grid.inView, "mt-3 text-white/95 flex-grow")}>{desc}</p>
 
               <a
-                href="#planos"
+                href="/planos"
                 className={slideX(
                   grid.inView,
                   "right",

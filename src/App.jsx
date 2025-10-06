@@ -83,7 +83,9 @@ export default function App() {
         <Impact />
       </div>
 
-      <Plans />
+      <div id="planos" className="scroll-mt-24">
+        <Plans />
+      </div>
 
       <div id="testimonials" className="scroll-mt-24">
         <Testimonials />

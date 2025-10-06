@@ -1,33 +1,58 @@
 // src/utils/sectionRouting.js
 
-// Mapeie caminho -> id da seção (confira os ids no seu HTML/JSX)
-const PATH_TO_ID = {
-  "/": "hero",
-  "/sobre-nos": "about",
-  "/produtos": "products",
-  "/clientes": "clients",
-  "/planos": "plans",
-  "/contato": "contact",
+// Mapeie cada PATH para possíveis IDs (PT e EN, várias alternativas)
+const PATH_TO_IDS = {
+  "/": ["home", "hero"],
+  "/sobre-nos": ["sobre-nos"],
+  "/produtos": ["produtos"],
+  "/clientes": ["clientes"],
+  "/planos": ["planos"],
+  "/contato": ["contato"],
 };
 
-// Se usar #anchors (ex.: /#plans), também tratamos:
-function idFromLocation(loc = window.location) {
-  // Prioridade 1: hash (#plans)
-  if (loc.hash && loc.hash.length > 1) return loc.hash.slice(1);
-
-  // Prioridade 2: pathname limpo (/planos/)
-  const path = loc.pathname.replace(/\/+$/, ""); // remove barra final
-  return PATH_TO_ID[path] || null;
+function getFirstExistingId(candidates = []) {
+  for (const id of candidates) {
+    if (id && document.getElementById(id)) return id;
+  }
+  return null;
 }
 
-// Scroll com compensação do header fixo (se houver)
+function pathForId(id) {
+  for (const [path, ids] of Object.entries(PATH_TO_IDS)) {
+    if (ids.includes(id)) return path;
+  }
+  return null;
+}
+
+function normalizePathname(p) {
+  const noTrailing = p.replace(/\/+$/, "");
+  return noTrailing === "" ? "/" : noTrailing;
+}
+
+function idFromLocation(loc = window.location) {
+  // 1) Hash tem prioridade (#clientes)
+  if (loc.hash && loc.hash.length > 1) return loc.hash.slice(1);
+
+  // 2) Path limpo (/planos)
+  const path = normalizePathname(loc.pathname);
+  const candidates = PATH_TO_IDS[path];
+  return candidates ? getFirstExistingId(candidates) : null;
+}
+
+// Tenta detectar header fixo para compensar sobreposição
 function getHeaderOffsetPx() {
-  // Ajuste o seletor conforme seu header/nav
   const header =
     document.querySelector("header.sticky, header.fixed, nav.sticky, nav.fixed") ||
     document.querySelector("header") ||
     document.querySelector("nav");
-  return header ? header.offsetHeight : 0;
+
+  if (!header) return 0;
+
+  // só compensa se for fixed/sticky de verdade
+  const style = window.getComputedStyle(header);
+  const pos = style.position;
+  const isSticky = pos === "sticky" || pos === "fixed";
+  return isSticky ? header.offsetHeight : 0;
 }
 
 export function scrollToSectionId(id, behavior = "smooth") {
@@ -41,25 +66,34 @@ export function scrollToSectionId(id, behavior = "smooth") {
   window.scrollTo({ top: target, behavior });
 }
 
-// Chame na carga inicial da página
+// Aguarda a seção existir (evita cair no "home" por carregar cedo demais)
+async function scrollWhenReady(id, behavior = "smooth", maxWaitMs = 5000) {
+  const t0 = performance.now();
+  while (!document.getElementById(id)) {
+    if (performance.now() - t0 > maxWaitMs) return; // desiste silenciosamente
+    await new Promise((r) => setTimeout(r, 50));
+  }
+  scrollToSectionId(id, behavior);
+}
+
 export function handleInitialSectionScroll() {
   const id = idFromLocation();
   if (!id) return;
-
-  // Espera o primeiro paint para garantir que o DOM já montou
-  requestAnimationFrame(() => {
-    // mais um pequeno atraso para imagens/altura do header estabilizar
-    setTimeout(() => scrollToSectionId(id, "instant"), 50);
-  });
+  requestAnimationFrame(() => scrollWhenReady(id, "instant"));
 }
 
-// Intercepta cliques em <a> internos e usa pushState + scroll (SPA)
+// evita duplo binding no StrictMode
+let _spaNavEnabled = false;
+
 export function enableSpaNav() {
+  if (_spaNavEnabled) return;
+  _spaNavEnabled = true;
+
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a");
     if (!a) return;
 
-    // Ignora se for meta/ctrl/shift click, download, target _blank etc.
+    // respeita novas abas/descargas
     if (
       e.defaultPrevented ||
       a.target === "_blank" ||
@@ -68,32 +102,39 @@ export function enableSpaNav() {
       e.ctrlKey ||
       e.shiftKey ||
       e.altKey
-    ) {
+    )
+      return;
+
+    const url = new URL(a.getAttribute("href"), window.location.href);
+
+    // só lida com o mesmo origin
+    if (url.origin !== window.location.origin) return;
+
+    const hashId = url.hash ? url.hash.slice(1) : null;
+    const pathOnly = normalizePathname(url.pathname);
+
+    // Caso 1: link é só hash (#clientes) → canoniza para /clientes
+    if (hashId) {
+      const canonicalPath = pathForId(hashId) || pathOnly; // cai para path atual se não souber
+      e.preventDefault();
+      window.history.pushState({}, "", canonicalPath); // sem hash
+      scrollWhenReady(hashId);
       return;
     }
 
-    // Só trata links do mesmo origin
-    const url = new URL(a.href, window.location.href);
-    if (url.origin !== window.location.origin) return;
+    // Caso 2: path "limpo" (/planos, /clientes, etc.)
+    const candidates = PATH_TO_IDS[pathOnly];
+    if (!candidates) return; // não é link de seção: segue normal
 
-    // Descobre o id de destino por hash ou pathname
-    const hashId = url.hash ? url.hash.slice(1) : null;
-    const pathId = hashId ? null : idFromLocation(url);
-    const targetId = hashId || pathId;
-    if (!targetId) return; // não é link para seção: deixa navegar normal
-
+    const targetId = getFirstExistingId(candidates) || candidates[0]; // tenta o que existe; senão o 1º
     e.preventDefault();
-    // Atualiza a URL (preserva hash quando houver)
-    const pathname = url.pathname.replace(/\/+$/, "");
-    const next = hashId ? `${pathname}#${hashId}` : pathname || "/";
-    window.history.pushState({}, "", next);
-
-    scrollToSectionId(targetId);
+    window.history.pushState({}, "", pathOnly);
+    scrollWhenReady(targetId);
   });
 
-  // Voltar/avançar do navegador
+  // Voltar/Avançar do navegador
   window.addEventListener("popstate", () => {
-    const id = idFromLocation() || PATH_TO_ID["/"];
-    scrollToSectionId(id, "instant");
+    const id = idFromLocation() || getFirstExistingId(PATH_TO_IDS["/"]) || "hero";
+    scrollWhenReady(id, "instant");
   });
 }

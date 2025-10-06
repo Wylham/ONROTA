@@ -67,11 +67,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#sobre"
+                  href="/sobre-nos"
                   className="hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
-                    scrollToId("sobre");
+                    scrollToId("sobre-nos");
                   }}
                 >
                   Sobre
@@ -79,7 +79,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#produtos"
+                  href="/produtos"
                   className="hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
@@ -91,7 +91,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#clientes"
+                  href="/clientes"
                   className="hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
@@ -103,7 +103,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#planos"
+                  href="/planos"
                   className="hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
