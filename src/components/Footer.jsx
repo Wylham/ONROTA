@@ -55,7 +55,7 @@ export default function Footer() {
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-white/85 text-sm">
               <li>
                 <a
-                  href="#home"
+                  href="/home"
                   className="hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();

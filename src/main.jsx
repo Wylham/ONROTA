@@ -7,6 +7,8 @@ import "@fontsource/inter/600.css"; // semi-bold
 import "@fontsource/inter/700.css"; // bold
 
 import { enableSpaNav, handleInitialSectionScroll } from "./utils/sectionRouting";
+enableSpaNav();
+handleInitialSectionScroll();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,7 +16,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-// Habilita navegação SPA e rolagem inicial para a seção correta
-enableSpaNav();
-handleInitialSectionScroll();

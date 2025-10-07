@@ -3,16 +3,44 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import logo from "../assets/logo-light.png";
 
+/* Mapa id -> path (mesmos ids do App.jsx) */
+const idToPath = (id) => {
+  switch (id) {
+    case "home":
+      return "/";
+    case "sobre-nos":
+      return "/sobre-nos";
+    case "produtos":
+      return "/produtos";
+    case "clientes":
+      return "/clientes";
+    case "planos":
+      return "/planos";
+    case "contato":
+      return "/contato";
+    case "impacto":
+      return "/impacto";
+    case "produto-demo":
+      return "/produto-demo";
+    case "numeros":
+      return "/numeros";
+    case "testimonials":
+      return "/testimonials";
+    default:
+      return "/";
+  }
+};
+
 const NAV = [
   { id: "home", label: "Home" },
-  { id: "sobre", label: "Sobre nós" },
+  { id: "sobre-nos", label: "Sobre nós" },
   { id: "produtos", label: "Produtos" }, // pai do dropdown
   { id: "clientes", label: "Clientes" },
   { id: "planos", label: "Planos" },
   { id: "contato", label: "Contato" },
 ];
 
-const MOBILE_BG = "#121212"; // painel do sheet mobile
+const MOBILE_BG = "#121212";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false); // sheet mobile
@@ -21,20 +49,7 @@ export default function Navbar() {
   const prodBtnRef = useRef(null);
   const prodMenuRef = useRef(null);
 
-  // scroll suave com offset do header
-  const scrollToId = (id) => {
-    const HEADER_OFFSET = 64; // h-16
-    const el = document.getElementById(id);
-    if (!el) {
-      window.location.hash = id;
-      return;
-    }
-    const y = el.getBoundingClientRect().top + window.pageYOffset - HEADER_OFFSET - 8;
-    window.history.pushState(null, "", `#${id}`);
-    window.scrollTo({ top: y, behavior: "smooth" });
-  };
-
-  // detectar scroll para mudar o fundo do header
+  // Header muda fundo no scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -42,7 +57,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ESC fecha tudo
+  // ESC fecha menus
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -54,17 +69,7 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // hashchange fecha tudo
-  useEffect(() => {
-    const onHash = () => {
-      setOpen(false);
-      setProdOpen(false);
-    };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, []);
-
-  // clique fora fecha dropdown desktop
+  // Clique fora fecha dropdown desktop
   useEffect(() => {
     if (!prodOpen) return;
     const onClickAway = (e) => {
@@ -81,7 +86,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", onClickAway);
   }, [prodOpen]);
 
-  // trava scroll do body quando o sheet abre
+  // Trava scroll do body quando o sheet abre
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = open ? "hidden" : prev || "";
@@ -98,32 +103,21 @@ export default function Navbar() {
       ].join(" ")}
     >
       <nav className="mx-auto max-w-7xl w-full h-full px-4 flex items-center justify-between text-white">
-        <a
-          href="#home"
-          className="flex items-center gap-2"
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToId("home");
-            setProdOpen(false);
-          }}
-        >
+        {/* Logo → rota limpa "/" */}
+        <a href="/" className="flex items-center gap-2" onClick={() => setProdOpen(false)}>
           <img src={logo} alt="OnRota" className="h-7 w-auto" />
         </a>
 
-        {/* desktop */}
+        {/* Desktop */}
         <ul className="hidden md:flex items-center gap-6 text-sm">
           {NAV.map((n) => {
             if (n.id !== "produtos") {
               return (
                 <li key={n.id}>
                   <a
-                    href={`#${n.id}`}
+                    href={idToPath(n.id)} // <<< rotas limpas
                     className="text-white/80 hover:text-[#1da7e5]"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToId(n.id);
-                      setProdOpen(false);
-                    }}
+                    onClick={() => setProdOpen(false)} // apenas fecha dropdown
                   >
                     {n.label}
                   </a>
@@ -162,37 +156,25 @@ export default function Navbar() {
                   >
                     <a
                       role="menuitem"
-                      href="/produtos"
+                      href={idToPath("produtos")}
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setProdOpen(false);
-                        scrollToId("produtos");
-                      }}
+                      onClick={() => setProdOpen(false)}
                     >
                       OnCad
                     </a>
                     <a
                       role="menuitem"
-                      href="#impacto"
+                      href={idToPath("impacto")}
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setProdOpen(false);
-                        scrollToId("impacto");
-                      }}
+                      onClick={() => setProdOpen(false)}
                     >
                       Integrações
                     </a>
                     <a
                       role="menuitem"
-                      href="#produto-demo"
+                      href={idToPath("produto-demo")}
                       className="block px-4 py-3 text-sm text-white/90 hover:bg-white/10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setProdOpen(false);
-                        scrollToId("produto-demo");
-                      }}
+                      onClick={() => setProdOpen(false)}
                     >
                       Demonstração
                     </a>
@@ -215,14 +197,14 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Sheet mobile (não tela inteira) */}
-      <MobileSheet open={open} onClose={() => setOpen(false)} scrollToId={scrollToId} />
+      {/* Sheet mobile */}
+      <MobileSheet open={open} onClose={() => setOpen(false)} />
     </header>
   );
 }
 
 /* ===================== MOBILE SHEET ===================== */
-function MobileSheet({ open, onClose, scrollToId }) {
+function MobileSheet({ open, onClose }) {
   const [prodOpen, setProdOpen] = useState(false);
 
   return createPortal(
@@ -233,7 +215,7 @@ function MobileSheet({ open, onClose, scrollToId }) {
           origin-top transform transition-all duration-300 ease-out
           ${open ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0"}
           rounded-b-2xl shadow-2xl overflow-hidden
-          bg-[#121212]
+          bg-[${MOBILE_BG}]
         `}
       >
         {/* Topo com logo + X */}
@@ -256,20 +238,18 @@ function MobileSheet({ open, onClose, scrollToId }) {
           </button>
         </div>
 
-        {/* Itens alinhados à direita + submenu de Produtos */}
+        {/* Itens + submenu Produtos */}
         <ul className="px-6 pb-6 space-y-4 text-right uppercase tracking-[0.18em] text-[13px] text-white/90">
           {NAV.map((n) => {
             if (n.id !== "produtos") {
               return (
                 <li key={n.id}>
                   <a
-                    href={`#${n.id}`}
+                    href={idToPath(n.id)} // <<< rota limpa
                     className="inline-block py-2 hover:text-white transition"
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       onClose();
-                      setTimeout(() => scrollToId(n.id), 80);
-                    }}
+                    }} // fecha sheet
                   >
                     {n.label}
                   </a>
@@ -300,34 +280,28 @@ function MobileSheet({ open, onClose, scrollToId }) {
                 {prodOpen && (
                   <div className="mt-1 space-y-1 text-white/85 text-right normal-case tracking-normal text-[14px]">
                     <a
-                      href="/produtos"
+                      href={idToPath("produtos")}
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
-                      onClick={(e) => {
-                        e.preventDefault();
+                      onClick={() => {
                         onClose();
-                        setTimeout(() => scrollToId("produtos"), 80);
                       }}
                     >
                       OnCad
                     </a>
                     <a
-                      href="#impacto"
+                      href={idToPath("impacto")}
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
-                      onClick={(e) => {
-                        e.preventDefault();
+                      onClick={() => {
                         onClose();
-                        setTimeout(() => scrollToId("impacto"), 80);
                       }}
                     >
                       Integrações
                     </a>
                     <a
-                      href="#produto-demo"
+                      href={idToPath("produto-demo")}
                       className="block py-2 px-2 rounded-lg hover:bg-white/05"
-                      onClick={(e) => {
-                        e.preventDefault();
+                      onClick={() => {
                         onClose();
-                        setTimeout(() => scrollToId("produto-demo"), 80);
                       }}
                     >
                       Demonstração

@@ -1,6 +1,9 @@
 // src/utils/sectionRouting.js
+// Navegação SPA baseada em paths/âncoras para one-page (Vite + React).
+// Intercepta <a href="/rota"> e realiza scroll suave até o id correspondente,
+// com compensação de header fixo/sticky e espera o DOM montar quando preciso.
 
-// Mapeie cada PATH para possíveis IDs (PT e EN, várias alternativas)
+// 🔎 MAPA DE ROTAS → IDS (alinhado com seus ids no App.jsx)
 const PATH_TO_IDS = {
   "/": ["home", "hero"],
   "/sobre-nos": ["sobre-nos"],
@@ -8,7 +11,21 @@ const PATH_TO_IDS = {
   "/clientes": ["clientes"],
   "/planos": ["planos"],
   "/contato": ["contato"],
+
+  // adições
+  "/impacto": ["impacto"],
+  "/produto-demo": ["produto-demo"],
+
+  // opcionais (suportar acesso direto)
+  "/numeros": ["numeros"],
+  "/testimonials": ["testimonials"],
 };
+
+// -------------- utilitários internos --------------
+function normalizePathname(p) {
+  const noTrailing = p.replace(/\/+$/, "");
+  return noTrailing === "" ? "/" : noTrailing;
+}
 
 function getFirstExistingId(candidates = []) {
   for (const id of candidates) {
@@ -24,22 +41,17 @@ function pathForId(id) {
   return null;
 }
 
-function normalizePathname(p) {
-  const noTrailing = p.replace(/\/+$/, "");
-  return noTrailing === "" ? "/" : noTrailing;
-}
-
 function idFromLocation(loc = window.location) {
-  // 1) Hash tem prioridade (#clientes)
+  // 1) hash tem prioridade (#clientes)
   if (loc.hash && loc.hash.length > 1) return loc.hash.slice(1);
 
-  // 2) Path limpo (/planos)
+  // 2) pathname limpo (/planos)
   const path = normalizePathname(loc.pathname);
   const candidates = PATH_TO_IDS[path];
-  return candidates ? getFirstExistingId(candidates) : null;
+  return candidates ? getFirstExistingId(candidates) || candidates[0] : null;
 }
 
-// Tenta detectar header fixo para compensar sobreposição
+// Compensa header fixo/sticky para não cobrir o topo da seção
 function getHeaderOffsetPx() {
   const header =
     document.querySelector("header.sticky, header.fixed, nav.sticky, nav.fixed") ||
@@ -47,14 +59,12 @@ function getHeaderOffsetPx() {
     document.querySelector("nav");
 
   if (!header) return 0;
-
-  // só compensa se for fixed/sticky de verdade
-  const style = window.getComputedStyle(header);
-  const pos = style.position;
+  const pos = getComputedStyle(header).position;
   const isSticky = pos === "sticky" || pos === "fixed";
   return isSticky ? header.offsetHeight : 0;
 }
 
+// -------------- API pública --------------
 export function scrollToSectionId(id, behavior = "smooth") {
   const el = document.getElementById(id);
   if (!el) return;
@@ -66,11 +76,11 @@ export function scrollToSectionId(id, behavior = "smooth") {
   window.scrollTo({ top: target, behavior });
 }
 
-// Aguarda a seção existir (evita cair no "home" por carregar cedo demais)
+// Espera a seção existir (evita falha se o DOM montar depois)
 async function scrollWhenReady(id, behavior = "smooth", maxWaitMs = 5000) {
   const t0 = performance.now();
   while (!document.getElementById(id)) {
-    if (performance.now() - t0 > maxWaitMs) return; // desiste silenciosamente
+    if (performance.now() - t0 > maxWaitMs) return;
     await new Promise((r) => setTimeout(r, 50));
   }
   scrollToSectionId(id, behavior);
@@ -89,52 +99,60 @@ export function enableSpaNav() {
   if (_spaNavEnabled) return;
   _spaNavEnabled = true;
 
-  document.addEventListener("click", (e) => {
-    const a = e.target.closest("a");
-    if (!a) return;
+  // capture:true para interceptar antes do comportamento padrão do hash
+  document.addEventListener(
+    "click",
+    (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
 
-    // respeita novas abas/descargas
-    if (
-      e.defaultPrevented ||
-      a.target === "_blank" ||
-      a.hasAttribute("download") ||
-      e.metaKey ||
-      e.ctrlKey ||
-      e.shiftKey ||
-      e.altKey
-    )
-      return;
+      // respeita novas abas/descargas/modificadores
+      if (
+        e.defaultPrevented ||
+        a.target === "_blank" ||
+        a.hasAttribute("download") ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+      )
+        return;
 
-    const url = new URL(a.getAttribute("href"), window.location.href);
+      const rawHref = a.getAttribute("href");
+      if (!rawHref) return;
 
-    // só lida com o mesmo origin
-    if (url.origin !== window.location.origin) return;
+      const url = new URL(rawHref, window.location.href);
 
-    const hashId = url.hash ? url.hash.slice(1) : null;
-    const pathOnly = normalizePathname(url.pathname);
+      // só tratamos navegação dentro do mesmo origin
+      if (url.origin !== window.location.origin) return;
 
-    // Caso 1: link é só hash (#clientes) → canoniza para /clientes
-    if (hashId) {
-      const canonicalPath = pathForId(hashId) || pathOnly; // cai para path atual se não souber
+      const hashId = url.hash ? url.hash.slice(1) : null;
+      const pathOnly = normalizePathname(url.pathname);
+
+      // Caso 1: link com hash (#clientes) → canoniza para /clientes
+      if (hashId) {
+        e.preventDefault();
+        const canonicalPath = pathForId(hashId) || pathOnly || "/";
+        window.history.pushState({}, "", canonicalPath);
+        scrollWhenReady(hashId);
+        return;
+      }
+
+      // Caso 2: link com path limpo (/planos, /impacto, /produto-demo…)
+      const candidates = PATH_TO_IDS[pathOnly];
+      if (!candidates) return; // não é seção SPA → deixa navegar normal
+
       e.preventDefault();
-      window.history.pushState({}, "", canonicalPath); // sem hash
-      scrollWhenReady(hashId);
-      return;
-    }
+      const targetId = getFirstExistingId(candidates) || candidates[0];
+      window.history.pushState({}, "", pathOnly);
+      scrollWhenReady(targetId);
+    },
+    true
+  );
 
-    // Caso 2: path "limpo" (/planos, /clientes, etc.)
-    const candidates = PATH_TO_IDS[pathOnly];
-    if (!candidates) return; // não é link de seção: segue normal
-
-    const targetId = getFirstExistingId(candidates) || candidates[0]; // tenta o que existe; senão o 1º
-    e.preventDefault();
-    window.history.pushState({}, "", pathOnly);
-    scrollWhenReady(targetId);
-  });
-
-  // Voltar/Avançar do navegador
+  // Voltar/avançar do navegador
   window.addEventListener("popstate", () => {
-    const id = idFromLocation() || getFirstExistingId(PATH_TO_IDS["/"]) || "hero";
+    const id = idFromLocation() || getFirstExistingId(PATH_TO_IDS["/"]) || "home";
     scrollWhenReady(id, "instant");
   });
 }
