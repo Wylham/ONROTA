@@ -25,7 +25,7 @@ export default function Footer() {
         >
           {/* ESQUERDA — copyright + CNPJ em nova linha */}
           <div className="text-white/70 text-sm">
-            <div>© {new Date().getFullYear()} OnRota. Todos os direitos reservados.</div>
+            <div>© {new Date().getFullYear()} OnRota Tech Log. Todos os direitos reservados.</div>
             <div className="mt-1">
               CNPJ: <span className="text-white/80">62.762.345/0001-30</span>
             </div>

@@ -6,6 +6,7 @@ import pillarsBg from "../assets/bg-pilar.jpeg";
 import missionImg from "../assets/missao1.webp";
 import visionImg from "../assets/visao1.webp";
 import valuesImg from "../assets/valores1.webp";
+import { WHATSAPP_LINK } from "../constants";
 
 /* ===== TRIGGERS =====
    - DEFAULT: pouco antes do meio (Lead/Pilares)
@@ -287,7 +288,7 @@ function LeadRow() {
 
               <div {...fadeUp(lead.inView, "mt-6 flex flex-wrap gap-3")}>
                 <a
-                  href="/contato"
+                  href={WHATSAPP_LINK}
                   className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-white text-sm font-medium border transition-colors"
                   style={{ backgroundColor: colors.primary, borderColor: colors.primary }}
                   onMouseEnter={(e) =>

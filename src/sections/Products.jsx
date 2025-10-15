@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { IconOCR, IconCadastro, IconAPI, IconValidacao } from "@/components/icons.jsx";
 import { colors as brandColors } from "/src/components/brand.jsx";
+import { WHATSAPP_LINK } from "../constants";
 
 /* Mapa de cores com fallbacks */
 const theme = {
@@ -153,7 +154,7 @@ export default function Products() {
 
             <Reveal as="div" delay={190} className="mt-6 flex items-center gap-2 sm:gap-3">
               <a
-                href="/contato"
+                href={WHATSAPP_LINK}
                 className="flex-1 md:flex-none inline-flex items-center justify-center rounded-lg
                px-4 py-2 text-xs md:px-5 md:py-2.5 md:text-sm font-semibold transition"
                 style={{ backgroundColor: theme.primary }}

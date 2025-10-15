@@ -169,12 +169,12 @@ export default function Contato() {
               <div className="whitespace-nowrap">
                 <span className="text-white font-semibold">Telefone:</span>{" "}
                 <a
-                  href="#"
+                  href="tel:+556499288250"
                   onClick={(e) => e.preventDefault()}
                   className="hover:underline"
                   style={{ color: "#fff" }}
                 >
-                  +55 62 99263-1996
+                  +55 64 9928-8250
                 </a>
               </div>
               <div className="whitespace-nowrap">
